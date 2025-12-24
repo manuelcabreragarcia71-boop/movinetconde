@@ -1,0 +1,460 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MOVINETCONDE | Tecnología Premium</title>
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            /* COLORES BASADOS EN TU LOGO */
+            --primary: #000000;     /* Negro Fondo */
+            --accent: #ff8c00;      /* Naranja/Dorado del degradado */
+            --white: #ffffff;
+            --text: #333333;
+            /* Fondo blanco casi opaco para que se lea bien el texto sobre el logo negro */
+            --bg-overlay: rgba(255, 255, 255, 0.96); 
+        }
+
+        /* CONFIGURACIÓN DEL FONDO CON TU LOGO */
+        body { 
+            margin: 0; 
+            font-family: 'Montserrat', sans-serif; 
+            color: var(--text);
+            background-color: #000; /* Negro de seguridad */
+            
+            /* AQUÍ ESTÁ TU FOTO DE FONDO */
+            background-image: url('fondo.JPG');
+            background-repeat: no-repeat;
+            background-position: center center;
+            background-attachment: fixed; /* El fondo se queda quieto al bajar */
+            background-size: cover;       /* Cubre toda la pantalla */
+        }
+
+        /* Navegación */
+        .navbar { 
+            background: rgba(255, 255, 255, 0.95); 
+            padding: 15px 0; 
+            box-shadow: 0 4px 15px rgba(0,0,0,0.5); 
+            position: sticky; 
+            top: 0; 
+            z-index: 1000; 
+            border-bottom: 3px solid var(--accent); /* Línea dorada abajo */
+        }
+        .nav-container { display: flex; justify-content: space-between; align-items: center; max-width: 1200px; margin: 0 auto; padding: 0 20px; }
+        
+        .logo-container { display: flex; align-items: center; gap: 10px; text-decoration: none; color: var(--primary); }
+        .nav-logo-img { height: 40px; border-radius: 5px; } /* Imagen pequeña en el menú */
+        .logo-text { font-size: 1.5rem; font-weight: 800; margin: 0; letter-spacing: 1px; }
+        .logo-text span { color: var(--accent); }
+
+        .nav-links { list-style: none; display: flex; gap: 20px; padding: 0; margin: 0; align-items: center; }
+        .btn-icon { background: none; border: none; font-size: 1.2rem; cursor: pointer; color: var(--primary); transition: 0.3s; }
+        .btn-icon:hover { color: var(--accent); transform: scale(1.1); }
+        
+        /* Contenedores (Cajas blancas) */
+        .container { max-width: 1200px; margin: 30px auto; padding: 25px; background: var(--bg-overlay); border-radius: 15px; box-shadow: 0 10px 25px rgba(0,0,0,0.5); }
+        
+        .hero { 
+            text-align: center; 
+            padding: 60px 20px; 
+            /* Fondo negro semitransparente para el título principal */
+            background: linear-gradient(135deg, rgba(0,0,0,0.9), rgba(50,50,50,0.9)); 
+            color: white; 
+            border-radius: 15px; 
+            margin: 20px auto; 
+            max-width: 1200px; 
+            border: 2px solid var(--accent);
+        }
+        .hero h2 { margin-top: 0; font-size: 2.5rem; color: var(--accent); }
+
+        /* Productos */
+        .grid-container { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 25px; }
+        .product-card { background: white; padding: 15px; border-radius: 10px; text-align: center; border: 1px solid #eee; position: relative; transition: 0.3s; }
+        .product-card:hover { transform: translateY(-5px); box-shadow: 0 10px 20px rgba(0,0,0,0.2); border-color: var(--accent); }
+        
+        .product-photo { width: 100%; height: 200px; object-fit: cover; border-radius: 5px; }
+        .fav-btn { position: absolute; top: 10px; right: 10px; background: white; border: none; font-size: 1.3rem; color: #ccc; cursor: pointer; padding: 6px; border-radius: 50%; box-shadow: 0 2px 5px rgba(0,0,0,0.2); }
+        .fav-btn.active { color: red; }
+        
+        .price { font-size: 1.2rem; font-weight: bold; color: var(--primary); margin: 10px 0; }
+        .btn-primary { background: var(--primary); color: var(--accent); border: 2px solid var(--primary); padding: 10px; width: 100%; border-radius: 5px; cursor: pointer; margin-top: 10px; font-weight: bold; transition: 0.3s; text-transform: uppercase; }
+        .btn-primary:hover { background: var(--accent); color: var(--primary); border-color: var(--accent); }
+        
+        .btn-danger { background: #d32f2f; color: white; border: none; padding: 8px; border-radius: 5px; cursor: pointer; width: 100%; margin-top: 10px; }
+
+        /* Formularios */
+        input, textarea { width: 100%; padding: 12px; margin-bottom: 10px; border: 2px solid #ddd; border-radius: 5px; box-sizing: border-box; font-family: inherit; }
+        input:focus, textarea:focus { border-color: var(--accent); outline: none; }
+        
+        /* Modales */
+        .modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); z-index: 2000; display: flex; justify-content: center; align-items: center; }
+        .modal-content { background: white; padding: 30px; width: 90%; max-width: 450px; border-radius: 10px; position: relative; border-top: 5px solid var(--accent); }
+        .hidden { display: none !important; }
+        .close { position: absolute; top: 10px; right: 20px; font-size: 1.8rem; cursor: pointer; color: var(--primary); }
+        
+        /* Pestañas Perfil */
+        .tab-buttons { display: flex; gap: 10px; margin-bottom: 20px; border-bottom: 1px solid #eee; padding-bottom: 10px; }
+        .tab-btn { background: none; border: none; padding: 10px; cursor: pointer; font-weight: bold; color: #777; flex: 1; }
+        .tab-btn.active { color: var(--accent); border-bottom: 3px solid var(--accent); }
+
+        /* Admin Panel */
+        .admin-panel { background: #fff; border: 2px dashed var(--accent); padding: 20px; margin-top: 20px; border-radius: 10px; }
+        
+        footer { text-align: center; padding: 20px; background: rgba(0,0,0,0.8); color: white; margin-top: 40px; }
+    </style>
+</head>
+<body>
+
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="#" class="logo-container">
+                <img src="fondo.jpg" alt="Logo" class="nav-logo-img">
+                <h1 class="logo-text">MOVINET<span>CONDE</span></h1>
+            </a>
+            
+            <ul class="nav-links">
+                <li><button onclick="abrirModal('cart-modal')" class="btn-icon"><i class="fas fa-shopping-cart"></i> <span id="cart-count">0</span></button></li>
+                
+                <li id="user-logged-in" class="hidden">
+                    <button onclick="abrirPerfil()" class="btn-icon"><i class="fas fa-user-circle"></i> Mi Cuenta</button>
+                </li>
+                
+                <li id="user-logged-out">
+                    <button onclick="abrirModal('auth-modal')" class="btn-primary" style="width: auto; padding: 8px 20px; margin:0;">Entrar</button>
+                </li>
+
+                <li><button onclick="abrirModal('admin-login-modal')" class="btn-icon"><i class="fas fa-lock"></i></button></li>
+            </ul>
+        </div>
+    </nav>
+
+    <header class="hero">
+        <h2>SOLUCIONES TECNOLÓGICAS</h2>
+        <p>Venta de dispositivos, accesorios y servicio técnico especializado.</p>
+        <p><small>Regístrate para guardar favoritos y consultar estado de reparaciones.</small></p>
+    </header>
+
+    <div id="admin-panel" class="container admin-panel hidden">
+        <h3>🔧 Panel de Control (Admin)</h3>
+        <form id="addProductForm">
+            <label>Foto del producto (Menos de 1MB):</label>
+            <input type="file" id="newImg" accept="image/*" required>
+            <input type="text" id="newName" placeholder="Nombre del producto" required>
+            <input type="number" id="newPrice" placeholder="Precio (€)" required>
+            <button type="submit" class="btn-primary">Añadir al Catálogo</button>
+        </form>
+        <button onclick="cerrarSesionAdmin()" style="margin-top:10px; background: #333; color: white; border: none; padding: 10px; cursor: pointer;">Cerrar Admin</button>
+    </div>
+
+    <div class="container">
+        <h2 style="color: var(--primary); text-align: center; text-transform: uppercase; letter-spacing: 2px;">Catálogo Destacado</h2>
+        <div id="productos-container" class="grid-container">
+            <p style="text-align: center; width: 100%;">Cargando productos...</p>
+        </div>
+    </div>
+
+    <div class="container" style="margin-bottom: 50px;">
+        <h2 style="color: var(--primary); text-align: center; text-transform: uppercase;">Servicio Técnico</h2>
+        <p style="text-align: center;">Describe tu problema y te daremos presupuesto por WhatsApp al instante.</p>
+        <form id="contactForm" style="max-width: 600px; margin: 0 auto;">
+            <input type="text" id="clienteNombre" placeholder="Tu Nombre Completo" required>
+            <input type="text" id="clienteModelo" placeholder="Modelo del Dispositivo (Ej: iPhone 11)" required>
+            <textarea id="clienteProblema" placeholder="Describe la avería..." rows="4" required></textarea>
+            <button type="submit" class="btn-primary">Solicitar Presupuesto</button>
+        </form>
+    </div>
+
+    <div id="auth-modal" class="modal hidden">
+        <div class="modal-content">
+            <span class="close" onclick="cerrarModal('auth-modal')">&times;</span>
+            <h2 style="text-align: center; color: var(--accent);">Bienvenido</h2>
+            <form id="authForm">
+                <input type="email" id="authEmail" placeholder="Correo electrónico" required>
+                <input type="password" id="authPass" placeholder="Contraseña" required>
+                <button type="submit" class="btn-primary">Iniciar Sesión / Registrarse</button>
+            </form>
+            <p style="font-size: 0.8rem; text-align: center; color: #666; margin-top: 15px;">
+                Si no tienes cuenta, se creará automáticamente al pulsar el botón.
+            </p>
+        </div>
+    </div>
+
+    <div id="profile-modal" class="modal hidden">
+        <div class="modal-content" style="max-width: 600px;">
+            <span class="close" onclick="cerrarModal('profile-modal')">&times;</span>
+            <h2 style="color: var(--primary);">Mi Espacio</h2>
+            
+            <div class="tab-buttons">
+                <button class="tab-btn active" onclick="verTab('favs')">❤️ Favoritos</button>
+                <button class="tab-btn" onclick="verTab('history')">📋 Reparaciones</button>
+            </div>
+
+            <div id="tab-favs">
+                <ul id="fav-list" style="list-style: none; padding: 0;"></ul>
+            </div>
+            
+            <div id="tab-history" class="hidden">
+                <ul id="history-list" style="list-style: none; padding: 0;"></ul>
+            </div>
+
+            <button onclick="logout()" class="btn-danger">Cerrar Sesión</button>
+        </div>
+    </div>
+
+    <div id="cart-modal" class="modal hidden">
+        <div class="modal-content">
+            <span class="close" onclick="cerrarModal('cart-modal')">&times;</span>
+            <h2>Tu Carrito</h2>
+            <ul id="cart-items" style="list-style: none; padding: 0; margin: 20px 0;"></ul>
+            <h3>Total: <span id="total-price">0</span>€</h3>
+            <button onclick="realizarPedido()" class="btn-primary">Finalizar Compra (WhatsApp)</button>
+        </div>
+    </div>
+
+    <div id="admin-login-modal" class="modal hidden">
+        <div class="modal-content" style="max-width: 300px; text-align: center;">
+            <span class="close" onclick="cerrarModal('admin-login-modal')">&times;</span>
+            <h3>Acceso Gerencia</h3>
+            <input type="password" id="adminPassInput" placeholder="Código de seguridad">
+            <button onclick="verificarAdmin()" class="btn-primary">Acceder</button>
+        </div>
+    </div>
+
+    <footer>
+        <p>&copy; 2025 MOVINETCONDE | Expertos en Telefonía</p>
+    </footer>
+
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
+
+    <script>
+        // CONFIGURACIÓN MOVINETCONDE
+        const firebaseConfig = {
+            apiKey: "AIzaSyAO9sshvU5zUf_S9d12toWwrioeXBonlRc",
+            authDomain: "movinet-conde-web.firebaseapp.com",
+            projectId: "movinet-conde-web",
+            appId: "1:867268264562:web:f28e33585cdcde3d8e78eb"
+        };
+
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.firestore();
+        const auth = firebase.auth();
+
+        // Variables
+        let carrito = [];
+        let usuarioActual = null;
+        let favoritos = [];
+        
+        // ⚠️ PON TU TELÉFONO AQUÍ ⚠️
+        const MI_TELEFONO = "34613509309"; 
+
+        // --- AUTH ---
+        auth.onAuthStateChanged(user => {
+            if (user) {
+                usuarioActual = user;
+                document.getElementById('user-logged-in').classList.remove('hidden');
+                document.getElementById('user-logged-out').classList.add('hidden');
+                cerrarModal('auth-modal');
+                cargarFavoritos();
+            } else {
+                usuarioActual = null;
+                favoritos = [];
+                document.getElementById('user-logged-in').classList.add('hidden');
+                document.getElementById('user-logged-out').classList.remove('hidden');
+                mostrarProductos();
+            }
+        });
+
+        document.getElementById('authForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const email = document.getElementById('authEmail').value;
+            const pass = document.getElementById('authPass').value;
+
+            auth.signInWithEmailAndPassword(email, pass)
+                .then(() => alert("¡Hola de nuevo!"))
+                .catch(error => {
+                    if(error.code === 'auth/user-not-found' || error.code === 'auth/invalid-credential') {
+                        auth.createUserWithEmailAndPassword(email, pass)
+                            .then(() => {
+                                alert("¡Cuenta creada correctamente!");
+                                db.collection('usuarios').doc(auth.currentUser.uid).set({ email: email });
+                            })
+                            .catch(e => alert("Error al registrar: " + e.message));
+                    } else {
+                        alert("Error: " + error.message);
+                    }
+                });
+        });
+
+        function logout() {
+            auth.signOut();
+            cerrarModal('profile-modal');
+        }
+
+        // --- FAVORITOS ---
+        function cargarFavoritos() {
+            if(!usuarioActual) return;
+            db.collection('usuarios').doc(usuarioActual.uid).collection('favoritos').get()
+                .then(snapshot => {
+                    favoritos = [];
+                    snapshot.forEach(doc => favoritos.push(doc.id));
+                    mostrarProductos();
+                });
+        }
+
+        function toggleFavorito(id, nombre) {
+            if(!usuarioActual) return alert("Inicia sesión para guardar favoritos.");
+            const index = favoritos.indexOf(id);
+            if(index === -1) {
+                db.collection('usuarios').doc(usuarioActual.uid).collection('favoritos').doc(id).set({ nombre: nombre });
+                favoritos.push(id);
+            } else {
+                db.collection('usuarios').doc(usuarioActual.uid).collection('favoritos').doc(id).delete();
+                favoritos.splice(index, 1);
+            }
+            mostrarProductos(); // Refrescar iconos
+        }
+
+        // --- PERFIL ---
+        function abrirPerfil() {
+            abrirModal('profile-modal');
+            const listaFavs = document.getElementById('fav-list');
+            const listaHist = document.getElementById('history-list');
+            listaFavs.innerHTML = "Cargando..."; listaHist.innerHTML = "Cargando...";
+
+            db.collection('usuarios').doc(usuarioActual.uid).collection('favoritos').get().then(snap => {
+                listaFavs.innerHTML = "";
+                if(snap.empty) listaFavs.innerHTML = "<li>No tienes favoritos.</li>";
+                snap.forEach(doc => {
+                    listaFavs.innerHTML += `<li style="padding:10px; border-bottom:1px solid #eee;">❤️ ${doc.data().nombre}</li>`;
+                });
+            });
+
+            db.collection('usuarios').doc(usuarioActual.uid).collection('consultas').orderBy('fecha', 'desc').get().then(snap => {
+                listaHist.innerHTML = "";
+                if(snap.empty) listaHist.innerHTML = "<li>Sin consultas recientes.</li>";
+                snap.forEach(doc => {
+                    const d = doc.data();
+                    listaHist.innerHTML += `<li style="padding:10px; border-bottom:1px solid #eee;"><b>${d.dispositivo}</b>: ${d.problema}</li>`;
+                });
+            });
+        }
+
+        function verTab(tabName) {
+            document.getElementById('tab-favs').classList.add('hidden');
+            document.getElementById('tab-history').classList.add('hidden');
+            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+            document.getElementById(`tab-${tabName}`).classList.remove('hidden');
+            event.target.classList.add('active');
+        }
+
+        // --- PRODUCTOS ---
+        function mostrarProductos() {
+            const container = document.getElementById('productos-container');
+            db.collection("productos").orderBy("fecha", "desc").get().then((snap) => {
+                container.innerHTML = "";
+                if(snap.empty) { container.innerHTML = "<p>Catálogo vacío.</p>"; return; }
+
+                snap.forEach(doc => {
+                    const p = doc.data();
+                    const isFav = favoritos.includes(doc.id) ? 'active' : '';
+                    const div = document.createElement('div');
+                    div.className = "product-card";
+                    div.innerHTML = `
+                        <button class="fav-btn ${isFav}" onclick="toggleFavorito('${doc.id}', '${p.nombre}')">♥</button>
+                        <img src="${p.img}" class="product-photo">
+                        <h3>${p.nombre}</h3>
+                        <p class="price">${p.precio}€</p>
+                        <button class="btn-primary" onclick="addCart('${p.nombre}', ${p.precio})">Comprar</button>
+                    `;
+                    container.appendChild(div);
+                });
+            });
+        }
+
+        // --- CARRITO ---
+        function addCart(n, p) {
+            carrito.push({n, p});
+            document.getElementById('cart-count').innerText = carrito.length;
+            alert("✅ Producto añadido");
+        }
+
+        function realizarPedido() {
+            if(carrito.length === 0) return alert("Carrito vacío");
+            let msj = "👋 Hola MOVINETCONDE, quiero comprar: \n";
+            carrito.forEach(i => msj += `- ${i.n} (${i.p}€)\n`);
+            window.open(`https://wa.me/${MI_TELEFONO}?text=${encodeURIComponent(msj)}`, '_blank');
+            carrito = [];
+            document.getElementById('cart-count').innerText = 0;
+            cerrarModal('cart-modal');
+        }
+
+        // --- ADMIN ---
+        function verificarAdmin() {
+            if(document.getElementById('adminPassInput').value === "4354") {
+                document.getElementById('admin-panel').classList.remove('hidden');
+                cerrarModal('admin-login-modal');
+            } else { alert("Contraseña incorrecta"); }
+        }
+        function cerrarSesionAdmin() { document.getElementById('admin-panel').classList.add('hidden'); }
+
+        document.getElementById('addProductForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const file = document.getElementById('newImg').files[0];
+            const name = document.getElementById('newName').value;
+            const price = Number(document.getElementById('newPrice').value);
+            
+            if(file.size > 1000000) return alert("Imagen muy pesada (Máx 1MB)");
+            alert("Subiendo...");
+            
+            const reader = new FileReader();
+            reader.readAsDataURL(file);
+            reader.onload = function() {
+                db.collection("productos").add({
+                    nombre: name, precio: price, img: reader.result, fecha: new Date().toISOString()
+                }).then(() => {
+                    alert("¡Producto Guardado!");
+                    document.getElementById('addProductForm').reset();
+                    mostrarProductos();
+                });
+            };
+        });
+
+        // --- CONTACTO ---
+        document.getElementById('contactForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const n = document.getElementById('clienteNombre').value;
+            const m = document.getElementById('clienteModelo').value;
+            const p = document.getElementById('clienteProblema').value;
+
+            if(usuarioActual) {
+                db.collection('usuarios').doc(usuarioActual.uid).collection('consultas').add({
+                    dispositivo: m, problema: p, fecha: new Date()
+                });
+            }
+            const msj = `🔧 CONSULTA TÉCNICA\nCliente: ${n}\nDispositivo: ${m}\nProblema: ${p}`;
+            window.open(`https://wa.me/${MI_TELEFONO}?text=${encodeURIComponent(msj)}`, '_blank');
+        });
+
+        // Helpers
+        window.abrirModal = (id) => { 
+            document.getElementById(id).classList.remove('hidden'); 
+            if(id === 'cart-modal') {
+                const ul = document.getElementById('cart-items');
+                ul.innerHTML = ""; let total = 0;
+                carrito.forEach(i => { ul.innerHTML += `<li>${i.n} - ${i.p}€</li>`; total += i.p; });
+                document.getElementById('total-price').innerText = total;
+            }
+        }
+        window.cerrarModal = (id) => document.getElementById(id).classList.add('hidden');
+
+        mostrarProductos();
+    </script>
+</body>
+</html>
