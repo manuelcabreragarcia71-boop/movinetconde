@@ -1,0 +1,727 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="google-site-verification" content="8iamWe4GTvwJpKQOqVhcmM_6SbQ1hB-pWMybzcfF-1I" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MOVINETCONDE | Expertos en Tecnología</title>
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;800&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --primary: #000000;
+            --accent: #ff8c00;
+            --white: #ffffff;
+            --text: #333333;
+            --bg-overlay: rgba(255, 255, 255, 0.98); 
+        }
+
+        body { 
+            margin: 0; font-family: 'Montserrat', sans-serif; color: var(--text); background-color: #000; 
+            background-image: url('fondo.JPG');
+            background-repeat: no-repeat; background-position: center center; background-attachment: fixed; background-size: cover;       
+        }
+
+        /* NAVEGACIÓN */
+        .navbar { background: rgba(255, 255, 255, 0.98); padding: 10px 0; position: sticky; top: 0; z-index: 1000; border-bottom: 3px solid var(--accent); box-shadow: 0 4px 10px rgba(0,0,0,0.3); }
+        .nav-container { max-width: 1200px; margin: 0 auto; padding: 0 15px; display: flex; flex-direction: column; gap: 10px; }
+        .nav-top { display: flex; justify-content: space-between; align-items: center; }
+        .logo-container { display: flex; align-items: center; gap: 10px; text-decoration: none; color: var(--primary); }
+        .nav-logo-img { height: 40px; border-radius: 5px; } 
+        .logo-text { font-size: 1.4rem; font-weight: 800; margin: 0; }
+        .logo-text span { color: var(--accent); }
+        .nav-icons { display: flex; gap: 15px; }
+        .btn-icon { background: none; border: none; font-size: 1.2rem; cursor: pointer; color: var(--primary); }
+        
+        .nav-menu { display: flex; gap: 10px; overflow-x: auto; padding-bottom: 5px; -webkit-overflow-scrolling: touch; scrollbar-width: none; }
+        .menu-btn { background: #eee; border: none; padding: 8px 15px; border-radius: 20px; font-weight: 600; cursor: pointer; white-space: nowrap; font-size: 0.9rem; transition: 0.3s; }
+        .menu-btn.active, .menu-btn:hover { background: var(--accent); color: white; }
+
+        /* FILTROS (CARPETAS) */
+        .filter-scroll { display: flex; gap: 10px; overflow-x: auto; padding: 10px 0; margin-bottom: 20px; -webkit-overflow-scrolling: touch; scrollbar-width: none; border-bottom: 1px solid #eee; }
+        .filter-badge { background: white; border: 2px solid #eee; padding: 8px 15px; border-radius: 15px; cursor: pointer; font-weight: bold; white-space: nowrap; font-size: 0.85rem; transition: 0.3s; color: #555; display: flex; align-items: center; gap: 5px; }
+        .filter-badge:hover, .filter-badge.active { border-color: var(--accent); color: var(--accent); background: #fff8e1; transform: translateY(-2px); }
+        .filter-badge i { font-size: 1rem; }
+
+        /* CONTENEDORES */
+        .container { max-width: 1200px; margin: 20px auto; padding: 20px; background: var(--bg-overlay); border-radius: 15px; }
+        .hidden { display: none !important; }
+        .section-title { text-align: center; color: var(--primary); text-transform: uppercase; margin-bottom: 20px; border-bottom: 2px solid var(--accent); display: inline-block; padding-bottom: 5px; font-weight: 800; }
+        .center-wrapper { text-align: center; }
+
+        /* CARDS */
+        .grid-container { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px; }
+        
+        .product-card { background: white; padding: 15px; border-radius: 10px; text-align: center; border: 1px solid #eee; position: relative; box-shadow: 0 5px 15px rgba(0,0,0,0.05); }
+        .product-photo { width: 100%; height: 220px; object-fit: cover; border-radius: 5px; }
+        .brand-tag { position: absolute; top: 15px; left: 15px; background: rgba(0,0,0,0.7); color: white; padding: 2px 8px; border-radius: 4px; font-size: 0.7rem; font-weight: bold; text-transform: uppercase; }
+
+        .repair-card { background: white; border-radius: 10px; overflow: hidden; border-left: 5px solid var(--accent); box-shadow: 0 5px 10px rgba(0,0,0,0.05); display: flex; flex-direction: column; position: relative; }
+        .repair-header { background: #333; color: white; padding: 10px; text-align: center; font-weight: bold; font-size: 0.9rem; }
+        .repair-body { padding: 15px; text-align: center; flex: 1; }
+        .repair-type-icon { font-size: 2rem; color: var(--accent); margin-bottom: 10px; }
+        .repair-img { width: 80px; height: 80px; object-fit: cover; border-radius: 50%; margin: 0 auto 10px; border: 2px solid var(--accent); display: block; }
+        .repair-price { font-size: 1.5rem; color: var(--accent); font-weight: 800; margin: 10px 0; }
+        .cat-badge { background: #eee; color: #555; padding: 3px 8px; border-radius: 4px; font-size: 0.7rem; font-weight: bold; text-transform: uppercase; margin-bottom: 5px; display: inline-block; }
+
+        .options-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 5px; margin: 10px 0; }
+        .full-width-select { width: 100%; margin-top: 5px; }
+        select { padding: 5px; border-radius: 5px; border: 1px solid #ccc; font-size: 0.85rem; width: 100%; background: #f9f9f9; }
+        label { font-size: 0.7rem; color: #777; font-weight: bold; display: block; text-align: left; margin-bottom: 2px; }
+
+        .price { font-size: 1.3rem; font-weight: 800; color: var(--accent); margin: 10px 0; }
+        .btn-primary { background: var(--primary); color: white; border: none; padding: 10px; width: 100%; border-radius: 5px; cursor: pointer; font-weight: bold; text-transform: uppercase; margin-top: 5px; transition: 0.2s; }
+        .btn-primary:active { transform: scale(0.98); }
+        
+        .admin-actions { display: flex; gap: 5px; margin-top: 10px; padding-top: 10px; border-top: 1px solid #eee; }
+        .btn-edit { background: #f1c40f; color: black; border: none; padding: 5px; flex: 1; cursor: pointer; border-radius: 5px; font-weight: bold; }
+        .btn-delete { background: #e74c3c; color: white; border: none; padding: 5px; flex: 1; cursor: pointer; border-radius: 5px; font-weight: bold; }
+        
+        .fav-btn { position: absolute; top: 10px; right: 10px; background: white; border: none; font-size: 1.3rem; color: #ccc; cursor: pointer; padding: 5px; border-radius: 50%; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+        .fav-btn.active { color: red; }
+
+        /* PORTAFOLIO WEB */
+        .web-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 25px; }
+        .web-card { background: #fff; border: 1px solid #ddd; border-radius: 10px; overflow: hidden; transition: 0.3s; position: relative; }
+        .web-card:hover { transform: translateY(-5px); box-shadow: 0 10px 20px rgba(0,0,0,0.1); }
+        .web-preview { height: 150px; background: #222; display: flex; align-items: center; justify-content: center; color: var(--accent); font-size: 3rem; }
+        .web-info { padding: 20px; text-align: center; }
+
+        /* FORMULARIOS Y ADMIN */
+        .form-box { max-width: 600px; margin: 0 auto; background: white; padding: 30px; border-radius: 10px; box-shadow: 0 5px 15px rgba(0,0,0,0.05); }
+        input, textarea, select { width: 100%; padding: 12px; margin-bottom: 15px; border: 1px solid #ccc; border-radius: 5px; box-sizing: border-box; font-family: inherit; }
+        
+        .admin-panel { background: #fff8e1; border: 2px dashed var(--accent); margin-bottom: 20px; padding: 20px; }
+        .admin-tabs { display: flex; gap: 10px; margin-bottom: 20px; border-bottom: 1px solid #ccc; padding-bottom: 10px; overflow-x: auto; }
+        .admin-tab-btn { background: none; border: none; font-weight: bold; cursor: pointer; opacity: 0.5; font-size: 0.9rem; white-space: nowrap; }
+        .admin-tab-btn.active { opacity: 1; color: var(--accent); border-bottom: 2px solid var(--accent); }
+
+        /* MODALES */
+        .modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); z-index: 2000; display: flex; justify-content: center; align-items: center; }
+        .modal-content { background: white; padding: 30px; width: 90%; max-width: 450px; border-radius: 10px; position: relative; }
+        .close { position: absolute; top: 10px; right: 20px; font-size: 1.8rem; cursor: pointer; }
+
+        footer { text-align: center; padding: 30px; background: #111; color: white; margin-top: 50px; }
+        .social-link { color: var(--accent); font-size: 2rem; }
+    </style>
+</head>
+<body>
+
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-top">
+                <a href="#" class="logo-container">
+                    <img src="fondo.JPG" alt="Logo" class="nav-logo-img">
+                    <h1 class="logo-text">MOVINET<span>CONDE</span></h1>
+                </a>
+                <div class="nav-icons">
+                    <button onclick="abrirModal('cart-modal')" class="btn-icon"><i class="fas fa-shopping-cart"></i> <span id="cart-count">0</span></button>
+                    <button onclick="gestionarPerfil()" class="btn-icon"><i class="fas fa-user-circle"></i></button>
+                    <button onclick="abrirModal('admin-login-modal')" class="btn-icon"><i class="fas fa-lock"></i></button>
+                </div>
+            </div>
+            <div class="nav-menu">
+                <button onclick="verSeccion('catalogo')" class="menu-btn active" id="btn-catalogo">📱 Catálogo</button>
+                <button onclick="verSeccion('encargos')" class="menu-btn" id="btn-encargos">📦 Encargos</button>
+                <button onclick="verSeccion('reparaciones')" class="menu-btn" id="btn-reparaciones">🔧 Taller</button>
+                <button onclick="verSeccion('webs')" class="menu-btn" id="btn-webs">💻 Web</button>
+            </div>
+        </div>
+    </nav>
+
+    <div id="admin-panel" class="container admin-panel hidden">
+        <div class="admin-tabs">
+            <button class="admin-tab-btn active" onclick="verAdminTab('productos')">Productos</button>
+            <button class="admin-tab-btn" onclick="verAdminTab('reparaciones')">Taller / Piezas</button>
+            <button class="admin-tab-btn" onclick="verAdminTab('webs')">Webs</button>
+        </div>
+
+        <div id="admin-tab-productos">
+            <h3 id="productFormTitle">Nuevo Móvil</h3>
+            <form id="addProductForm">
+                <input type="hidden" id="editProductId">
+                <input type="file" id="newImg" accept="image/*">
+                <div id="imgPreview" style="font-size:0.8rem; color:green;"></div>
+                
+                <input type="text" id="newBrand" placeholder="MARCA (Importante para carpetas: Apple, Samsung...)" required style="border: 2px solid var(--accent);">
+                
+                <input type="text" id="newName" placeholder="Modelo (Ej: iPhone 13 Pro)" required>
+                
+                <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px;">
+                    <input type="text" id="newRam" placeholder="RAMs (Ej: 8GB, 12GB)" required>
+                    <input type="text" id="newStorage" placeholder="Memoria (Ej: 128GB, 256GB)" required>
+                </div>
+                
+                <input type="text" id="newColors" placeholder="Colores (Ej: Azul, Oro)" required>
+                <input type="number" id="newPrice" placeholder="Precio (€)" required>
+                
+                <button type="submit" class="btn-primary" id="btnSaveProduct">GUARDAR PRODUCTO</button>
+                <button type="button" onclick="resetFormProduct()" style="margin-top:5px; background:#999; color:white; border:none; padding:5px; width:100%;">Cancelar</button>
+            </form>
+        </div>
+
+        <div id="admin-tab-reparaciones" class="hidden">
+            <h3 id="repairFormTitle">Nueva Reparación / Pieza</h3>
+            <form id="addRepairForm">
+                <input type="hidden" id="editRepairId">
+                <input type="file" id="repairImg" accept="image/*">
+                
+                <label>Categoría de Reparación</label>
+                <select id="repairCategory" required style="border: 2px solid var(--accent);">
+                    <option value="Pantalla">Pantalla</option>
+                    <option value="Conector de Carga">Conector de Carga</option>
+                    <option value="Batería">Batería</option>
+                    <option value="Altavoz / Audio">Altavoz / Audio</option>
+                    <option value="Cámara">Cámara</option>
+                    <option value="Tapa Trasera">Tapa Trasera</option>
+                    <option value="Placa Base">Placa Base</option>
+                    <option value="Software">Software</option>
+                    <option value="Otros">Otros</option>
+                </select>
+
+                <input type="text" id="repairBrand" placeholder="Marca (Ej: Samsung, Apple)" required>
+                <input type="text" id="repairModel" placeholder="Modelo Exacto (Ej: Galaxy S21)" required>
+                <input type="number" id="repairPrice" placeholder="Precio (€)" required>
+                
+                <button type="submit" class="btn-primary" id="btnSaveRepair">GUARDAR REPARACIÓN</button>
+                <button type="button" onclick="resetFormRepair()" style="margin-top:5px; background:#999; color:white; border:none; padding:5px; width:100%;">Cancelar</button>
+            </form>
+        </div>
+
+        <div id="admin-tab-webs" class="hidden">
+            <h3 id="webFormTitle">Nueva Web Portafolio</h3>
+            <form id="addWebForm">
+                <input type="hidden" id="editWebId">
+                <input type="text" id="webIcon" placeholder="Icono (fas fa-desktop)" value="fas fa-desktop" required>
+                <input type="text" id="webTitle" placeholder="Título Web" required>
+                <textarea id="webDesc" placeholder="Descripción..." rows="2" required></textarea>
+                <button type="submit" class="btn-primary" id="btnSaveWeb">GUARDAR WEB</button>
+                <button type="button" onclick="resetFormWeb()" style="margin-top:5px; background:#999; color:white; border:none; padding:5px; width:100%;">Cancelar</button>
+            </form>
+        </div>
+        <button onclick="cerrarSesionAdmin()" style="margin-top:20px; background:#333; color:white; border:none; padding:10px; width:100%;">Cerrar Sesión Admin</button>
+    </div>
+
+    <div id="sec-catalogo" class="container">
+        <div class="center-wrapper"><h2 class="section-title">Catálogo Móviles</h2></div>
+        
+        <div id="brand-filters" class="filter-scroll">
+            <button class="filter-badge active" onclick="filtrarMarca('all')"><i class="fas fa-th"></i> Todo</button>
+            </div>
+
+        <div id="productos-container" class="grid-container">
+            <p style="text-align:center;">Cargando catálogo...</p>
+        </div>
+    </div>
+
+    <div id="sec-encargos" class="container hidden">
+        <div class="center-wrapper"><h2 class="section-title">Encargos</h2></div>
+        <div class="form-box">
+            <p style="text-align: center;">¿Buscas un modelo específico? Pídelo aquí.</p>
+            <form id="encargoForm">
+                <input type="text" id="encargoNombre" placeholder="Tu Nombre" required>
+                <input type="text" id="encargoModelo" placeholder="Modelo deseado" required>
+                <input type="text" id="encargoDetalles" placeholder="Detalles (Color, GB...)">
+                <button type="submit" class="btn-primary">CONSULTAR DISPONIBILIDAD <i class="fab fa-whatsapp"></i></button>
+            </form>
+        </div>
+    </div>
+
+    <div id="sec-reparaciones" class="container hidden">
+        <div class="center-wrapper"><h2 class="section-title">Tarifas de Taller</h2></div>
+        
+        <div id="repair-filters" class="filter-scroll">
+            <button class="filter-badge active" onclick="filtrarTaller('all')">Todo</button>
+            <button class="filter-badge" onclick="filtrarTaller('Pantalla')"><i class="fas fa-mobile-alt"></i> Pantalla</button>
+            <button class="filter-badge" onclick="filtrarTaller('Conector de Carga')"><i class="fas fa-bolt"></i> Carga</button>
+            <button class="filter-badge" onclick="filtrarTaller('Batería')"><i class="fas fa-battery-full"></i> Batería</button>
+            <button class="filter-badge" onclick="filtrarTaller('Altavoz / Audio')"><i class="fas fa-volume-up"></i> Audio</button>
+            <button class="filter-badge" onclick="filtrarTaller('Otros')">Otros</button>
+        </div>
+
+        <div id="reparaciones-container" class="grid-container" style="margin-bottom: 40px;">
+            <p style="text-align:center;">Cargando tarifas...</p>
+        </div>
+
+        <div class="form-box" style="background:#f4f4f4;">
+            <h3 style="text-align:center;">¿Otra Avería?</h3>
+            <form id="tallerForm">
+                <input type="text" id="tallerNombre" placeholder="Nombre" required>
+                <input type="text" id="tallerDispositivo" placeholder="Dispositivo" required>
+                <textarea id="tallerProblema" placeholder="Problema..." rows="3" required></textarea>
+                <button type="submit" class="btn-primary" style="background:#333;">CONSULTAR <i class="fab fa-whatsapp"></i></button>
+            </form>
+        </div>
+    </div>
+
+    <div id="sec-webs" class="container hidden">
+        <div class="center-wrapper"><h2 class="section-title">Portafolio Web</h2></div>
+        <div id="webs-container" class="web-grid">
+            <p>Cargando portafolio...</p>
+        </div>
+        <div class="form-box" style="margin-top: 40px; background: #f9f9f9;">
+            <h3 style="text-align:center;">Solicitar Web</h3>
+            <form id="webRequestForm">
+                <input type="text" id="reqWebNombre" placeholder="Tu Nombre" required>
+                <input type="text" id="reqWebTipo" placeholder="Tipo de negocio" required>
+                <button type="submit" class="btn-primary" style="background:#333">CONTACTAR <i class="fab fa-whatsapp"></i></button>
+            </form>
+        </div>
+    </div>
+
+    <div id="cart-modal" class="modal hidden">
+        <div class="modal-content">
+            <span class="close" onclick="cerrarModal('cart-modal')">&times;</span>
+            <h2>Carrito</h2>
+            <ul id="cart-items" style="list-style:none; padding:0; margin:20px 0;"></ul>
+            <h3>Total: <span id="total-price">0</span>€</h3>
+            <button onclick="realizarPedido()" class="btn-primary">COMPRAR POR WHATSAPP</button>
+        </div>
+    </div>
+
+    <div id="admin-login-modal" class="modal hidden">
+        <div class="modal-content" style="max-width:300px; text-align:center;">
+            <span class="close" onclick="cerrarModal('admin-login-modal')">&times;</span>
+            <h3>Zona Admin</h3>
+            <input type="password" id="adminPassInput" placeholder="Contraseña">
+            <button onclick="verificarAdmin()" class="btn-primary">Entrar</button>
+        </div>
+    </div>
+
+    <div id="auth-modal" class="modal hidden">
+        <div class="modal-content">
+            <span class="close" onclick="cerrarModal('auth-modal')">&times;</span>
+            <h2 style="text-align:center">Clientes</h2>
+            <form id="authForm">
+                <input type="email" id="authEmail" placeholder="Email">
+                <input type="password" id="authPass" placeholder="Contraseña">
+                <button type="submit" class="btn-primary">Entrar / Registro</button>
+            </form>
+        </div>
+    </div>
+
+    <div id="profile-modal" class="modal hidden">
+        <div class="modal-content">
+            <span class="close" onclick="cerrarModal('profile-modal')">&times;</span>
+            <h2>Favoritos</h2>
+            <ul id="fav-list" style="list-style:none; padding:0"></ul>
+            <button onclick="auth.signOut(); cerrarModal('profile-modal');" class="btn-delete" style="background:#333; margin-top:10px;">Salir</button>
+        </div>
+    </div>
+
+    <footer>
+        <a href="https://www.instagram.com/movinetconde/" target="_blank" class="social-link"><i class="fab fa-instagram"></i></a>
+        <p>&copy; 2025 MOVINETCONDE</p>
+    </footer>
+
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
+
+    <script>
+        // --- CLAVES FIREBASE ---
+        const firebaseConfig = {
+            apiKey: "AIzaSyAO9sshvU5zUf_S9d12toWwrioeXBonlRc",
+            authDomain: "movinet-conde-web.firebaseapp.com",
+            projectId: "movinet-conde-web",
+            appId: "1:867268264562:web:f28e33585cdcde3d8e78eb"
+        };
+
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.firestore();
+        const auth = firebase.auth();
+
+        let carrito = [];
+        let usuarioActual = null;
+        let favoritos = [];
+        let esAdmin = false;
+        let editImgProduct = "";
+        let editImgRepair = "";
+        
+        let allProducts = [];
+        let allRepairs = [];
+        let filtroMarcaActual = 'all';
+        let filtroTallerActual = 'all';
+        
+        const MI_TELEFONO = "34613509309"; 
+
+        // --- NAVEGACIÓN ---
+        function verSeccion(id) {
+            document.querySelectorAll('[id^="sec-"]').forEach(s => s.classList.add('hidden'));
+            document.querySelectorAll('.menu-btn').forEach(b => b.classList.remove('active'));
+            document.getElementById(`sec-${id}`).classList.remove('hidden');
+            document.getElementById(`btn-${id}`).classList.add('active');
+        }
+
+        function verAdminTab(tab) {
+            document.querySelectorAll('[id^="admin-tab-"]').forEach(t => t.classList.add('hidden'));
+            document.querySelectorAll('.admin-tab-btn').forEach(b => b.classList.remove('active'));
+            document.getElementById(`admin-tab-${tab}`).classList.remove('hidden');
+            event.target.classList.add('active');
+        }
+
+        // --- 1. PRODUCTOS (MÓVILES) ---
+        function cargarProductos() {
+            db.collection("productos").orderBy("fecha", "desc").onSnapshot((snap) => {
+                allProducts = [];
+                snap.forEach(doc => { allProducts.push({...doc.data(), id: doc.id}); });
+                renderizarMarcas();
+                renderizarProductos();
+            });
+        }
+
+        function renderizarMarcas() {
+            // Extraer marcas únicas
+            const marcas = ['all', ...new Set(allProducts.map(p => p.marca ? p.marca.trim() : 'Otros'))];
+            const div = document.getElementById('brand-filters');
+            
+            // Generar botones
+            div.innerHTML = marcas.map(m => `
+                <button class="filter-badge ${filtroMarcaActual === m ? 'active' : ''}" 
+                onclick="filtrarMarca('${m}')">
+                <i class="fas fa-folder"></i> ${m === 'all' ? 'Todo' : m}
+                </button>
+            `).join('');
+        }
+
+        function filtrarMarca(m) {
+            filtroMarcaActual = m;
+            renderizarMarcas(); // Actualizar activo
+            renderizarProductos();
+        }
+
+        function renderizarProductos() {
+            const container = document.getElementById('productos-container');
+            container.innerHTML = "";
+            
+            const filtrados = filtroMarcaActual === 'all' 
+                ? allProducts 
+                : allProducts.filter(p => (p.marca || 'Otros') === filtroMarcaActual);
+
+            if(filtrados.length === 0) { container.innerHTML = "<p>No hay productos aquí.</p>"; return; }
+
+            filtrados.forEach(p => {
+                const isFav = favoritos.includes(p.id) ? 'active' : '';
+                const rams = p.ram ? p.ram.split(',') : ['-'];
+                const storages = p.storage ? p.storage.split(',') : ['-'];
+                const colors = p.colores ? p.colores.split(',') : ['Standard'];
+
+                let adminBtns = '';
+                if(esAdmin) {
+                    const json = JSON.stringify(p).replace(/"/g, '&quot;');
+                    adminBtns = `<div class="admin-actions"><button class="btn-edit" onclick="editarProducto('${p.id}', '${json}')">✏️</button><button class="btn-delete" onclick="borrar('productos','${p.id}')">🗑️</button></div>`;
+                }
+
+                container.innerHTML += `
+                    <div class="product-card">
+                        <span class="brand-tag">${p.marca || 'GENÉRICO'}</span>
+                        <button class="fav-btn ${isFav}" onclick="toggleFavorito('${p.id}', '${p.nombre}')">♥</button>
+                        <img src="${p.img}" class="product-photo">
+                        <h3>${p.nombre}</h3>
+                        <div class="options-grid">
+                            <div><label>RAM</label><select id="ram-${p.id}">${rams.map(r=>`<option>${r.trim()}</option>`).join('')}</select></div>
+                            <div><label>GB</label><select id="gb-${p.id}">${storages.map(s=>`<option>${s.trim()}</option>`).join('')}</select></div>
+                        </div>
+                        <div class="full-width-select"><label>Color</label><select id="col-${p.id}">${colors.map(c=>`<option>${c.trim()}</option>`).join('')}</select></div>
+                        <p class="price">${p.precio}€</p>
+                        <button class="btn-primary" onclick="addCart('${p.id}', '${p.nombre}', ${p.precio})">AÑADIR</button>
+                        ${adminBtns}
+                    </div>`;
+            });
+        }
+
+        // --- 2. TALLER (REPARACIONES) ---
+        function cargarReparaciones() {
+            db.collection("reparaciones").orderBy("fecha", "desc").onSnapshot((snap) => {
+                allRepairs = [];
+                snap.forEach(doc => { allRepairs.push({...doc.data(), id: doc.id}); });
+                renderizarTaller();
+            });
+        }
+
+        function filtrarTaller(cat) {
+            filtroTallerActual = cat;
+            // Actualizar visual botones
+            document.querySelectorAll('#repair-filters .filter-badge').forEach(b => b.classList.remove('active'));
+            event.currentTarget.classList.add('active');
+            renderizarTaller();
+        }
+
+        function renderizarTaller() {
+            const div = document.getElementById('reparaciones-container');
+            div.innerHTML = "";
+
+            const filtrados = filtroTallerActual === 'all'
+                ? allRepairs
+                : allRepairs.filter(r => r.categoria === filtroTallerActual);
+
+            if(filtrados.length === 0) { div.innerHTML = "<p>No hay tarifas para esta categoría.</p>"; return; }
+
+            filtrados.forEach(r => {
+                let adminBtns = '';
+                if(esAdmin) {
+                    const json = JSON.stringify(r).replace(/"/g, '&quot;');
+                    adminBtns = `<div class="admin-actions"><button class="btn-edit" onclick="editarReparacion('${r.id}', '${json}')">✏️</button><button class="btn-delete" onclick="borrar('reparaciones','${r.id}')">🗑️</button></div>`;
+                }
+                const imgHtml = r.img ? `<img src="${r.img}" class="repair-img">` : '';
+
+                div.innerHTML += `
+                    <div class="repair-card">
+                        <div class="repair-header">${r.marca || ''} ${r.dispositivo}</div>
+                        <div class="repair-body">
+                            <span class="cat-badge">${r.categoria}</span>
+                            ${imgHtml}
+                            <div style="font-weight:600; font-size:1.1rem; margin-top:5px;">${r.titulo}</div> <div class="repair-price">${r.precio}€</div>
+                            <button class="btn-primary" onclick="pedirCita('${r.categoria}', '${r.dispositivo}', ${r.precio})">PEDIR CITA</button>
+                            ${adminBtns}
+                        </div>
+                    </div>`;
+            });
+        }
+
+        // --- 3. WEBS ---
+        function mostrarWebs() {
+            db.collection("webs").orderBy("fecha", "desc").onSnapshot((snap) => {
+                const div = document.getElementById('webs-container');
+                div.innerHTML = "";
+                snap.forEach(doc => {
+                    const w = doc.data();
+                    let adminBtns = '';
+                    if(esAdmin) {
+                        const json = JSON.stringify(w).replace(/"/g, '&quot;');
+                        adminBtns = `<div class="admin-actions"><button class="btn-edit" onclick="editarWeb('${doc.id}', '${json}')">✏️</button><button class="btn-delete" onclick="borrar('webs','${doc.id}')">🗑️</button></div>`;
+                    }
+                    div.innerHTML += `
+                        <div class="web-card">
+                            <div class="web-preview"><i class="${w.icono}"></i></div>
+                            <div class="web-info"><div class="web-title">${w.titulo}</div><p>${w.descripcion}</p></div>
+                            ${adminBtns}
+                        </div>`;
+                });
+            });
+        }
+
+        // --- GESTIÓN ADMIN (GUARDAR) ---
+        async function guardarItem(collection, id, data, fileInput, oldImg) {
+            const file = document.getElementById(fileInput).files[0];
+            let imgFinal = oldImg;
+            if(file) {
+                const reader = new FileReader();
+                reader.readAsDataURL(file);
+                await new Promise(resolve => reader.onload = () => { imgFinal = reader.result; resolve(); });
+            }
+            if(imgFinal) data.img = imgFinal;
+            
+            if(id) await db.collection(collection).doc(id).update(data);
+            else await db.collection(collection).add({...data, fecha: new Date().toISOString()});
+            alert("Guardado");
+        }
+
+        // FORM PRODUCTO
+        document.getElementById('addProductForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const id = document.getElementById('editProductId').value;
+            const data = {
+                nombre: document.getElementById('newName').value,
+                marca: document.getElementById('newBrand').value,
+                ram: document.getElementById('newRam').value,
+                storage: document.getElementById('newStorage').value,
+                colores: document.getElementById('newColors').value,
+                precio: Number(document.getElementById('newPrice').value)
+            };
+            await guardarItem('productos', id, data, 'newImg', editImgProduct);
+            resetFormProduct();
+        });
+
+        // FORM REPARACIÓN
+        document.getElementById('addRepairForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const id = document.getElementById('editRepairId').value;
+            const data = {
+                categoria: document.getElementById('repairCategory').value,
+                titulo: document.getElementById('repairCategory').value, // Usamos la categoria como titulo base
+                dispositivo: document.getElementById('repairModel').value,
+                marca: document.getElementById('repairBrand').value,
+                precio: Number(document.getElementById('repairPrice').value)
+            };
+            await guardarItem('reparaciones', id, data, 'repairImg', editImgRepair);
+            resetFormRepair();
+        });
+
+        // FORM WEB
+        document.getElementById('addWebForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const id = document.getElementById('editWebId').value;
+            const data = { icono: document.getElementById('webIcon').value, titulo: document.getElementById('webTitle').value, descripcion: document.getElementById('webDesc').value };
+            if(id) await db.collection('webs').doc(id).update(data);
+            else await db.collection('webs').add({...data, fecha: new Date().toISOString()});
+            alert("Web guardada"); resetFormWeb();
+        });
+
+        // --- FUNCIONES EDITAR ---
+        function editarProducto(id, json) {
+            const p = JSON.parse(json);
+            document.getElementById('editProductId').value = id;
+            document.getElementById('newBrand').value = p.marca || '';
+            document.getElementById('newName').value = p.nombre;
+            document.getElementById('newRam').value = p.ram;
+            document.getElementById('newStorage').value = p.storage;
+            document.getElementById('newColors').value = p.colores;
+            document.getElementById('newPrice').value = p.precio;
+            editImgProduct = p.img;
+            document.getElementById('productFormTitle').innerText = "Editar Producto";
+            document.getElementById('btnSaveProduct').innerText = "ACTUALIZAR";
+            document.getElementById('admin-panel').classList.remove('hidden');
+            verAdminTab('productos'); window.scrollTo(0,0);
+        }
+        function resetFormProduct() {
+            document.getElementById('addProductForm').reset();
+            document.getElementById('editProductId').value=""; editImgProduct="";
+            document.getElementById('productFormTitle').innerText="Nuevo Móvil";
+            document.getElementById('btnSaveProduct').innerText="GUARDAR";
+        }
+
+        function editarReparacion(id, json) {
+            const r = JSON.parse(json);
+            document.getElementById('editRepairId').value = id;
+            document.getElementById('repairCategory').value = r.categoria;
+            document.getElementById('repairBrand').value = r.marca;
+            document.getElementById('repairModel').value = r.dispositivo;
+            document.getElementById('repairPrice').value = r.precio;
+            editImgRepair = r.img;
+            document.getElementById('repairFormTitle').innerText = "Editar Reparación";
+            document.getElementById('btnSaveRepair').innerText = "ACTUALIZAR";
+            document.getElementById('admin-panel').classList.remove('hidden');
+            verAdminTab('reparaciones'); window.scrollTo(0,0);
+        }
+        function resetFormRepair() {
+            document.getElementById('addRepairForm').reset();
+            document.getElementById('editRepairId').value=""; editImgRepair="";
+            document.getElementById('repairFormTitle').innerText="Nueva Reparación";
+            document.getElementById('btnSaveRepair').innerText="GUARDAR";
+        }
+
+        function editarWeb(id, json) {
+            const w = JSON.parse(json);
+            document.getElementById('editWebId').value = id;
+            document.getElementById('webIcon').value = w.icono;
+            document.getElementById('webTitle').value = w.titulo;
+            document.getElementById('webDesc').value = w.descripcion;
+            document.getElementById('btnSaveWeb').innerText="ACTUALIZAR";
+            document.getElementById('admin-panel').classList.remove('hidden');
+            verAdminTab('webs'); window.scrollTo(0,0);
+        }
+        function resetFormWeb() {
+            document.getElementById('addWebForm').reset();
+            document.getElementById('editWebId').value="";
+            document.getElementById('btnSaveWeb').innerText="GUARDAR";
+        }
+
+        function borrar(col, id) { if(confirm("¿Eliminar?")) db.collection(col).doc(id).delete(); }
+
+        // --- AUTH ---
+        function verificarAdmin() {
+            if(document.getElementById('adminPassInput').value === "4354") {
+                esAdmin = true;
+                document.getElementById('admin-panel').classList.remove('hidden');
+                cerrarModal('admin-login-modal');
+                // Forzar recarga de datos para mostrar botones
+                cargarProductos(); cargarReparaciones(); mostrarWebs();
+                alert("Modo Admin");
+            } else { alert("Error"); }
+        }
+        function cerrarSesionAdmin() { esAdmin=false; document.getElementById('admin-panel').classList.add('hidden'); cargarProductos(); cargarReparaciones(); mostrarWebs(); }
+
+        auth.onAuthStateChanged(user => {
+            if(user) { usuarioActual = user; cerrarModal('auth-modal'); cargarFavoritos(); }
+            else { usuarioActual = null; favoritos = []; }
+        });
+
+        // --- HELPERS ---
+        function addCart(id, n, p) {
+            const ram = document.getElementById(`ram-${id}`).value;
+            const gb = document.getElementById(`gb-${id}`).value;
+            const col = document.getElementById(`col-${id}`).value;
+            carrito.push({n, p, det: `${col}, ${ram}, ${gb}`});
+            document.getElementById('cart-count').innerText = carrito.length;
+            alert("Añadido");
+        }
+        function realizarPedido() {
+            if(carrito.length===0) return alert("Vacío");
+            let m = "Hola, pedido:\n";
+            carrito.forEach(i=> m+=`📱 ${i.n} (${i.det}) - ${i.p}€\n`);
+            window.open(`https://wa.me/${MI_TELEFONO}?text=${encodeURIComponent(m)}`, '_blank');
+        }
+        function pedirCita(t, d, p) {
+            window.open(`https://wa.me/${MI_TELEFONO}?text=${encodeURIComponent(`📅 CITA TALLER\nReparación: ${t}\nModelo: ${d}\nPrecio Aprox: ${p}€`)}`, '_blank');
+        }
+
+        // Formularios contacto
+        document.getElementById('encargoForm').addEventListener('submit', e => {
+            e.preventDefault();
+            const n = document.getElementById('encargoNombre').value;
+            const m = document.getElementById('encargoModelo').value;
+            const d = document.getElementById('encargoDetalles').value;
+            window.open(`https://wa.me/${MI_TELEFONO}?text=${encodeURIComponent(`📦 ENCARGO\nNombre: ${n}\nBusco: ${m}\nDetalles: ${d}`)}`, '_blank');
+        });
+        document.getElementById('tallerForm').addEventListener('submit', e => {
+            e.preventDefault();
+            const n = document.getElementById('tallerNombre').value;
+            const d = document.getElementById('tallerDispositivo').value;
+            const p = document.getElementById('tallerProblema').value;
+            window.open(`https://wa.me/${MI_TELEFONO}?text=${encodeURIComponent(`🔧 CONSULTA TALLER\nNombre: ${n}\nDispositivo: ${d}\nProblema: ${p}`)}`, '_blank');
+        });
+        document.getElementById('webRequestForm').addEventListener('submit', e => {
+            e.preventDefault();
+            const n = document.getElementById('reqWebNombre').value;
+            const t = document.getElementById('reqWebTipo').value;
+            window.open(`https://wa.me/${MI_TELEFONO}?text=${encodeURIComponent(`💻 INTERÉS WEB\nNombre: ${n}\nNegocio: ${t}`)}`, '_blank');
+        });
+        document.getElementById('authForm').addEventListener('submit', e => {
+            e.preventDefault();
+            const em = document.getElementById('authEmail').value;
+            const pw = document.getElementById('authPass').value;
+            auth.signInWithEmailAndPassword(em, pw).catch(() => auth.createUserWithEmailAndPassword(em, pw));
+        });
+
+        function gestionarPerfil() {
+            if(usuarioActual) { 
+                abrirModal('profile-modal'); 
+                const ul = document.getElementById('fav-list'); ul.innerHTML="";
+                favoritos.forEach(id => ul.innerHTML += `<li>❤️ ID: ${id}</li>`);
+            } else { abrirModal('auth-modal'); }
+        }
+        function cargarFavoritos() {
+            if(!usuarioActual) return;
+            db.collection('usuarios').doc(usuarioActual.uid).collection('favoritos').get().then(s => {
+                favoritos = []; s.forEach(d => favoritos.push(d.id)); cargarProductos();
+            });
+        }
+        function toggleFavorito(id, nombre) {
+            if(!usuarioActual) return abrirModal('auth-modal');
+            const i = favoritos.indexOf(id);
+            if(i === -1) { db.collection('usuarios').doc(usuarioActual.uid).collection('favoritos').doc(id).set({nombre}); favoritos.push(id); }
+            else { db.collection('usuarios').doc(usuarioActual.uid).collection('favoritos').doc(id).delete(); favoritos.splice(i, 1); }
+            cargarProductos();
+        }
+
+        window.abrirModal = (id) => {
+            document.getElementById(id).classList.remove('hidden');
+            if(id === 'cart-modal') {
+                const ul = document.getElementById('cart-items'); ul.innerHTML=""; let t=0;
+                carrito.forEach(i=>{ ul.innerHTML+=`<li>${i.n} <small>(${i.det})</small> - ${i.p}€</li>`; t+=i.p; });
+                document.getElementById('total-price').innerText = t;
+            }
+        }
+        window.cerrarModal = (id) => document.getElementById(id).classList.add('hidden');
+
+        // INICIAR
+        cargarProductos();
+        cargarReparaciones();
+        mostrarWebs();
+
+    </script>
+</body>
+</html>
