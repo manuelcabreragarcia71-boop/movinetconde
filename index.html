@@ -1,0 +1,602 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="google-site-verification" content="8iamWe4GTvwJpKQOqVhcmM_6SbQ1hB-pWMybzcfF-1I" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>MOVINETCONDE | Expertos en Tecnología</title>
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;800&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --primary: #000000;
+            --accent: #ff8c00;
+            --white: #ffffff;
+            --text: #333333;
+            /* CAMBIO: Fondo más transparente para efecto cristal */
+            --bg-glass: rgba(255, 255, 255, 0.85); 
+            --success: #2ecc71;
+            --error: #e74c3c;
+        }
+
+        body { 
+            margin: 0; font-family: 'Montserrat', sans-serif; color: var(--text); background-color: #000; 
+            background-image: url('fondo.JPG');
+            background-repeat: no-repeat; background-position: center center; background-attachment: fixed; background-size: cover;       
+            touch-action: manipulation;
+        }
+
+        /* EFECTO CRISTAL (GLASSMORPHISM) */
+        .glass-effect {
+            background: var(--bg-glass) !important;
+            backdrop-filter: blur(10px); /* Esto desenfoca el fondo detrás */
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+
+        /* NAVEGACIÓN */
+        .navbar { background: rgba(255, 255, 255, 0.95); padding: 10px 0; position: sticky; top: 0; z-index: 1000; border-bottom: 3px solid var(--accent); box-shadow: 0 4px 10px rgba(0,0,0,0.3); }
+        .nav-container { max-width: 1200px; margin: 0 auto; padding: 0 15px; display: flex; flex-direction: column; gap: 10px; }
+        .nav-top { display: flex; justify-content: space-between; align-items: center; }
+        .logo-container { display: flex; align-items: center; gap: 10px; text-decoration: none; color: var(--primary); }
+        .nav-logo-img { height: 40px; border-radius: 5px; } 
+        .logo-text { font-size: 1.4rem; font-weight: 800; margin: 0; }
+        .logo-text span { color: var(--accent); }
+        .nav-icons { display: flex; gap: 15px; }
+        .btn-icon { background: none; border: none; font-size: 1.2rem; cursor: pointer; color: var(--primary); }
+        
+        .nav-menu { display: flex; gap: 10px; overflow-x: auto; padding-bottom: 5px; -webkit-overflow-scrolling: touch; scrollbar-width: none; }
+        .menu-btn { background: rgba(255,255,255,0.8); border: none; padding: 8px 15px; border-radius: 20px; font-weight: 600; cursor: pointer; white-space: nowrap; font-size: 0.9rem; transition: 0.3s; }
+        .menu-btn.active, .menu-btn:hover { background: var(--accent); color: white; }
+
+        /* FILTROS */
+        .filter-scroll { display: flex; gap: 10px; overflow-x: auto; padding: 10px 0; margin-bottom: 20px; -webkit-overflow-scrolling: touch; scrollbar-width: none; border-bottom: 1px solid rgba(0,0,0,0.1); }
+        .filter-badge { background: rgba(255,255,255,0.8); border: 2px solid rgba(0,0,0,0.1); padding: 8px 15px; border-radius: 15px; cursor: pointer; font-weight: bold; white-space: nowrap; font-size: 0.85rem; transition: 0.3s; color: #555; display: flex; align-items: center; gap: 5px; }
+        .filter-badge:hover, .filter-badge.active { border-color: var(--accent); color: var(--accent); background: #fff; transform: translateY(-2px); }
+
+        /* CONTENEDORES CON FONDO TRANSLÚCIDO */
+        .container { 
+            max-width: 1200px; margin: 20px auto; padding: 20px; 
+            border-radius: 15px; 
+            background: var(--bg-glass);
+            backdrop-filter: blur(8px); /* Blur del contenedor principal */
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
+        }
+        
+        .hidden { display: none !important; }
+        .section-title { text-align: center; color: var(--primary); text-transform: uppercase; margin-bottom: 20px; border-bottom: 2px solid var(--accent); display: inline-block; padding-bottom: 5px; font-weight: 800; }
+        .center-wrapper { text-align: center; }
+
+        /* CARDS (Translúcidas) */
+        .grid-container { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px; }
+        
+        .product-card, .repair-card, .web-card { 
+            background: rgba(255, 255, 255, 0.75); /* Tarjetas más transparentes */
+            backdrop-filter: blur(5px);
+            padding: 15px; border-radius: 10px; text-align: center; border: 1px solid rgba(255,255,255,0.4); position: relative; box-shadow: 0 5px 15px rgba(0,0,0,0.05); 
+        }
+        .product-photo { width: 100%; height: 220px; object-fit: cover; border-radius: 5px; }
+        .brand-tag { position: absolute; top: 15px; left: 15px; background: rgba(0,0,0,0.8); color: white; padding: 2px 8px; border-radius: 4px; font-size: 0.7rem; font-weight: bold; text-transform: uppercase; }
+
+        /* ESTILO NUEVO PARA SERVICIOS DE TALLER */
+        .repair-card { border-left: 5px solid var(--accent); display: flex; flex-direction: column; }
+        .repair-img { width: 100px; height: 100px; object-fit: cover; border-radius: 50%; margin: 0 auto 10px; border: 3px solid var(--accent); display: block; }
+        .repair-price { font-size: 1.2rem; color: var(--accent); font-weight: 800; margin: 10px 0; }
+        .repair-desc { font-size: 0.9rem; color: #555; margin-bottom: 10px; min-height: 40px;}
+
+        .options-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 5px; margin: 10px 0; }
+        .full-width-select { width: 100%; margin-top: 5px; }
+        select { padding: 5px; border-radius: 5px; border: 1px solid #ccc; font-size: 0.85rem; width: 100%; background: rgba(255,255,255,0.9); }
+        label { font-size: 0.7rem; color: #333; font-weight: bold; display: block; text-align: left; margin-bottom: 2px; }
+
+        .price { font-size: 1.3rem; font-weight: 800; color: var(--accent); margin: 10px 0; }
+        .btn-primary { background: var(--primary); color: white; border: none; padding: 10px; width: 100%; border-radius: 5px; cursor: pointer; font-weight: bold; text-transform: uppercase; margin-top: 5px; transition: 0.2s; }
+        .btn-primary:active { transform: scale(0.98); }
+        
+        .admin-actions { display: flex; gap: 5px; margin-top: 10px; padding-top: 10px; border-top: 1px solid rgba(0,0,0,0.1); }
+        .btn-edit { background: #f1c40f; color: black; border: none; padding: 5px; flex: 1; cursor: pointer; border-radius: 5px; font-weight: bold; }
+        .btn-delete { background: #e74c3c; color: white; border: none; padding: 5px; flex: 1; cursor: pointer; border-radius: 5px; font-weight: bold; }
+        .fav-btn { position: absolute; top: 10px; right: 10px; background: white; border: none; font-size: 1.3rem; color: #ccc; cursor: pointer; padding: 5px; border-radius: 50%; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+        .fav-btn.active { color: red; }
+
+        /* PORTAFOLIO WEB */
+        .web-preview { height: 150px; background: rgba(0,0,0,0.8); display: flex; align-items: center; justify-content: center; color: var(--accent); font-size: 3rem; border-radius: 5px; }
+        
+        /* FORMULARIOS Y ADMIN */
+        .form-box { max-width: 600px; margin: 0 auto; background: rgba(255,255,255,0.9); padding: 30px; border-radius: 10px; box-shadow: 0 5px 15px rgba(0,0,0,0.05); }
+        input, textarea, select { width: 100%; padding: 12px; margin-bottom: 15px; border: 1px solid #ccc; border-radius: 5px; box-sizing: border-box; font-family: inherit; background: rgba(255,255,255,0.9); }
+        
+        .admin-panel { background: rgba(255, 248, 225, 0.95); border: 2px dashed var(--accent); margin-bottom: 20px; padding: 20px; }
+        .admin-tabs { display: flex; gap: 10px; margin-bottom: 20px; border-bottom: 1px solid #ccc; padding-bottom: 10px; overflow-x: auto; }
+        .admin-tab-btn { background: none; border: none; font-weight: bold; cursor: pointer; opacity: 0.5; font-size: 0.9rem; white-space: nowrap; }
+        .admin-tab-btn.active { opacity: 1; color: var(--accent); border-bottom: 2px solid var(--accent); }
+
+        /* QUIZ */
+        #quiz-wrapper { max-width: 600px; margin: 0 auto; background: rgba(255,255,255,0.9); border-radius: 15px; padding: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); text-align: center; }
+        .quiz-header { margin-bottom: 20px; }
+        .progress-container { width: 100%; background: #ccc; height: 10px; border-radius: 5px; margin-bottom: 20px; overflow: hidden; }
+        .progress-bar { height: 100%; background: var(--accent); width: 0%; transition: width 0.3s ease; }
+        .question-text { font-size: 1.3rem; font-weight: 800; margin-bottom: 25px; color: #222; }
+        .options-list { display: grid; gap: 10px; }
+        .quiz-btn { background: white; border: 2px solid #ddd; padding: 15px; border-radius: 10px; font-size: 1rem; cursor: pointer; transition: 0.2s; text-align: left; font-weight: 600; color: #555; }
+        .quiz-btn:hover { border-color: var(--accent); color: var(--accent); background: #fff8e1; }
+        .quiz-btn.correct { background: var(--success); color: white; border-color: var(--success); }
+        .quiz-btn.wrong { background: var(--error); color: white; border-color: var(--error); }
+        .score-display { font-size: 3rem; color: var(--accent); font-weight: 800; display: block; margin: 20px 0; }
+        .q-list-item { background: rgba(255,255,255,0.8); padding: 10px; border-bottom: 1px solid #eee; display: flex; justify-content: space-between; align-items: center; text-align: left; margin-bottom: 5px; border-radius: 5px;}
+
+        /* MODALES */
+        .modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); z-index: 2000; display: flex; justify-content: center; align-items: center; }
+        .modal-content { background: rgba(255,255,255,0.95); backdrop-filter: blur(10px); padding: 30px; width: 90%; max-width: 450px; border-radius: 10px; position: relative; }
+        .close { position: absolute; top: 10px; right: 20px; font-size: 1.8rem; cursor: pointer; }
+
+        footer { text-align: center; padding: 30px; background: rgba(17,17,17,0.95); color: white; margin-top: 50px; }
+        .social-link { color: var(--accent); font-size: 2rem; }
+    </style>
+</head>
+<body>
+
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-top">
+                <a href="#" class="logo-container">
+                    <h1 class="logo-text">MOVINET<span>CONDE</span></h1>
+                </a>
+                <div class="nav-icons">
+                    <button onclick="abrirModal('cart-modal')" class="btn-icon"><i class="fas fa-shopping-cart"></i> <span id="cart-count">0</span></button>
+                    <button onclick="gestionarPerfil()" class="btn-icon"><i class="fas fa-user-circle"></i></button>
+                    <button onclick="abrirModal('admin-login-modal')" class="btn-icon"><i class="fas fa-lock"></i></button>
+                </div>
+            </div>
+            <div class="nav-menu">
+                <button onclick="verSeccion('catalogo')" class="menu-btn active" id="btn-catalogo">📱 Catálogo</button>
+                <button onclick="verSeccion('encargos')" class="menu-btn" id="btn-encargos">📦 Encargos</button>
+                <button onclick="verSeccion('reparaciones')" class="menu-btn" id="btn-reparaciones">🔧 Taller</button>
+                <button onclick="verSeccion('webs')" class="menu-btn" id="btn-webs">💻 Web</button>
+                <button onclick="verSeccion('juego')" class="menu-btn" id="btn-juego">❓ Quiz</button>
+            </div>
+        </div>
+    </nav>
+
+    <div id="admin-panel" class="container admin-panel hidden">
+        <div class="admin-tabs">
+            <button class="admin-tab-btn active" onclick="verAdminTab('productos')">Productos</button>
+            <button class="admin-tab-btn" onclick="verAdminTab('reparaciones')">Servicios Taller</button>
+            <button class="admin-tab-btn" onclick="verAdminTab('webs')">Webs</button>
+            <button class="admin-tab-btn" onclick="verAdminTab('quiz')">Trivia / Quiz</button>
+        </div>
+
+        <div id="admin-tab-productos">
+            <h3 id="productFormTitle">Nuevo Móvil</h3>
+            <form id="addProductForm">
+                <input type="hidden" id="editProductId">
+                <input type="file" id="newImg" accept="image/*">
+                <div id="imgPreview" style="font-size:0.8rem; color:green;"></div>
+                <input type="text" id="newBrand" placeholder="MARCA (Ej: Samsung)" required style="border: 2px solid var(--accent);">
+                <input type="text" id="newName" placeholder="Modelo (Ej: Galaxy S24)" required>
+                <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px;">
+                    <input type="text" id="newRam" placeholder="RAM" required>
+                    <input type="text" id="newStorage" placeholder="Memoria" required>
+                </div>
+                <input type="text" id="newColors" placeholder="Colores" required>
+                <input type="number" id="newPrice" placeholder="Precio (€)" required>
+                <button type="submit" class="btn-primary" id="btnSaveProduct">GUARDAR PRODUCTO</button>
+                <button type="button" onclick="resetFormProduct()" style="margin-top:5px; background:#999; color:white; border:none; padding:5px; width:100%;">Cancelar</button>
+            </form>
+        </div>
+
+        <div id="admin-tab-reparaciones" class="hidden">
+            <h3 id="repairFormTitle">Nuevo Servicio de Taller</h3>
+            <p style="font-size:0.8rem; margin-bottom:10px;">Añade servicios generales (Ej: Cambio Pantalla) en lugar de modelos específicos.</p>
+            <form id="addRepairForm">
+                <input type="hidden" id="editRepairId">
+                <label>Icono o Imagen del Servicio:</label>
+                <input type="file" id="repairImg" accept="image/*">
+                
+                <input type="text" id="repairService" placeholder="Nombre Servicio (Ej: Sustitución de Pantalla)" required style="border: 2px solid var(--accent);">
+                
+                <textarea id="repairDesc" placeholder="Descripción (Ej: Originales y compatibles. Todas las marcas: iPhone, Samsung...)" rows="3" required></textarea>
+                
+                <input type="text" id="repairPriceText" placeholder="Precio o Texto (Ej: Desde 35€)" required>
+                
+                <button type="submit" class="btn-primary" id="btnSaveRepair">GUARDAR SERVICIO</button>
+                <button type="button" onclick="resetFormRepair()" style="margin-top:5px; background:#999; color:white; border:none; padding:5px; width:100%;">Cancelar</button>
+            </form>
+        </div>
+
+        <div id="admin-tab-webs" class="hidden">
+            <h3 id="webFormTitle">Nueva Web Portafolio</h3>
+            <form id="addWebForm">
+                <input type="hidden" id="editWebId">
+                <input type="text" id="webIcon" placeholder="Icono (fas fa-desktop)" value="fas fa-desktop" required>
+                <input type="text" id="webTitle" placeholder="Título Web" required>
+                <textarea id="webDesc" placeholder="Descripción..." rows="2" required></textarea>
+                <button type="submit" class="btn-primary" id="btnSaveWeb">GUARDAR WEB</button>
+                <button type="button" onclick="resetFormWeb()" style="margin-top:5px; background:#999; color:white; border:none; padding:5px; width:100%;">Cancelar</button>
+            </form>
+        </div>
+        
+        <div id="admin-tab-quiz" class="hidden">
+            <h3>Nueva Pregunta Trivia</h3>
+            <form id="addQuizForm">
+                <input type="text" id="quizQuestion" placeholder="¿Cuál es la pregunta?" required style="border: 2px solid var(--accent);">
+                <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px;">
+                    <input type="text" id="quizOp0" placeholder="Opción A" required>
+                    <input type="text" id="quizOp1" placeholder="Opción B" required>
+                    <input type="text" id="quizOp2" placeholder="Opción C" required>
+                    <input type="text" id="quizOp3" placeholder="Opción D" required>
+                </div>
+                <label>Respuesta Correcta:</label>
+                <select id="quizCorrect" required>
+                    <option value="0">Opción A</option>
+                    <option value="1">Opción B</option>
+                    <option value="2">Opción C</option>
+                    <option value="3">Opción D</option>
+                </select>
+                <button type="submit" class="btn-primary">AÑADIR PREGUNTA</button>
+            </form>
+            <h4 style="margin-top:20px;">Preguntas Activas:</h4>
+            <div id="admin-quiz-list" style="max-height: 200px; overflow-y: auto; background: rgba(255,255,255,0.8); border: 1px solid #ccc;"></div>
+        </div>
+
+        <button onclick="cerrarSesionAdmin()" style="margin-top:20px; background:#333; color:white; border:none; padding:10px; width:100%;">Cerrar Sesión Admin</button>
+    </div>
+
+    <div id="sec-catalogo" class="container">
+        <div class="center-wrapper"><h2 class="section-title">Catálogo Móviles</h2></div>
+        <div id="brand-filters" class="filter-scroll">
+            <button class="filter-badge active" onclick="filtrarMarca('all')">Todo</button>
+        </div>
+        <div id="productos-container" class="grid-container">
+            <p style="text-align:center;">Cargando catálogo...</p>
+        </div>
+    </div>
+
+    <div id="sec-encargos" class="container hidden">
+        <div class="center-wrapper"><h2 class="section-title">Encargos</h2></div>
+        <div class="form-box">
+            <p style="text-align: center;">¿Buscas un modelo específico? Pídelo aquí.</p>
+            <form id="encargoForm">
+                <input type="text" id="encargoNombre" placeholder="Tu Nombre" required>
+                <input type="text" id="encargoModelo" placeholder="Modelo deseado" required>
+                <input type="text" id="encargoDetalles" placeholder="Detalles">
+                <button type="submit" class="btn-primary">CONSULTAR <i class="fab fa-whatsapp"></i></button>
+            </form>
+        </div>
+    </div>
+
+    <div id="sec-reparaciones" class="container hidden">
+        <div class="center-wrapper"><h2 class="section-title">Nuestros Servicios</h2></div>
+        <p style="text-align:center; margin-bottom:20px;">Realizamos reparaciones de todo tipo en el acto.</p>
+        
+        <div id="reparaciones-container" class="grid-container" style="margin-bottom: 40px;"></div>
+        
+        <div class="form-box glass-effect" style="background:rgba(255,255,255,0.7);">
+            <h3 style="text-align:center;">¿Tienes una avería?</h3>
+            <form id="tallerForm">
+                <input type="text" id="tallerNombre" placeholder="Nombre" required>
+                <input type="text" id="tallerDispositivo" placeholder="Dispositivo y Avería" required>
+                <button type="submit" class="btn-primary" style="background:#333;">CONSULTAR PRESUPUESTO <i class="fab fa-whatsapp"></i></button>
+            </form>
+        </div>
+    </div>
+
+    <div id="sec-webs" class="container hidden">
+        <div class="center-wrapper"><h2 class="section-title">Portafolio Web</h2></div>
+        <div id="webs-container" class="web-grid"></div>
+        <div class="form-box" style="margin-top: 40px;">
+            <h3 style="text-align:center;">Solicitar Web</h3>
+            <form id="webRequestForm">
+                <input type="text" id="reqWebNombre" placeholder="Tu Nombre" required>
+                <input type="text" id="reqWebTipo" placeholder="Tipo de negocio" required>
+                <button type="submit" class="btn-primary">CONTACTAR <i class="fab fa-whatsapp"></i></button>
+            </form>
+        </div>
+    </div>
+
+    <div id="sec-juego" class="container hidden">
+        <div class="center-wrapper"><h2 class="section-title">Trivia Tecnológico</h2></div>
+        <div id="quiz-wrapper">
+            <div id="quiz-start">
+                <i class="fas fa-brain" style="font-size: 4rem; color: var(--accent); margin-bottom: 10px;"></i>
+                <h3>¿Cuánto sabes de tecnología?</h3>
+                <p>Responde estas preguntas y demuestra que eres un experto.</p>
+                <button class="btn-primary" onclick="startQuiz()">¡JUGAR AHORA!</button>
+            </div>
+            <div id="quiz-game" class="hidden">
+                <div class="progress-container"><div class="progress-bar" id="progressBar"></div></div>
+                <div class="question-text" id="questionText">Cargando...</div>
+                <div class="options-list" id="optionsList"></div>
+                <button id="nextBtn" class="btn-primary hidden" onclick="nextQuestion()" style="margin-top: 20px;">Siguiente Pregunta <i class="fas fa-arrow-right"></i></button>
+            </div>
+            <div id="quiz-result" class="hidden">
+                <h3>¡Juego Terminado!</h3>
+                <p>Tu puntuación final es:</p>
+                <span class="score-display" id="finalScore">0</span>
+                <p id="feedbackText">Texto final</p>
+                <button class="btn-primary" onclick="startQuiz()">VOLVER A JUGAR</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="cart-modal" class="modal hidden">
+        <div class="modal-content">
+            <span class="close" onclick="cerrarModal('cart-modal')">&times;</span>
+            <h2>Carrito</h2>
+            <ul id="cart-items" style="list-style:none; padding:0; margin:20px 0;"></ul>
+            <h3>Total: <span id="total-price">0</span>€</h3>
+            <button onclick="realizarPedido()" class="btn-primary">COMPRAR POR WHATSAPP</button>
+        </div>
+    </div>
+    <div id="admin-login-modal" class="modal hidden">
+        <div class="modal-content" style="max-width:300px; text-align:center;">
+            <span class="close" onclick="cerrarModal('admin-login-modal')">&times;</span>
+            <h3>Zona Admin</h3>
+            <input type="password" id="adminPassInput" placeholder="Contraseña">
+            <button onclick="verificarAdmin()" class="btn-primary">Entrar</button>
+        </div>
+    </div>
+    <div id="auth-modal" class="modal hidden">
+        <div class="modal-content">
+            <span class="close" onclick="cerrarModal('auth-modal')">&times;</span>
+            <h2 style="text-align:center">Clientes</h2>
+            <form id="authForm">
+                <input type="email" id="authEmail" placeholder="Email">
+                <input type="password" id="authPass" placeholder="Contraseña">
+                <button type="submit" class="btn-primary">Entrar / Registro</button>
+            </form>
+        </div>
+    </div>
+    <div id="profile-modal" class="modal hidden">
+        <div class="modal-content">
+            <span class="close" onclick="cerrarModal('profile-modal')">&times;</span>
+            <h2>Favoritos</h2>
+            <ul id="fav-list" style="list-style:none; padding:0"></ul>
+            <button onclick="auth.signOut(); cerrarModal('profile-modal');" class="btn-delete" style="background:#333; margin-top:10px;">Salir</button>
+        </div>
+    </div>
+
+    <footer>
+        <a href="https://www.instagram.com/movinetconde/" target="_blank" class="social-link"><i class="fab fa-instagram"></i></a>
+        <p>&copy; 2025 MOVINETCONDE</p>
+    </footer>
+
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
+
+    <script>
+        const firebaseConfig = {
+            apiKey: "AIzaSyAO9sshvU5zUf_S9d12toWwrioeXBonlRc",
+            authDomain: "movinet-conde-web.firebaseapp.com",
+            projectId: "movinet-conde-web",
+            appId: "1:867268264562:web:f28e33585cdcde3d8e78eb"
+        };
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.firestore();
+        const auth = firebase.auth();
+
+        let carrito = []; let usuarioActual = null; let favoritos = []; let esAdmin = false;
+        let allProducts = []; let allRepairs = []; let allQuestions = [];
+        let filtroMarcaActual = 'all'; 
+        let editImgProduct = ""; let editImgRepair = "";
+        const MI_TELEFONO = "34613509309"; 
+
+        function verSeccion(id) {
+            document.querySelectorAll('[id^="sec-"]').forEach(s => s.classList.add('hidden'));
+            document.querySelectorAll('.menu-btn').forEach(b => b.classList.remove('active'));
+            document.getElementById(`sec-${id}`).classList.remove('hidden');
+            document.getElementById(`btn-${id}`).classList.add('active');
+        }
+        function verAdminTab(tab) {
+            document.querySelectorAll('[id^="admin-tab-"]').forEach(t => t.classList.add('hidden'));
+            document.querySelectorAll('.admin-tab-btn').forEach(b => b.classList.remove('active'));
+            document.getElementById(`admin-tab-${tab}`).classList.remove('hidden');
+            event.target.classList.add('active');
+        }
+
+        function cargarProductos() {
+            db.collection("productos").orderBy("fecha", "desc").onSnapshot((snap) => {
+                allProducts = []; snap.forEach(doc => { allProducts.push({...doc.data(), id: doc.id}); });
+                renderizarMarcas(); renderizarProductos();
+            });
+        }
+        function cargarReparaciones() {
+            db.collection("reparaciones").orderBy("fecha", "desc").onSnapshot((snap) => {
+                allRepairs = []; snap.forEach(doc => { allRepairs.push({...doc.data(), id: doc.id}); });
+                renderizarTaller();
+            });
+        }
+        function mostrarWebs() {
+            db.collection("webs").orderBy("fecha", "desc").onSnapshot(s => {
+                const d = document.getElementById('webs-container'); d.innerHTML="";
+                s.forEach(doc => {
+                    const w=doc.data();
+                    let adminBtns = esAdmin ? `<div class="admin-actions"><button class="btn-edit" onclick="editarWeb('${doc.id}', '${JSON.stringify(w).replace(/"/g, '&quot;')}')">✏️</button><button class="btn-delete" onclick="borrar('webs','${doc.id}')">🗑️</button></div>` : '';
+                    d.innerHTML += `<div class="web-card"><div class="web-preview"><i class="${w.icono}"></i></div><div class="web-info"><b>${w.titulo}</b><p>${w.descripcion}</p>${adminBtns}</div></div>`;
+                });
+            });
+        }
+        function cargarQuiz() {
+            db.collection("quiz").orderBy("fecha", "desc").onSnapshot(s => {
+                allQuestions = [];
+                const listDiv = document.getElementById('admin-quiz-list'); listDiv.innerHTML = "";
+                s.forEach(doc => {
+                    const q = doc.data(); allQuestions.push({...q, id: doc.id});
+                    if(esAdmin) { listDiv.innerHTML += `<div class="q-list-item"><div><b>${q.pregunta}</b><br><small>Correcta: ${q.opciones[q.correcta]}</small></div><button class="btn-delete" style="width:auto; padding:5px 10px;" onclick="borrar('quiz','${doc.id}')">🗑️</button></div>`; }
+                });
+            });
+        }
+
+        function renderizarMarcas() {
+            const marcas = ['all', ...new Set(allProducts.map(p => p.marca ? p.marca.trim() : 'Otros'))];
+            const div = document.getElementById('brand-filters');
+            div.innerHTML = marcas.map(m => `<button class="filter-badge ${filtroMarcaActual === m ? 'active' : ''}" onclick="filtrarMarca('${m}')"><i class="fas fa-folder"></i> ${m === 'all' ? 'Todo' : m}</button>`).join('');
+        }
+        function renderizarProductos() {
+            const container = document.getElementById('productos-container'); container.innerHTML = "";
+            const filtrados = filtroMarcaActual === 'all' ? allProducts : allProducts.filter(p => (p.marca || 'Otros') === filtroMarcaActual);
+            if(filtrados.length === 0) { container.innerHTML = "<p>Vacío...</p>"; return; }
+            filtrados.forEach(p => {
+                const isFav = favoritos.includes(p.id) ? 'active' : '';
+                const rams = p.ram ? p.ram.split(',') : ['-'];
+                let adminBtns = esAdmin ? `<div class="admin-actions"><button class="btn-edit" onclick="editarProducto('${p.id}', '${JSON.stringify(p).replace(/"/g, '&quot;')}')">✏️</button><button class="btn-delete" onclick="borrar('productos','${p.id}')">🗑️</button></div>` : '';
+                container.innerHTML += `
+                    <div class="product-card">
+                        <span class="brand-tag">${p.marca || ''}</span>
+                        <button class="fav-btn ${isFav}" onclick="toggleFavorito('${p.id}', '${p.nombre}')">♥</button>
+                        <img src="${p.img}" class="product-photo">
+                        <h3>${p.nombre}</h3>
+                        <p class="price">${p.precio}€</p>
+                        <button class="btn-primary" onclick="addCart('${p.id}', '${p.nombre}', ${p.precio})">AÑADIR</button>
+                        ${adminBtns}
+                    </div>`;
+            });
+        }
+        function filtrarMarca(m) { filtroMarcaActual = m; renderizarMarcas(); renderizarProductos(); }
+
+        // RENDERIZAR TALLER SIMPLIFICADO
+        function renderizarTaller() {
+            const div = document.getElementById('reparaciones-container'); div.innerHTML = "";
+            if(allRepairs.length === 0) { div.innerHTML = "<p>No hay servicios configurados.</p>"; return; }
+            allRepairs.forEach(r => {
+                let adminBtns = esAdmin ? `<div class="admin-actions"><button class="btn-edit" onclick="editarReparacion('${r.id}', '${JSON.stringify(r).replace(/"/g, '&quot;')}')">✏️</button><button class="btn-delete" onclick="borrar('reparaciones','${r.id}')">🗑️</button></div>` : '';
+                const img = r.img ? `<img src="${r.img}" class="repair-img">` : '';
+                // Mostrar tarjeta de servicio
+                div.innerHTML += `
+                <div class="repair-card">
+                    ${img}
+                    <div style="font-weight:800; font-size:1.1rem; margin-bottom:5px;">${r.servicio}</div>
+                    <div class="repair-desc">${r.descripcion}</div>
+                    <div class="repair-price">${r.precioTexto}</div>
+                    <button class="btn-primary" onclick="pedirCita('Servicio Taller','${r.servicio}','${r.precioTexto}')">PEDIR CITA</button>
+                    ${adminBtns}
+                </div>`;
+            });
+        }
+
+        async function guardarItem(col, id, data, fileIn, oldImg) {
+            const f = document.getElementById(fileIn) ? document.getElementById(fileIn).files[0] : null;
+            let imgF = oldImg;
+            if(f) { const r = new FileReader(); r.readAsDataURL(f); await new Promise(res => r.onload = ()=> { imgF = r.result; res(); }); }
+            if(imgF) data.img = imgF;
+            if(id) await db.collection(col).doc(id).update(data);
+            else await db.collection(col).add({...data, fecha: new Date().toISOString()});
+            alert("Guardado");
+        }
+
+        document.getElementById('addProductForm').addEventListener('submit', e=>{ e.preventDefault(); 
+            guardarItem('productos', document.getElementById('editProductId').value, {
+                nombre: document.getElementById('newName').value, marca: document.getElementById('newBrand').value, 
+                ram: document.getElementById('newRam').value, storage: document.getElementById('newStorage').value, 
+                colores: document.getElementById('newColors').value, precio: Number(document.getElementById('newPrice').value)
+            }, 'newImg', editImgProduct).then(resetFormProduct); });
+
+        // GUARDAR SERVICIO TALLER (NUEVO FORMATO)
+        document.getElementById('addRepairForm').addEventListener('submit', e=>{ e.preventDefault(); 
+            guardarItem('reparaciones', document.getElementById('editRepairId').value, {
+                servicio: document.getElementById('repairService').value,
+                descripcion: document.getElementById('repairDesc').value,
+                precioTexto: document.getElementById('repairPriceText').value
+            }, 'repairImg', editImgRepair).then(resetFormRepair); });
+        
+        document.getElementById('addWebForm').addEventListener('submit', e=>{ e.preventDefault(); 
+            guardarItem('webs', document.getElementById('editWebId').value, {
+                icono: document.getElementById('webIcon').value, titulo: document.getElementById('webTitle').value, descripcion: document.getElementById('webDesc').value
+            }, null, null).then(resetFormWeb); });
+        
+        document.getElementById('addQuizForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const data = { pregunta: document.getElementById('quizQuestion').value, opciones: [document.getElementById('quizOp0').value, document.getElementById('quizOp1').value, document.getElementById('quizOp2').value, document.getElementById('quizOp3').value], correcta: parseInt(document.getElementById('quizCorrect').value), fecha: new Date().toISOString() };
+            await db.collection('quiz').add(data); alert("Pregunta añadida"); document.getElementById('addQuizForm').reset();
+        });
+
+        function editarProducto(id, json) {
+            const p = JSON.parse(json); document.getElementById('editProductId').value = id;
+            document.getElementById('newBrand').value = p.marca || ''; document.getElementById('newName').value = p.nombre;
+            document.getElementById('newRam').value = p.ram; document.getElementById('newStorage').value = p.storage;
+            document.getElementById('newColors').value = p.colores; document.getElementById('newPrice').value = p.precio;
+            editImgProduct = p.img; document.getElementById('btnSaveProduct').innerText = "ACTUALIZAR";
+            document.getElementById('admin-panel').classList.remove('hidden'); verAdminTab('productos'); window.scrollTo(0,0);
+        }
+        function editarReparacion(id, json) {
+            const r = JSON.parse(json); document.getElementById('editRepairId').value = id;
+            document.getElementById('repairService').value = r.servicio; document.getElementById('repairDesc').value = r.descripcion;
+            document.getElementById('repairPriceText').value = r.precioTexto;
+            editImgRepair = r.img; document.getElementById('btnSaveRepair').innerText = "ACTUALIZAR";
+            document.getElementById('admin-panel').classList.remove('hidden'); verAdminTab('reparaciones'); window.scrollTo(0,0);
+        }
+        function editarWeb(id, json) {
+            const w = JSON.parse(json); document.getElementById('editWebId').value = id;
+            document.getElementById('webIcon').value = w.icono; document.getElementById('webTitle').value = w.titulo;
+            document.getElementById('webDesc').value = w.descripcion; document.getElementById('btnSaveWeb').innerText="ACTUALIZAR";
+            document.getElementById('admin-panel').classList.remove('hidden'); verAdminTab('webs'); window.scrollTo(0,0);
+        }
+
+        function resetFormProduct(){ document.getElementById('addProductForm').reset(); document.getElementById('editProductId').value=""; editImgProduct=""; document.getElementById('btnSaveProduct').innerText="GUARDAR"; }
+        function resetFormRepair(){ document.getElementById('addRepairForm').reset(); document.getElementById('editRepairId').value=""; editImgRepair=""; document.getElementById('btnSaveRepair').innerText="GUARDAR"; }
+        function resetFormWeb(){ document.getElementById('addWebForm').reset(); document.getElementById('editWebId').value=""; document.getElementById('btnSaveWeb').innerText="GUARDAR"; }
+        function borrar(c,i){ if(confirm("Borrar?")) db.collection(c).doc(i).delete(); }
+
+        function verificarAdmin() { if(document.getElementById('adminPassInput').value==="4354"){ esAdmin=true; document.getElementById('admin-panel').classList.remove('hidden'); cerrarModal('admin-login-modal'); cargarProductos(); cargarReparaciones(); mostrarWebs(); cargarQuiz(); } else alert("Error"); }
+        function cerrarSesionAdmin(){ esAdmin=false; document.getElementById('admin-panel').classList.add('hidden'); cargarProductos(); cargarReparaciones(); mostrarWebs(); cargarQuiz(); }
+        
+        auth.onAuthStateChanged(u => { usuarioActual=u; if(u){ cerrarModal('auth-modal'); cargarFavoritos(); } else { favoritos=[]; } });
+        document.getElementById('authForm').addEventListener('submit', e => { e.preventDefault(); const em=document.getElementById('authEmail').value, pw=document.getElementById('authPass').value; auth.signInWithEmailAndPassword(em,pw).catch(()=>auth.createUserWithEmailAndPassword(em,pw)); });
+
+        function addCart(id,n,p){ carrito.push({n,p}); document.getElementById('cart-count').innerText=carrito.length; alert("Añadido"); }
+        function realizarPedido(){ if(!carrito.length)return; let m="Hola, pedido:\n"; carrito.forEach(i=>m+=`- ${i.n} (${i.p}€)\n`); window.open(`https://wa.me/${MI_TELEFONO}?text=${encodeURIComponent(m)}`,'_blank'); }
+        function pedirCita(c,d,p){ window.open(`https://wa.me/${MI_TELEFONO}?text=${encodeURIComponent(`Consulta: ${c}\nDetalle: ${d}\nPrecio ref: ${p}`)}`,'_blank'); }
+        function gestionarPerfil(){ usuarioActual ? abrirModal('profile-modal') : abrirModal('auth-modal'); }
+        function cargarFavoritos(){ if(!usuarioActual)return; db.collection('usuarios').doc(usuarioActual.uid).collection('favoritos').get().then(s=>{ favoritos=[]; s.forEach(d=>favoritos.push(d.id)); cargarProductos(); }); }
+        function toggleFavorito(id,n){ if(!usuarioActual) return abrirModal('auth-modal'); const i=favoritos.indexOf(id); if(i===-1){ db.collection('usuarios').doc(usuarioActual.uid).collection('favoritos').doc(id).set({n}); favoritos.push(id); } else { db.collection('usuarios').doc(usuarioActual.uid).collection('favoritos').doc(id).delete(); favoritos.splice(i,1); } cargarProductos(); }
+
+        window.abrirModal=(id)=>{ document.getElementById(id).classList.remove('hidden'); if(id==='cart-modal'){ const ul=document.getElementById('cart-items'); ul.innerHTML=""; let t=0; carrito.forEach(i=>{ ul.innerHTML+=`<li>${i.n} - ${i.p}€</li>`; t+=i.p; }); document.getElementById('total-price').innerText=t; }};
+        window.cerrarModal=(id)=>document.getElementById(id).classList.add('hidden');
+
+        // QUIZ LOGIC
+        let currentQuestion = 0; let score = 0; let answered = false;
+        function startQuiz() {
+            if(allQuestions.length === 0) return alert("Aún no hay preguntas cargadas.");
+            currentQuestion = 0; score = 0;
+            document.getElementById('quiz-start').classList.add('hidden');
+            document.getElementById('quiz-result').classList.add('hidden');
+            document.getElementById('quiz-game').classList.remove('hidden');
+            showQuestion();
+        }
+        function showQuestion() {
+            answered = false; document.getElementById('nextBtn').classList.add('hidden');
+            const q = allQuestions[currentQuestion];
+            document.getElementById('questionText').innerText = q.pregunta;
+            document.getElementById('progressBar').style.width = `${((currentQuestion) / allQuestions.length) * 100}%`;
+            const optsDiv = document.getElementById('optionsList'); optsDiv.innerHTML = "";
+            q.opciones.forEach((opt, index) => {
+                const btn = document.createElement('button'); btn.className = "quiz-btn";
+                btn.innerHTML = `<span style="font-weight:800; margin-right:10px;">${String.fromCharCode(65+index)}</span> ${opt}`;
+                btn.onclick = () => checkAnswer(index, btn);
+                optsDiv.appendChild(btn);
+            });
+        }
+        function checkAnswer(selected, btnElement) {
+            if(answered) return; answered = true;
+            const q = allQuestions[currentQuestion];
+            const allBtns = document.querySelectorAll('.quiz-btn');
+            if(selected === q.correcta) { btnElement.classList.add('correct'); btnElement.innerHTML += ' <i class="fas fa-check-circle"></i>'; score++; } 
+            else { btnElement.classList.add('wrong'); btnElement.innerHTML += ' <i class="fas fa-times-circle"></i>'; if(allBtns[q.correcta]) allBtns[q.correcta].classList.add('correct'); }
+            document.getElementById('nextBtn').classList.remove('hidden');
+        }
+        function nextQuestion() { currentQuestion++; if(currentQuestion < allQuestions.length) showQuestion(); else showResult(); }
+        function showResult() {
+            document.getElementById('quiz-game').classList.add('hidden');
+            document.getElementById('quiz-result').classList.remove('hidden');
+            document.getElementById('finalScore').innerText = `${score} / ${allQuestions.length}`;
+            let msg = score === allQuestions.length ? "¡INCREÍBLE! ERES UN EXPERTO 🏆" : (score > allQuestions.length / 2 ? "¡MUY BIEN! SABES BASTANTE 👍" : "¡INTÉNTALO DE NUEVO! 💪");
+            document.getElementById('feedbackText').innerText = msg;
+        }
+
+        cargarProductos(); cargarReparaciones(); mostrarWebs(); cargarQuiz();
+    </script>
+</body>
+</html>
