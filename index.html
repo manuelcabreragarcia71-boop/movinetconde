@@ -14,7 +14,7 @@
             --accent: #ff8c00;
             --white: #ffffff;
             --text: #333333;
-            --bg-glass: rgba(255, 255, 255, 0.9); 
+            --bg-glass: rgba(255, 255, 255, 0.92); 
             --success: #2ecc71;
             --pending: #f39c12;
             --error: #e74c3c;
@@ -28,7 +28,7 @@
         }
 
         /* NAVEGACIÓN */
-        .navbar { background: rgba(255, 255, 255, 0.95); padding: 10px 0; position: sticky; top: 0; z-index: 1000; border-bottom: 3px solid var(--accent); box-shadow: 0 4px 10px rgba(0,0,0,0.3); }
+        .navbar { background: rgba(255, 255, 255, 0.98); padding: 10px 0; position: sticky; top: 0; z-index: 1000; border-bottom: 3px solid var(--accent); box-shadow: 0 4px 10px rgba(0,0,0,0.3); }
         .nav-container { max-width: 1200px; margin: 0 auto; padding: 0 15px; display: flex; flex-direction: column; gap: 10px; }
         .nav-top { display: flex; justify-content: space-between; align-items: center; }
         .logo-container { display: flex; align-items: center; gap: 10px; text-decoration: none; color: var(--primary); }
@@ -52,7 +52,7 @@
         .section-title { text-align: center; color: var(--primary); text-transform: uppercase; margin-bottom: 20px; border-bottom: 2px solid var(--accent); display: inline-block; padding-bottom: 5px; font-weight: 800; }
         .center-wrapper { text-align: center; }
 
-        /* CARDS & FILTROS */
+        /* ELEMENTOS VISUALES */
         .filter-scroll { display: flex; gap: 10px; overflow-x: auto; padding: 10px 0; margin-bottom: 20px; }
         .filter-badge { background: rgba(255,255,255,0.8); border: 2px solid rgba(0,0,0,0.1); padding: 8px 15px; border-radius: 15px; cursor: pointer; font-weight: bold; white-space: nowrap; transition: 0.3s; }
         .filter-badge.active { border-color: var(--accent); color: var(--accent); background: #fff; }
@@ -71,7 +71,7 @@
         .specs-list li { margin-bottom: 4px; display: flex; align-items: center; gap: 5px; }
 
         .price { font-size: 1.3rem; font-weight: 800; color: var(--accent); margin: 10px 0; }
-        .btn-primary { background: var(--primary); color: white; border: none; padding: 10px; width: 100%; border-radius: 5px; cursor: pointer; font-weight: bold; text-transform: uppercase; margin-top: 5px; }
+        .btn-primary { background: var(--primary); color: white; border: none; padding: 12px; width: 100%; border-radius: 5px; cursor: pointer; font-weight: bold; text-transform: uppercase; margin-top: 5px; font-size: 1rem; }
         .btn-secondary { background: white; color: var(--primary); border: 2px solid var(--primary); padding: 10px; width: 100%; border-radius: 5px; cursor: pointer; font-weight: bold; text-transform: uppercase; margin-top: 5px; }
 
         /* PEDIDOS Y ESTADOS */
@@ -83,7 +83,7 @@
         .bg-success { background: var(--success); }
 
         /* ADMIN */
-        .admin-panel { background: rgba(255, 248, 225, 0.95); border: 2px dashed var(--accent); margin-bottom: 20px; padding: 20px; }
+        .admin-panel { background: rgba(255, 248, 225, 0.98); border: 2px dashed var(--accent); margin-bottom: 20px; padding: 20px; }
         .admin-tabs { display: flex; gap: 10px; margin-bottom: 20px; border-bottom: 1px solid #ccc; padding-bottom: 10px; overflow-x: auto; }
         .admin-tab-btn { background: none; border: none; font-weight: bold; cursor: pointer; opacity: 0.5; font-size: 0.9rem; white-space: nowrap; }
         .admin-tab-btn.active { opacity: 1; color: var(--accent); border-bottom: 2px solid var(--accent); }
@@ -92,8 +92,16 @@
         .btn-delete { background: #e74c3c; color: white; border: none; padding: 5px; flex: 1; cursor: pointer; border-radius: 5px; font-weight: bold; }
         .btn-confirm { background: var(--success); color: white; padding: 8px; border:none; border-radius:5px; cursor:pointer; width:100%; margin-top:5px; font-weight:bold;}
 
-        /* MODALES Y FORMULARIOS */
-        .form-box { max-width: 600px; margin: 0 auto; background: rgba(255,255,255,0.9); padding: 30px; border-radius: 10px; }
+        /* QUIZ ESTILOS */
+        #quiz-wrapper { max-width: 600px; margin: 0 auto; text-align: center; }
+        .quiz-btn { background: white; border: 2px solid #ddd; padding: 15px; border-radius: 10px; font-size: 1rem; cursor: pointer; transition: 0.2s; text-align: left; font-weight: 600; color: #555; width: 100%; margin-bottom: 10px; }
+        .quiz-btn:hover { border-color: var(--accent); color: var(--accent); background: #fff8e1; }
+        .quiz-btn.correct { background: var(--success); color: white; border-color: var(--success); }
+        .quiz-btn.wrong { background: var(--error); color: white; border-color: var(--error); }
+        .score-display { font-size: 3rem; color: var(--accent); font-weight: 800; display: block; margin: 20px 0; }
+
+        /* MODALES */
+        .form-box { max-width: 600px; margin: 0 auto; background: rgba(255,255,255,0.95); padding: 30px; border-radius: 10px; }
         input, textarea, select { width: 100%; padding: 12px; margin-bottom: 15px; border: 1px solid #ccc; border-radius: 5px; box-sizing: border-box; background: rgba(255,255,255,0.9); }
         .modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); z-index: 2000; display: flex; justify-content: center; align-items: center; }
         .modal-content { background: rgba(255,255,255,0.98); padding: 30px; width: 90%; max-width: 500px; border-radius: 10px; position: relative; max-height: 90vh; overflow-y: auto; }
@@ -123,11 +131,11 @@
             <div class="nav-menu">
                 <button onclick="verSeccion('catalogo')" class="menu-btn active" id="btn-catalogo">📱 Móviles</button>
                 <button onclick="verSeccion('pcs')" class="menu-btn" id="btn-pcs">🖥️ PC</button>
-                <button onclick="verSeccion('reacondicionados')" class="menu-btn" id="btn-reacondicionados">♻️ Segunda Mano</button>
+                <button onclick="verSeccion('reacondicionados')" class="menu-btn" id="btn-reacondicionados">♻️ Reaco</button>
                 <button onclick="verSeccion('reparaciones')" class="menu-btn" id="btn-reparaciones">🔧 Taller</button>
                 <button onclick="verSeccion('webs')" class="menu-btn" id="btn-webs">💻 Web</button>
-                <button onclick="verSeccion('resenas')" class="menu-btn" id="btn-resenas">⭐ Reseñas</button>
                 <button onclick="verSeccion('quiz')" class="menu-btn" id="btn-quiz">❓ Quiz</button>
+                <button onclick="verSeccion('resenas')" class="menu-btn" id="btn-resenas">⭐ Opiniones</button>
             </div>
         </div>
     </nav>
@@ -138,10 +146,11 @@
             <button class="admin-tab-btn active" onclick="verAdminTab('pedidos')">🚨 PEDIDOS</button>
             <button class="admin-tab-btn" onclick="verAdminTab('citas')">🔧 Citas</button>
             <button class="admin-tab-btn" onclick="verAdminTab('productos')">Móviles</button>
-            <button class="admin-tab-btn" onclick="verAdminTab('pcs')">PC/Gaming</button>
-            <button class="admin-tab-btn" onclick="verAdminTab('reacondicionados')">Reacondicionados</button>
+            <button class="admin-tab-btn" onclick="verAdminTab('pcs')">PC</button>
+            <button class="admin-tab-btn" onclick="verAdminTab('reacondicionados')">Reaco</button>
             <button class="admin-tab-btn" onclick="verAdminTab('reparaciones')">Servicios</button>
             <button class="admin-tab-btn" onclick="verAdminTab('webs')">Webs</button>
+            <button class="admin-tab-btn" onclick="verAdminTab('quiz')">Trivia</button>
         </div>
 
         <div id="admin-tab-pedidos">
@@ -173,12 +182,12 @@
         </div>
         
         <div id="admin-tab-pcs" class="hidden">
-            <h3>Nuevo PC / Gaming</h3>
+            <h3>Nuevo PC</h3>
             <form id="addPcForm">
                 <input type="hidden" id="editPcId">
                 <input type="file" id="pcImg" accept="image/*">
-                <input type="text" id="pcTitle" placeholder="Título (PC Gamer X)" required>
-                <input type="text" id="pcCpu" placeholder="CPU (i5/Ryzen 5)" required>
+                <input type="text" id="pcTitle" placeholder="Título (PC Gamer)" required>
+                <input type="text" id="pcCpu" placeholder="CPU" required>
                 <input type="text" id="pcRam" placeholder="RAM" required>
                 <input type="text" id="pcGpu" placeholder="Gráfica" required>
                 <input type="text" id="pcSsd" placeholder="Disco Duro" required>
@@ -207,9 +216,9 @@
             <form id="addRepairForm">
                 <input type="hidden" id="editRepairId">
                 <input type="file" id="repairImg" accept="image/*">
-                <input type="text" id="repairService" placeholder="Servicio (Cambio Pantalla)" required>
+                <input type="text" id="repairService" placeholder="Servicio" required>
                 <textarea id="repairDesc" placeholder="Descripción"></textarea>
-                <input type="text" id="repairPriceText" placeholder="Texto Precio (Desde 20€)" required>
+                <input type="text" id="repairPriceText" placeholder="Texto Precio" required>
                 <button type="submit" class="btn-primary" id="btnSaveRepair">GUARDAR SERVICIO</button>
                 <button type="button" onclick="resetFormRepair()" style="margin-top:5px;width:100%;border:none;background:#ccc;">Cancelar</button>
             </form>
@@ -225,6 +234,29 @@
                 <button type="submit" class="btn-primary" id="btnSaveWeb">GUARDAR WEB</button>
                 <button type="button" onclick="resetFormWeb()" style="margin-top:5px;width:100%;border:none;background:#ccc;">Cancelar</button>
             </form>
+        </div>
+
+        <div id="admin-tab-quiz" class="hidden">
+            <h3>Añadir Pregunta Trivia</h3>
+            <form id="addQuizForm">
+                <input type="text" id="quizQuestion" placeholder="¿Pregunta?" required>
+                <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px;">
+                    <input type="text" id="quizOp0" placeholder="Opción A" required>
+                    <input type="text" id="quizOp1" placeholder="Opción B" required>
+                    <input type="text" id="quizOp2" placeholder="Opción C" required>
+                    <input type="text" id="quizOp3" placeholder="Opción D" required>
+                </div>
+                <label>Respuesta Correcta:</label>
+                <select id="quizCorrect" required>
+                    <option value="0">Opción A</option>
+                    <option value="1">Opción B</option>
+                    <option value="2">Opción C</option>
+                    <option value="3">Opción D</option>
+                </select>
+                <button type="submit" class="btn-primary">AÑADIR PREGUNTA</button>
+            </form>
+            <h4>Preguntas Activas:</h4>
+            <div id="admin-quiz-list"></div>
         </div>
 
         <button onclick="cerrarSesionAdmin()" style="margin-top:20px; background:#333; color:white; border:none; padding:10px; width:100%;">Cerrar Sesión Admin</button>
@@ -254,6 +286,7 @@
         
         <div class="form-box glass-effect">
             <h3>Solicitar Reparación</h3>
+            <p style="font-size:0.9rem; text-align:center;">Se abrirá WhatsApp inmediatamente.</p>
             <form id="tallerForm">
                 <input type="text" id="tallerNombre" placeholder="Tu Nombre" required>
                 <input type="text" id="tallerDispositivo" placeholder="Dispositivo y Avería" required>
@@ -277,9 +310,22 @@
 
     <div id="sec-quiz" class="container hidden">
         <div class="center-wrapper"><h2 class="section-title">Trivia Tech</h2></div>
-        <div style="text-align:center; background:white; padding:20px; border-radius:10px;">
-            <h3>¡Muy Pronto!</h3>
-            <p>Estamos preparando las mejores preguntas para ti.</p>
+        <div id="quiz-wrapper">
+            <div id="quiz-start">
+                <i class="fas fa-brain" style="font-size: 4rem; color: var(--accent); margin-bottom: 10px;"></i>
+                <h3>¿Cuánto sabes de tecnología?</h3>
+                <button class="btn-primary" onclick="startQuiz()">¡JUGAR!</button>
+            </div>
+            <div id="quiz-game" class="hidden">
+                <div class="question-text" id="questionText">Cargando...</div>
+                <div class="options-list" id="optionsList" style="display:grid; gap:10px;"></div>
+                <button id="nextBtn" class="btn-primary hidden" onclick="nextQuestion()" style="margin-top: 20px;">Siguiente</button>
+            </div>
+            <div id="quiz-result" class="hidden">
+                <h3>¡Juego Terminado!</h3>
+                <span class="score-display" id="finalScore">0</span>
+                <button class="btn-primary" onclick="startQuiz()">Repetir</button>
+            </div>
         </div>
     </div>
 
@@ -289,7 +335,7 @@
             <h2>Carrito</h2>
             <ul id="cart-items" style="list-style:none; padding:0; margin:20px 0;"></ul>
             <h3>Total: <span id="total-price">0</span>€</h3>
-            <button onclick="realizarPedido()" class="btn-primary">FINALIZAR COMPRA (WHATSAPP)</button>
+            <button onclick="realizarPedido()" class="btn-primary">COMPRAR POR WHATSAPP</button>
         </div>
     </div>
 
@@ -372,7 +418,7 @@
         const auth = firebase.auth();
 
         let carrito = []; let usuarioActual = null; let esAdmin = false; let favoritos = [];
-        let allProducts = []; let filtroMarcaActual = 'all';
+        let allProducts = []; let allQuestions = []; let filtroMarcaActual = 'all';
         let editImgProduct="", editImgPc="", editImgReaco="", editImgRepair="";
         const MI_TELEFONO = "34613509309"; 
 
@@ -408,7 +454,7 @@
             event.target.classList.add('active');
         }
 
-        // ------------------ CARGA DE DATOS (MÓVILES, PC, ETC) ------------------
+        // ------------------ CARGA DE DATOS ------------------
         function cargarProductos() {
             db.collection("productos").orderBy("fecha", "desc").onSnapshot(snap => {
                 allProducts = []; snap.forEach(doc => allProducts.push({...doc.data(), id: doc.id}));
@@ -456,6 +502,20 @@
                 });
             });
         }
+        function cargarQuiz() {
+            db.collection("quiz").orderBy("fecha", "desc").onSnapshot(snap => {
+                allQuestions = [];
+                const listDiv = document.getElementById('admin-quiz-list'); 
+                if(listDiv) listDiv.innerHTML = "";
+                snap.forEach(doc => {
+                    const q = doc.data(); 
+                    allQuestions.push({...q, id: doc.id});
+                    if(esAdmin && listDiv) { 
+                        listDiv.innerHTML += `<div style="padding:10px; border-bottom:1px solid #ccc; display:flex; justify-content:space-between;"><div><b>${q.pregunta}</b><br><small>✅ ${q.opciones[q.correcta]}</small></div><button class="btn-delete" style="width:auto;" onclick="borrar('quiz','${doc.id}')">🗑️</button></div>`; 
+                    }
+                });
+            });
+        }
 
         // ------------------ RENDERIZADO MÓVILES ------------------
         function renderizarMarcas() {
@@ -472,52 +532,46 @@
         }
         function filtrarMarca(m) { filtroMarcaActual = m; renderizarMarcas(); renderizarProductos(); }
 
-        // ------------------ LÓGICA PEDIDOS Y WHATSAPP ------------------
+        // ------------------ PEDIDOS Y WHATSAPP (CORREGIDO) ------------------
         
-        async function realizarPedido(){
+        function realizarPedido(){
             if(!carrito.length) return;
             if(!usuarioActual) { alert("Inicia sesión para que podamos guardar tu pedido."); abrirModal('auth-modal'); return; }
 
             let total = 0; let itemsTexto = "";
             carrito.forEach(i => { total += i.p; itemsTexto += `${i.n} (${i.p}€), `; });
 
-            const pedidoData = {
-                uid: usuarioActual.uid,
-                email: usuarioActual.email,
-                items: carrito,
-                total: total,
-                fecha: new Date().toISOString(),
-                estado: 'pendiente' // Naranja
-            };
+            // 1. ABRIR WHATSAPP INMEDIATAMENTE (Para evitar bloqueo de popup)
+            let msg = `Hola MovinetConde, soy ${usuarioActual.email}. He pedido: ${itemsTexto}. Total: ${total}€`;
+            const waUrl = `https://wa.me/${MI_TELEFONO}?text=${encodeURIComponent(msg)}`;
+            window.open(waUrl, '_blank');
 
-            try {
-                // 1. Guardar en Base de Datos (ADMIN LO VERÁ)
-                await db.collection('pedidos').add(pedidoData);
-                
-                // 2. ABRIR WHATSAPP INMEDIATAMENTE
-                let msg = `Hola MovinetConde, soy ${usuarioActual.email}. He pedido: ${itemsTexto}. Total: ${total}€`;
-                window.open(`https://wa.me/${MI_TELEFONO}?text=${encodeURIComponent(msg)}`, '_blank');
-                
-                // 3. Limpiar
+            // 2. GUARDAR EN BD EN SEGUNDO PLANO
+            db.collection('pedidos').add({
+                uid: usuarioActual.uid, email: usuarioActual.email, items: carrito, total: total, fecha: new Date().toISOString(), estado: 'pendiente'
+            }).then(() => {
+                console.log("Pedido guardado en BD");
+                // 3. Limpiar Interfaz
                 carrito = []; document.getElementById('cart-count').innerText = "0";
                 cerrarModal('cart-modal');
-                alert("Pedido guardado correctamente. Revisa WhatsApp.");
                 cargarDatosPerfil();
-
-            } catch(e) {
-                alert("Error de conexión: " + e.message);
-            }
+            }).catch(e => console.error("Error guardando pedido:", e));
         }
 
-        document.getElementById('tallerForm').addEventListener('submit', async (e) => {
+        document.getElementById('tallerForm').addEventListener('submit', (e) => {
             e.preventDefault();
             const n = document.getElementById('tallerNombre').value;
             const d = document.getElementById('tallerDispositivo').value;
             
+            // 1. WhatsApp Inmediato
+            const waUrl = `https://wa.me/${MI_TELEFONO}?text=${encodeURIComponent(`Hola, soy ${n}. Consulta taller: ${d}`)}`;
+            window.open(waUrl, '_blank');
+
+            // 2. Guardar DB
             if(usuarioActual) {
-                await db.collection('citas').add({ uid: usuarioActual.uid, email: usuarioActual.email, nombre: n, dispositivo: d, fecha: new Date().toISOString(), estado: 'pendiente' });
+                db.collection('citas').add({ uid: usuarioActual.uid, email: usuarioActual.email, nombre: n, dispositivo: d, fecha: new Date().toISOString(), estado: 'pendiente' });
             }
-            window.open(`https://wa.me/${MI_TELEFONO}?text=${encodeURIComponent(`Hola, soy ${n}. Consulta taller: ${d}`)}`, '_blank');
+            document.getElementById('tallerForm').reset();
         });
 
         // ------------------ ADMIN ------------------
@@ -529,7 +583,6 @@
         }
         function cerrarSesionAdmin(){ esAdmin=false; document.getElementById('admin-panel').classList.add('hidden'); cargarTodo(); }
 
-        // ESCUCHAR PEDIDOS EN ADMIN
         function cargarPedidosAdmin() {
             db.collection('pedidos').orderBy('fecha', 'desc').onSnapshot(snap => {
                 const div = document.getElementById('admin-orders-list'); div.innerHTML = "";
@@ -562,7 +615,7 @@
         }
         function cambiarEstado(col, id, est) { db.collection(col).doc(id).update({estado: est}); }
 
-        // ------------------ CRUD ADMIN (Guardar, Editar, Borrar) ------------------
+        // ------------------ CRUD ADMIN ------------------
         async function guardarItem(col, id, data, fileIn, oldImg) {
             const f = document.getElementById(fileIn) ? document.getElementById(fileIn).files[0] : null;
             let imgF = oldImg;
@@ -590,7 +643,7 @@
         });
         document.getElementById('addReacoForm').addEventListener('submit', e=>{ e.preventDefault();
             guardarItem('reacondicionados', document.getElementById('editReacoId').value, {
-                titulo: document.getElementById('reacoTitle').value, condition: document.getElementById('reacoCondition').value,
+                titulo: document.getElementById('reacoTitle').value, condicion: document.getElementById('reacoCondition').value,
                 descripcion: document.getElementById('reacoDesc').value, precio: Number(document.getElementById('reacoPrice').value)
             }, 'reacoImg', editImgReaco).then(resetFormReaco);
         });
@@ -604,6 +657,11 @@
             guardarItem('webs', document.getElementById('editWebId').value, {
                 icono: document.getElementById('webIcon').value, titulo: document.getElementById('webTitle').value, descripcion: document.getElementById('webDesc').value
             }, null, null).then(resetFormWeb);
+        });
+        document.getElementById('addQuizForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const data = { pregunta: document.getElementById('quizQuestion').value, opciones: [document.getElementById('quizOp0').value, document.getElementById('quizOp1').value, document.getElementById('quizOp2').value, document.getElementById('quizOp3').value], correcta: parseInt(document.getElementById('quizCorrect').value), fecha: new Date().toISOString() };
+            await db.collection('quiz').add(data); alert("Pregunta añadida"); document.getElementById('addQuizForm').reset();
         });
 
         // Funciones Editar
@@ -654,18 +712,52 @@
             }); 
         }
 
+        // ------------------ QUIZ GAME ------------------
+        let currentQuestion = 0; let score = 0;
+        function startQuiz() {
+            if(allQuestions.length === 0) return alert("Cargando preguntas...");
+            currentQuestion = 0; score = 0;
+            document.getElementById('quiz-start').classList.add('hidden');
+            document.getElementById('quiz-result').classList.add('hidden');
+            document.getElementById('quiz-game').classList.remove('hidden');
+            showQuestion();
+        }
+        function showQuestion() {
+            document.getElementById('nextBtn').classList.add('hidden');
+            const q = allQuestions[currentQuestion];
+            document.getElementById('questionText').innerText = q.pregunta;
+            const optsDiv = document.getElementById('optionsList'); optsDiv.innerHTML = "";
+            q.opciones.forEach((opt, index) => {
+                const btn = document.createElement('button'); btn.className = "quiz-btn";
+                btn.innerHTML = `<span style="font-weight:800; margin-right:10px;">${String.fromCharCode(65+index)}</span> ${opt}`;
+                btn.onclick = () => checkAnswer(index, btn, q.correcta);
+                optsDiv.appendChild(btn);
+            });
+        }
+        function checkAnswer(selected, btnElement, correct) {
+            const allBtns = document.querySelectorAll('.quiz-btn');
+            allBtns.forEach(b => b.disabled = true);
+            if(selected === correct) { btnElement.classList.add('correct'); score++; } 
+            else { btnElement.classList.add('wrong'); if(allBtns[correct]) allBtns[correct].classList.add('correct'); }
+            document.getElementById('nextBtn').classList.remove('hidden');
+        }
+        function nextQuestion() { currentQuestion++; if(currentQuestion < allQuestions.length) showQuestion(); else showResult(); }
+        function showResult() {
+            document.getElementById('quiz-game').classList.add('hidden');
+            document.getElementById('quiz-result').classList.remove('hidden');
+            document.getElementById('finalScore').innerText = `${score} / ${allQuestions.length}`;
+        }
+
         // ------------------ EXTRAS ------------------
         function addCart(id, n, p){ carrito.push({n,p}); document.getElementById('cart-count').innerText=carrito.length; alert("Añadido"); }
         window.abrirModal = (id) => { document.getElementById(id).classList.remove('hidden'); if(id==='cart-modal'){ const ul = document.getElementById('cart-items'); ul.innerHTML=""; let t=0; carrito.forEach(i => { ul.innerHTML+=`<li>${i.n} - ${i.p}€</li>`; t+=i.p; }); document.getElementById('total-price').innerText = t; }};
         window.cerrarModal = (id) => document.getElementById(id).classList.add('hidden');
         
         document.getElementById('addReviewForm').addEventListener('submit', async (e) => { e.preventDefault(); await db.collection('resenas').add({ nombre: document.getElementById('reviewName').value, estrellas: document.getElementById('reviewStars').value, texto: document.getElementById('reviewText').value, fecha: new Date().toISOString() }); alert("Enviada"); cerrarModal('review-modal'); });
-        
         function cargarResenas() { db.collection('resenas').orderBy('fecha', 'desc').onSnapshot(snap => { const d = document.getElementById('reviews-container'); d.innerHTML=""; snap.forEach(doc => { const r = doc.data(); d.innerHTML += `<div class="review-card"><div style="color:gold;">${"⭐".repeat(r.estrellas)}</div><b>${r.nombre}</b><p>${r.texto}</p></div>`; }); }); }
 
-        function cargarTodo() { cargarProductos(); cargarPCs(); cargarReacos(); cargarReparaciones(); cargarWebs(); cargarResenas(); }
+        function cargarTodo() { cargarProductos(); cargarPCs(); cargarReacos(); cargarReparaciones(); cargarWebs(); cargarQuiz(); cargarResenas(); }
         cargarTodo();
-
     </script>
 </body>
 </html>
