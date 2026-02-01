@@ -27,7 +27,7 @@
             touch-action: manipulation;
         }
 
-        /* EFECTO CRISTAL (GLASSMORPHISM) */
+        /* EFECTO CRISTAL */
         .glass-effect {
             background: var(--bg-glass) !important;
             backdrop-filter: blur(10px);
@@ -77,26 +77,30 @@
             padding: 15px; border-radius: 10px; text-align: center; border: 1px solid rgba(255,255,255,0.4); position: relative; box-shadow: 0 5px 15px rgba(0,0,0,0.05); 
         }
         .product-photo { width: 100%; height: 220px; object-fit: cover; border-radius: 5px; }
+        
+        /* Etiquetas */
         .brand-tag { position: absolute; top: 15px; left: 15px; background: rgba(0,0,0,0.8); color: white; padding: 2px 8px; border-radius: 4px; font-size: 0.7rem; font-weight: bold; text-transform: uppercase; }
+        .condition-tag { position: absolute; top: 15px; right: 15px; background: var(--success); color: white; padding: 2px 8px; border-radius: 4px; font-size: 0.7rem; font-weight: bold; text-transform: uppercase; }
 
         .repair-card { border-left: 5px solid var(--accent); display: flex; flex-direction: column; }
         .repair-img { width: 100px; height: 100px; object-fit: cover; border-radius: 50%; margin: 0 auto 10px; border: 3px solid var(--accent); display: block; }
         .repair-price { font-size: 1.2rem; color: var(--accent); font-weight: 800; margin: 10px 0; }
         .repair-desc { font-size: 0.9rem; color: #555; margin-bottom: 10px; min-height: 40px;}
 
-        .options-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 5px; margin: 10px 0; }
-        .full-width-select { width: 100%; margin-top: 5px; }
-        select { padding: 5px; border-radius: 5px; border: 1px solid #ccc; font-size: 0.85rem; width: 100%; background: rgba(255,255,255,0.9); }
-        label { font-size: 0.7rem; color: #333; font-weight: bold; display: block; text-align: left; margin-bottom: 2px; }
+        /* Specs List for PC */
+        .specs-list { list-style: none; padding: 0; text-align: left; font-size: 0.85rem; margin: 10px 0; background: rgba(255,255,255,0.5); padding: 10px; border-radius: 5px; }
+        .specs-list li { margin-bottom: 4px; display: flex; align-items: center; gap: 5px; }
+        .specs-list i { color: var(--accent); width: 20px; text-align: center; }
 
         .price { font-size: 1.3rem; font-weight: 800; color: var(--accent); margin: 10px 0; }
         .btn-primary { background: var(--primary); color: white; border: none; padding: 10px; width: 100%; border-radius: 5px; cursor: pointer; font-weight: bold; text-transform: uppercase; margin-top: 5px; transition: 0.2s; }
-        .btn-primary:active { transform: scale(0.98); }
+        .btn-secondary { background: white; color: var(--primary); border: 2px solid var(--primary); padding: 10px; width: 100%; border-radius: 5px; cursor: pointer; font-weight: bold; text-transform: uppercase; margin-top: 5px; transition: 0.2s; }
+        .btn-primary:active, .btn-secondary:active { transform: scale(0.98); }
         
         .admin-actions { display: flex; gap: 5px; margin-top: 10px; padding-top: 10px; border-top: 1px solid rgba(0,0,0,0.1); }
         .btn-edit { background: #f1c40f; color: black; border: none; padding: 5px; flex: 1; cursor: pointer; border-radius: 5px; font-weight: bold; }
         .btn-delete { background: #e74c3c; color: white; border: none; padding: 5px; flex: 1; cursor: pointer; border-radius: 5px; font-weight: bold; }
-        .fav-btn { position: absolute; top: 10px; right: 10px; background: white; border: none; font-size: 1.3rem; color: #ccc; cursor: pointer; padding: 5px; border-radius: 50%; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+        .fav-btn { position: absolute; bottom: 15px; right: 15px; background: white; border: none; font-size: 1.3rem; color: #ccc; cursor: pointer; padding: 8px; border-radius: 50%; box-shadow: 0 2px 5px rgba(0,0,0,0.2); z-index: 10; }
         .fav-btn.active { color: red; }
 
         /* PORTAFOLIO WEB */
@@ -113,7 +117,6 @@
 
         /* QUIZ */
         #quiz-wrapper { max-width: 600px; margin: 0 auto; background: rgba(255,255,255,0.9); border-radius: 15px; padding: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); text-align: center; }
-        .quiz-header { margin-bottom: 20px; }
         .progress-container { width: 100%; background: #ccc; height: 10px; border-radius: 5px; margin-bottom: 20px; overflow: hidden; }
         .progress-bar { height: 100%; background: var(--accent); width: 0%; transition: width 0.3s ease; }
         .question-text { font-size: 1.3rem; font-weight: 800; margin-bottom: 25px; color: #222; }
@@ -149,10 +152,12 @@
                 </div>
             </div>
             <div class="nav-menu">
-                <button onclick="verSeccion('catalogo')" class="menu-btn active" id="btn-catalogo">📱 Catálogo</button>
+                <button onclick="verSeccion('catalogo')" class="menu-btn active" id="btn-catalogo">📱 Móviles</button>
+                <button onclick="verSeccion('pcs')" class="menu-btn" id="btn-pcs">🖥️ PC / Gaming</button>
+                <button onclick="verSeccion('reacondicionados')" class="menu-btn" id="btn-reacondicionados">♻️ Reacondicionados</button>
                 <button onclick="verSeccion('encargos')" class="menu-btn" id="btn-encargos">📦 Encargos</button>
                 <button onclick="verSeccion('reparaciones')" class="menu-btn" id="btn-reparaciones">🔧 Reparaciones</button>
-                <button onclick="verSeccion('webs')" class="menu-btn" id="btn-webs">💻 Diseños Web</button>
+                <button onclick="verSeccion('webs')" class="menu-btn" id="btn-webs">💻 Web</button>
                 <button onclick="verSeccion('juego')" class="menu-btn" id="btn-juego">❓ Quiz</button>
             </div>
         </div>
@@ -160,52 +165,77 @@
 
     <div id="admin-panel" class="container admin-panel hidden">
         <div class="admin-tabs">
-            <button class="admin-tab-btn active" onclick="verAdminTab('productos')">Productos</button>
+            <button class="admin-tab-btn active" onclick="verAdminTab('productos')">Móviles</button>
+            <button class="admin-tab-btn" onclick="verAdminTab('pcs')">PC / Torres</button>
+            <button class="admin-tab-btn" onclick="verAdminTab('reacondicionados')">Reacondicionados</button>
             <button class="admin-tab-btn" onclick="verAdminTab('reparaciones')">Reparaciones</button>
-            <button class="admin-tab-btn" onclick="verAdminTab('webs')">Diseños Web</button>
-            <button class="admin-tab-btn" onclick="verAdminTab('quiz')">Trivia / Quiz</button>
+            <button class="admin-tab-btn" onclick="verAdminTab('webs')">Webs</button>
+            <button class="admin-tab-btn" onclick="verAdminTab('quiz')">Quiz</button>
         </div>
 
         <div id="admin-tab-productos">
-            <h3 id="productFormTitle">Nuevo Móvil</h3>
+            <h3>Nuevo Móvil</h3>
             <form id="addProductForm">
                 <input type="hidden" id="editProductId">
                 <input type="file" id="newImg" accept="image/*">
-                <div id="imgPreview" style="font-size:0.8rem; color:green;"></div>
-                <input type="text" id="newBrand" placeholder="MARCA (Ej: Samsung)" required style="border: 2px solid var(--accent);">
-                <input type="text" id="newName" placeholder="Modelo (Ej: Galaxy S24)" required>
+                <input type="text" id="newBrand" placeholder="Marca (Samsung)" required>
+                <input type="text" id="newName" placeholder="Modelo (S24 Ultra)" required>
                 <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px;">
                     <input type="text" id="newRam" placeholder="RAM" required>
                     <input type="text" id="newStorage" placeholder="Memoria" required>
                 </div>
                 <input type="text" id="newColors" placeholder="Colores" required>
                 <input type="number" id="newPrice" placeholder="Precio (€)" required>
-                <button type="submit" class="btn-primary" id="btnSaveProduct">GUARDAR PRODUCTO</button>
+                <button type="submit" class="btn-primary" id="btnSaveProduct">GUARDAR MÓVIL</button>
                 <button type="button" onclick="resetFormProduct()" style="margin-top:5px; background:#999; color:white; border:none; padding:5px; width:100%;">Cancelar</button>
             </form>
         </div>
 
+        <div id="admin-tab-pcs" class="hidden">
+            <h3>Nuevo Ordenador / PC</h3>
+            <form id="addPcForm">
+                <input type="hidden" id="editPcId">
+                <input type="file" id="pcImg" accept="image/*">
+                <input type="text" id="pcTitle" placeholder="Título (Ej: PC Gaming RTX 4060)" required>
+                <input type="text" id="pcCpu" placeholder="Procesador (Ej: i5 12400F)" required>
+                <input type="text" id="pcRam" placeholder="RAM (Ej: 16GB RGB)" required>
+                <input type="text" id="pcSsd" placeholder="Disco (Ej: 1TB NVMe)" required>
+                <input type="text" id="pcGpu" placeholder="Gráfica (Ej: RTX 4060 8GB)" required>
+                <input type="number" id="pcPrice" placeholder="Precio (€)" required>
+                <button type="submit" class="btn-primary" id="btnSavePc">GUARDAR PC</button>
+                <button type="button" onclick="resetFormPc()" style="margin-top:5px; background:#999; color:white; border:none; padding:5px; width:100%;">Cancelar</button>
+            </form>
+        </div>
+
+        <div id="admin-tab-reacondicionados" class="hidden">
+            <h3>Nuevo Producto Reacondicionado</h3>
+            <form id="addReacoForm">
+                <input type="hidden" id="editReacoId">
+                <input type="file" id="reacoImg" accept="image/*">
+                <input type="text" id="reacoTitle" placeholder="Nombre Producto" required>
+                <input type="text" id="reacoCondition" placeholder="Estado (Ej: Grado A - Impecable)" required>
+                <textarea id="reacoDesc" placeholder="Descripción detallada..." rows="2"></textarea>
+                <input type="number" id="reacoPrice" placeholder="Precio (€)" required>
+                <button type="submit" class="btn-primary" id="btnSaveReaco">GUARDAR REACONDICIONADO</button>
+                <button type="button" onclick="resetFormReaco()" style="margin-top:5px; background:#999; color:white; border:none; padding:5px; width:100%;">Cancelar</button>
+            </form>
+        </div>
+
         <div id="admin-tab-reparaciones" class="hidden">
-            <h3 id="repairFormTitle">Nuevo Servicio de Reparación</h3>
-            <p style="font-size:0.8rem; margin-bottom:10px;">Añade servicios generales (Ej: Cambio Pantalla) en lugar de modelos específicos.</p>
+            <h3>Servicio de Reparación</h3>
             <form id="addRepairForm">
                 <input type="hidden" id="editRepairId">
-                <label>Icono o Imagen del Servicio:</label>
                 <input type="file" id="repairImg" accept="image/*">
-                
-                <input type="text" id="repairService" placeholder="Nombre Servicio (Ej: Sustitución de Pantalla)" required style="border: 2px solid var(--accent);">
-                
-                <textarea id="repairDesc" placeholder="Descripción (Ej: Originales y compatibles. Todas las marcas: iPhone, Samsung...)" rows="3" required></textarea>
-                
-                <input type="text" id="repairPriceText" placeholder="Precio o Texto (Ej: Desde 35€)" required>
-                
+                <input type="text" id="repairService" placeholder="Nombre Servicio" required>
+                <textarea id="repairDesc" placeholder="Descripción" rows="3" required></textarea>
+                <input type="text" id="repairPriceText" placeholder="Texto Precio (Ej: Desde 35€)" required>
                 <button type="submit" class="btn-primary" id="btnSaveRepair">GUARDAR SERVICIO</button>
                 <button type="button" onclick="resetFormRepair()" style="margin-top:5px; background:#999; color:white; border:none; padding:5px; width:100%;">Cancelar</button>
             </form>
         </div>
 
         <div id="admin-tab-webs" class="hidden">
-            <h3 id="webFormTitle">Nuevo Diseño Web</h3>
+            <h3>Diseño Web</h3>
             <form id="addWebForm">
                 <input type="hidden" id="editWebId">
                 <input type="text" id="webIcon" placeholder="Icono (fas fa-desktop)" value="fas fa-desktop" required>
@@ -217,9 +247,9 @@
         </div>
         
         <div id="admin-tab-quiz" class="hidden">
-            <h3>Nueva Pregunta Trivia</h3>
+            <h3>Pregunta Trivia</h3>
             <form id="addQuizForm">
-                <input type="text" id="quizQuestion" placeholder="¿Cuál es la pregunta?" required style="border: 2px solid var(--accent);">
+                <input type="text" id="quizQuestion" placeholder="¿Pregunta?" required>
                 <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px;">
                     <input type="text" id="quizOp0" placeholder="Opción A" required>
                     <input type="text" id="quizOp1" placeholder="Opción B" required>
@@ -235,13 +265,11 @@
                 </select>
                 <button type="submit" class="btn-primary">AÑADIR PREGUNTA</button>
             </form>
-            <h4 style="margin-top:20px;">Preguntas Activas:</h4>
-            <div id="admin-quiz-list" style="max-height: 200px; overflow-y: auto; background: rgba(255,255,255,0.8); border: 1px solid #ccc;"></div>
+            <div id="admin-quiz-list" style="margin-top:10px;"></div>
         </div>
 
         <button onclick="cerrarSesionAdmin()" style="margin-top:20px; background:#333; color:white; border:none; padding:10px; width:100%;">Cerrar Sesión Admin</button>
     </div>
-
     <div id="sec-catalogo" class="container">
         <div class="center-wrapper"><h2 class="section-title">Catálogo Móviles</h2></div>
         <div id="brand-filters" class="filter-scroll">
@@ -249,6 +277,21 @@
         </div>
         <div id="productos-container" class="grid-container">
             <p style="text-align:center;">Cargando catálogo...</p>
+        </div>
+    </div>
+
+    <div id="sec-pcs" class="container hidden">
+        <div class="center-wrapper"><h2 class="section-title">PC & Gaming</h2></div>
+        <div id="pcs-container" class="grid-container">
+            <p style="text-align:center;">Cargando equipos...</p>
+        </div>
+    </div>
+
+    <div id="sec-reacondicionados" class="container hidden">
+        <div class="center-wrapper"><h2 class="section-title">Reacondicionados</h2></div>
+        <p style="text-align:center; margin-bottom:20px;">Productos revisados con garantía.</p>
+        <div id="reaco-container" class="grid-container">
+            <p style="text-align:center;">Cargando ofertas...</p>
         </div>
     </div>
 
@@ -283,7 +326,7 @@
 
     <div id="sec-webs" class="container hidden">
         <div class="center-wrapper"><h2 class="section-title">Diseños Web</h2></div>
-        <div id="webs-container" class="web-grid"></div>
+        <div id="webs-container" class="grid-container"></div>
         <div class="form-box" style="margin-top: 40px;">
             <h3 style="text-align:center;">Solicitar Web</h3>
             <form id="webRequestForm">
@@ -300,18 +343,16 @@
             <div id="quiz-start">
                 <i class="fas fa-brain" style="font-size: 4rem; color: var(--accent); margin-bottom: 10px;"></i>
                 <h3>¿Cuánto sabes de tecnología?</h3>
-                <p>Responde estas preguntas y demuestra que eres un experto.</p>
                 <button class="btn-primary" onclick="startQuiz()">¡JUGAR AHORA!</button>
             </div>
             <div id="quiz-game" class="hidden">
                 <div class="progress-container"><div class="progress-bar" id="progressBar"></div></div>
                 <div class="question-text" id="questionText">Cargando...</div>
                 <div class="options-list" id="optionsList"></div>
-                <button id="nextBtn" class="btn-primary hidden" onclick="nextQuestion()" style="margin-top: 20px;">Siguiente Pregunta <i class="fas fa-arrow-right"></i></button>
+                <button id="nextBtn" class="btn-primary hidden" onclick="nextQuestion()" style="margin-top: 20px;">Siguiente</button>
             </div>
             <div id="quiz-result" class="hidden">
                 <h3>¡Juego Terminado!</h3>
-                <p>Tu puntuación final es:</p>
                 <span class="score-display" id="finalScore">0</span>
                 <p id="feedbackText">Texto final</p>
                 <button class="btn-primary" onclick="startQuiz()">VOLVER A JUGAR</button>
@@ -328,6 +369,7 @@
             <button onclick="realizarPedido()" class="btn-primary">COMPRAR POR WHATSAPP</button>
         </div>
     </div>
+
     <div id="admin-login-modal" class="modal hidden">
         <div class="modal-content" style="max-width:300px; text-align:center;">
             <span class="close" onclick="cerrarModal('admin-login-modal')">&times;</span>
@@ -336,17 +378,24 @@
             <button onclick="verificarAdmin()" class="btn-primary">Entrar</button>
         </div>
     </div>
+
     <div id="auth-modal" class="modal hidden">
         <div class="modal-content">
             <span class="close" onclick="cerrarModal('auth-modal')">&times;</span>
-            <h2 style="text-align:center">Clientes</h2>
+            <h2 style="text-align:center">Acceso Clientes</h2>
             <form id="authForm">
-                <input type="email" id="authEmail" placeholder="Email">
-                <input type="password" id="authPass" placeholder="Contraseña">
-                <button type="submit" class="btn-primary">Entrar / Registro</button>
+                <input type="email" id="authEmail" placeholder="Email" required>
+                <input type="password" id="authPass" placeholder="Contraseña" required>
+                
+                <div style="display:flex; gap:10px;">
+                    <button type="button" class="btn-primary" onclick="handleAuth('login')">INICIAR SESIÓN</button>
+                    <button type="button" class="btn-secondary" onclick="handleAuth('register')">REGISTRARSE</button>
+                </div>
             </form>
+            <p id="authError" style="color:red; text-align:center; font-size:0.8rem; margin-top:10px;"></p>
         </div>
     </div>
+
     <div id="profile-modal" class="modal hidden">
         <div class="modal-content">
             <span class="close" onclick="cerrarModal('profile-modal')">&times;</span>
@@ -377,11 +426,12 @@
         const auth = firebase.auth();
 
         let carrito = []; let usuarioActual = null; let favoritos = []; let esAdmin = false;
-        let allProducts = []; let allRepairs = []; let allQuestions = [];
+        let allProducts = []; let allPcs = []; let allReacos = []; let allRepairs = []; let allQuestions = [];
         let filtroMarcaActual = 'all'; 
-        let editImgProduct = ""; let editImgRepair = "";
+        let editImgProduct = ""; let editImgPc = ""; let editImgReaco = ""; let editImgRepair = "";
         const MI_TELEFONO = "34613509309"; 
 
+        // NAVEGACIÓN
         function verSeccion(id) {
             document.querySelectorAll('[id^="sec-"]').forEach(s => s.classList.add('hidden'));
             document.querySelectorAll('.menu-btn').forEach(b => b.classList.remove('active'));
@@ -395,10 +445,23 @@
             event.target.classList.add('active');
         }
 
+        // CARGA DE DATOS
         function cargarProductos() {
             db.collection("productos").orderBy("fecha", "desc").onSnapshot((snap) => {
                 allProducts = []; snap.forEach(doc => { allProducts.push({...doc.data(), id: doc.id}); });
                 renderizarMarcas(); renderizarProductos();
+            });
+        }
+        function cargarPCs() {
+            db.collection("pcs").orderBy("fecha", "desc").onSnapshot((snap) => {
+                allPcs = []; snap.forEach(doc => { allPcs.push({...doc.data(), id: doc.id}); });
+                renderizarPCs();
+            });
+        }
+        function cargarReacondicionados() {
+            db.collection("reacondicionados").orderBy("fecha", "desc").onSnapshot((snap) => {
+                allReacos = []; snap.forEach(doc => { allReacos.push({...doc.data(), id: doc.id}); });
+                renderizarReacos();
             });
         }
         function cargarReparaciones() {
@@ -417,17 +480,8 @@
                 });
             });
         }
-        function cargarQuiz() {
-            db.collection("quiz").orderBy("fecha", "desc").onSnapshot(s => {
-                allQuestions = [];
-                const listDiv = document.getElementById('admin-quiz-list'); listDiv.innerHTML = "";
-                s.forEach(doc => {
-                    const q = doc.data(); allQuestions.push({...q, id: doc.id});
-                    if(esAdmin) { listDiv.innerHTML += `<div class="q-list-item"><div><b>${q.pregunta}</b><br><small>Correcta: ${q.opciones[q.correcta]}</small></div><button class="btn-delete" style="width:auto; padding:5px 10px;" onclick="borrar('quiz','${doc.id}')">🗑️</button></div>`; }
-                });
-            });
-        }
 
+        // RENDERIZADOS
         function renderizarMarcas() {
             const marcas = ['all', ...new Set(allProducts.map(p => p.marca ? p.marca.trim() : 'Otros'))];
             const div = document.getElementById('brand-filters');
@@ -439,30 +493,66 @@
             if(filtrados.length === 0) { container.innerHTML = "<p>Vacío...</p>"; return; }
             filtrados.forEach(p => {
                 const isFav = favoritos.includes(p.id) ? 'active' : '';
-                const rams = p.ram ? p.ram.split(',') : ['-'];
                 let adminBtns = esAdmin ? `<div class="admin-actions"><button class="btn-edit" onclick="editarProducto('${p.id}', '${JSON.stringify(p).replace(/"/g, '&quot;')}')">✏️</button><button class="btn-delete" onclick="borrar('productos','${p.id}')">🗑️</button></div>` : '';
                 container.innerHTML += `
                     <div class="product-card">
                         <span class="brand-tag">${p.marca || ''}</span>
-                        <button class="fav-btn ${isFav}" onclick="toggleFavorito('${p.id}', '${p.nombre}')">♥</button>
                         <img src="${p.img}" class="product-photo">
                         <h3>${p.nombre}</h3>
+                        <p style="font-size:0.8rem; color:#555;">${p.ram} | ${p.storage} | ${p.colores}</p>
                         <p class="price">${p.precio}€</p>
+                        <button class="fav-btn ${isFav}" onclick="toggleFavorito('${p.id}', '${p.nombre}')">♥</button>
                         <button class="btn-primary" onclick="addCart('${p.id}', '${p.nombre}', ${p.precio})">AÑADIR</button>
                         ${adminBtns}
                     </div>`;
             });
         }
-        function filtrarMarca(m) { filtroMarcaActual = m; renderizarMarcas(); renderizarProductos(); }
-
-        // RENDERIZAR TALLER SIMPLIFICADO
+        function renderizarPCs() {
+            const container = document.getElementById('pcs-container'); container.innerHTML = "";
+            if(allPcs.length === 0) { container.innerHTML = "<p>No hay PCs disponibles.</p>"; return; }
+            allPcs.forEach(p => {
+                let adminBtns = esAdmin ? `<div class="admin-actions"><button class="btn-edit" onclick="editarPc('${p.id}', '${JSON.stringify(p).replace(/"/g, '&quot;')}')">✏️</button><button class="btn-delete" onclick="borrar('pcs','${p.id}')">🗑️</button></div>` : '';
+                const img = p.img ? `<img src="${p.img}" class="product-photo">` : '';
+                container.innerHTML += `
+                    <div class="product-card">
+                        ${img}
+                        <h3>${p.titulo}</h3>
+                        <ul class="specs-list">
+                            <li><i class="fas fa-microchip"></i> ${p.cpu}</li>
+                            <li><i class="fas fa-memory"></i> ${p.ram}</li>
+                            <li><i class="fas fa-hdd"></i> ${p.ssd}</li>
+                            <li><i class="fas fa-gamepad"></i> ${p.gpu}</li>
+                        </ul>
+                        <p class="price">${p.precio}€</p>
+                        <button class="btn-primary" onclick="addCart('${p.id}', '${p.titulo}', ${p.precio})">AÑADIR</button>
+                        ${adminBtns}
+                    </div>`;
+            });
+        }
+        function renderizarReacos() {
+            const container = document.getElementById('reaco-container'); container.innerHTML = "";
+            if(allReacos.length === 0) { container.innerHTML = "<p>No hay reacondicionados disponibles.</p>"; return; }
+            allReacos.forEach(r => {
+                let adminBtns = esAdmin ? `<div class="admin-actions"><button class="btn-edit" onclick="editarReaco('${r.id}', '${JSON.stringify(r).replace(/"/g, '&quot;')}')">✏️</button><button class="btn-delete" onclick="borrar('reacondicionados','${r.id}')">🗑️</button></div>` : '';
+                const img = r.img ? `<img src="${r.img}" class="product-photo">` : '';
+                container.innerHTML += `
+                    <div class="product-card">
+                        <span class="condition-tag">${r.condicion}</span>
+                        ${img}
+                        <h3>${r.titulo}</h3>
+                        <p style="font-size:0.9rem; margin-bottom:10px;">${r.descripcion}</p>
+                        <p class="price">${r.precio}€</p>
+                        <button class="btn-primary" onclick="addCart('${r.id}', '${r.titulo}', ${r.precio})">AÑADIR</button>
+                        ${adminBtns}
+                    </div>`;
+            });
+        }
         function renderizarTaller() {
             const div = document.getElementById('reparaciones-container'); div.innerHTML = "";
             if(allRepairs.length === 0) { div.innerHTML = "<p>No hay servicios configurados.</p>"; return; }
             allRepairs.forEach(r => {
                 let adminBtns = esAdmin ? `<div class="admin-actions"><button class="btn-edit" onclick="editarReparacion('${r.id}', '${JSON.stringify(r).replace(/"/g, '&quot;')}')">✏️</button><button class="btn-delete" onclick="borrar('reparaciones','${r.id}')">🗑️</button></div>` : '';
                 const img = r.img ? `<img src="${r.img}" class="repair-img">` : '';
-                // Mostrar tarjeta de servicio
                 div.innerHTML += `
                 <div class="repair-card">
                     ${img}
@@ -474,43 +564,66 @@
                 </div>`;
             });
         }
+        function filtrarMarca(m) { filtroMarcaActual = m; renderizarMarcas(); renderizarProductos(); }
 
+        // GESTIÓN DE DATOS (CRUD)
         async function guardarItem(col, id, data, fileIn, oldImg) {
             const f = document.getElementById(fileIn) ? document.getElementById(fileIn).files[0] : null;
             let imgF = oldImg;
             if(f) { const r = new FileReader(); r.readAsDataURL(f); await new Promise(res => r.onload = ()=> { imgF = r.result; res(); }); }
             if(imgF) data.img = imgF;
-            if(id) await db.collection(col).doc(id).update(data);
-            else await db.collection(col).add({...data, fecha: new Date().toISOString()});
-            alert("Guardado");
+            
+            try {
+                if(id) await db.collection(col).doc(id).update(data);
+                else await db.collection(col).add({...data, fecha: new Date().toISOString()});
+                alert("Guardado correctamente");
+            } catch(e) { alert("Error al guardar: " + e.message); }
         }
 
+        // Event Listeners Formularios
         document.getElementById('addProductForm').addEventListener('submit', e=>{ e.preventDefault(); 
             guardarItem('productos', document.getElementById('editProductId').value, {
                 nombre: document.getElementById('newName').value, marca: document.getElementById('newBrand').value, 
                 ram: document.getElementById('newRam').value, storage: document.getElementById('newStorage').value, 
                 colores: document.getElementById('newColors').value, precio: Number(document.getElementById('newPrice').value)
-            }, 'newImg', editImgProduct).then(resetFormProduct); });
+            }, 'newImg', editImgProduct).then(resetFormProduct); 
+        });
 
-        // GUARDAR SERVICIO TALLER (NUEVO FORMATO)
+        document.getElementById('addPcForm').addEventListener('submit', e=>{ e.preventDefault();
+            guardarItem('pcs', document.getElementById('editPcId').value, {
+                titulo: document.getElementById('pcTitle').value, cpu: document.getElementById('pcCpu').value,
+                ram: document.getElementById('pcRam').value, ssd: document.getElementById('pcSsd').value,
+                gpu: document.getElementById('pcGpu').value, precio: Number(document.getElementById('pcPrice').value)
+            }, 'pcImg', editImgPc).then(resetFormPc);
+        });
+
+        document.getElementById('addReacoForm').addEventListener('submit', e=>{ e.preventDefault();
+            guardarItem('reacondicionados', document.getElementById('editReacoId').value, {
+                titulo: document.getElementById('reacoTitle').value, condicion: document.getElementById('reacoCondition').value,
+                descripcion: document.getElementById('reacoDesc').value, precio: Number(document.getElementById('reacoPrice').value)
+            }, 'reacoImg', editImgReaco).then(resetFormReaco);
+        });
+
         document.getElementById('addRepairForm').addEventListener('submit', e=>{ e.preventDefault(); 
             guardarItem('reparaciones', document.getElementById('editRepairId').value, {
-                servicio: document.getElementById('repairService').value,
-                descripcion: document.getElementById('repairDesc').value,
+                servicio: document.getElementById('repairService').value, descripcion: document.getElementById('repairDesc').value,
                 precioTexto: document.getElementById('repairPriceText').value
-            }, 'repairImg', editImgRepair).then(resetFormRepair); });
+            }, 'repairImg', editImgRepair).then(resetFormRepair); 
+        });
         
         document.getElementById('addWebForm').addEventListener('submit', e=>{ e.preventDefault(); 
             guardarItem('webs', document.getElementById('editWebId').value, {
                 icono: document.getElementById('webIcon').value, titulo: document.getElementById('webTitle').value, descripcion: document.getElementById('webDesc').value
-            }, null, null).then(resetFormWeb); });
-        
-        document.getElementById('addQuizForm').addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const data = { pregunta: document.getElementById('quizQuestion').value, opciones: [document.getElementById('quizOp0').value, document.getElementById('quizOp1').value, document.getElementById('quizOp2').value, document.getElementById('quizOp3').value], correcta: parseInt(document.getElementById('quizCorrect').value), fecha: new Date().toISOString() };
-            await db.collection('quiz').add(data); alert("Pregunta añadida"); document.getElementById('addQuizForm').reset();
+            }, null, null).then(resetFormWeb); 
         });
 
+        document.getElementById('addQuizForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            await db.collection('quiz').add({ pregunta: document.getElementById('quizQuestion').value, opciones: [document.getElementById('quizOp0').value, document.getElementById('quizOp1').value, document.getElementById('quizOp2').value, document.getElementById('quizOp3').value], correcta: parseInt(document.getElementById('quizCorrect').value), fecha: new Date().toISOString() });
+            alert("Pregunta añadida"); document.getElementById('addQuizForm').reset();
+        });
+
+        // EDICIÓN
         function editarProducto(id, json) {
             const p = JSON.parse(json); document.getElementById('editProductId').value = id;
             document.getElementById('newBrand').value = p.marca || ''; document.getElementById('newName').value = p.nombre;
@@ -518,6 +631,21 @@
             document.getElementById('newColors').value = p.colores; document.getElementById('newPrice').value = p.precio;
             editImgProduct = p.img; document.getElementById('btnSaveProduct').innerText = "ACTUALIZAR";
             document.getElementById('admin-panel').classList.remove('hidden'); verAdminTab('productos'); window.scrollTo(0,0);
+        }
+        function editarPc(id, json) {
+            const p = JSON.parse(json); document.getElementById('editPcId').value = id;
+            document.getElementById('pcTitle').value = p.titulo; document.getElementById('pcCpu').value = p.cpu;
+            document.getElementById('pcRam').value = p.ram; document.getElementById('pcSsd').value = p.ssd;
+            document.getElementById('pcGpu').value = p.gpu; document.getElementById('pcPrice').value = p.precio;
+            editImgPc = p.img; document.getElementById('btnSavePc').innerText = "ACTUALIZAR";
+            document.getElementById('admin-panel').classList.remove('hidden'); verAdminTab('pcs'); window.scrollTo(0,0);
+        }
+        function editarReaco(id, json) {
+            const r = JSON.parse(json); document.getElementById('editReacoId').value = id;
+            document.getElementById('reacoTitle').value = r.titulo; document.getElementById('reacoCondition').value = r.condicion;
+            document.getElementById('reacoDesc').value = r.descripcion; document.getElementById('reacoPrice').value = r.precio;
+            editImgReaco = r.img; document.getElementById('btnSaveReaco').innerText = "ACTUALIZAR";
+            document.getElementById('admin-panel').classList.remove('hidden'); verAdminTab('reacondicionados'); window.scrollTo(0,0);
         }
         function editarReparacion(id, json) {
             const r = JSON.parse(json); document.getElementById('editRepairId').value = id;
@@ -533,20 +661,53 @@
             document.getElementById('admin-panel').classList.remove('hidden'); verAdminTab('webs'); window.scrollTo(0,0);
         }
 
-        function resetFormProduct(){ document.getElementById('addProductForm').reset(); document.getElementById('editProductId').value=""; editImgProduct=""; document.getElementById('btnSaveProduct').innerText="GUARDAR"; }
-        function resetFormRepair(){ document.getElementById('addRepairForm').reset(); document.getElementById('editRepairId').value=""; editImgRepair=""; document.getElementById('btnSaveRepair').innerText="GUARDAR"; }
+        function resetFormProduct(){ document.getElementById('addProductForm').reset(); document.getElementById('editProductId').value=""; editImgProduct=""; document.getElementById('btnSaveProduct').innerText="GUARDAR MÓVIL"; }
+        function resetFormPc(){ document.getElementById('addPcForm').reset(); document.getElementById('editPcId').value=""; editImgPc=""; document.getElementById('btnSavePc').innerText="GUARDAR PC"; }
+        function resetFormReaco(){ document.getElementById('addReacoForm').reset(); document.getElementById('editReacoId').value=""; editImgReaco=""; document.getElementById('btnSaveReaco').innerText="GUARDAR REACO"; }
+        function resetFormRepair(){ document.getElementById('addRepairForm').reset(); document.getElementById('editRepairId').value=""; editImgRepair=""; document.getElementById('btnSaveRepair').innerText="GUARDAR SERVICIO"; }
         function resetFormWeb(){ document.getElementById('addWebForm').reset(); document.getElementById('editWebId').value=""; document.getElementById('btnSaveWeb').innerText="GUARDAR"; }
-        function borrar(c,i){ if(confirm("Borrar?")) db.collection(c).doc(i).delete(); }
+        function borrar(c,i){ if(confirm("¿Seguro que quieres borrar este elemento?")) db.collection(c).doc(i).delete(); }
 
-        function verificarAdmin() { if(document.getElementById('adminPassInput').value==="4354"){ esAdmin=true; document.getElementById('admin-panel').classList.remove('hidden'); cerrarModal('admin-login-modal'); cargarProductos(); cargarReparaciones(); mostrarWebs(); cargarQuiz(); } else alert("Error"); }
-        function cerrarSesionAdmin(){ esAdmin=false; document.getElementById('admin-panel').classList.add('hidden'); cargarProductos(); cargarReparaciones(); mostrarWebs(); cargarQuiz(); }
+        // LOGIN ADMIN & AUTH
+        function verificarAdmin() { if(document.getElementById('adminPassInput').value==="4354"){ esAdmin=true; document.getElementById('admin-panel').classList.remove('hidden'); cerrarModal('admin-login-modal'); cargarTodo(); } else alert("Contraseña incorrecta"); }
+        function cerrarSesionAdmin(){ esAdmin=false; document.getElementById('admin-panel').classList.add('hidden'); cargarTodo(); }
         
         auth.onAuthStateChanged(u => { usuarioActual=u; if(u){ cerrarModal('auth-modal'); cargarFavoritos(); } else { favoritos=[]; } });
-        document.getElementById('authForm').addEventListener('submit', e => { e.preventDefault(); const em=document.getElementById('authEmail').value, pw=document.getElementById('authPass').value; auth.signInWithEmailAndPassword(em,pw).catch(()=>auth.createUserWithEmailAndPassword(em,pw)); });
 
-        function addCart(id,n,p){ carrito.push({n,p}); document.getElementById('cart-count').innerText=carrito.length; alert("Añadido"); }
-        function realizarPedido(){ if(!carrito.length)return; let m="Hola, pedido:\n"; carrito.forEach(i=>m+=`- ${i.n} (${i.p}€)\n`); window.open(`https://wa.me/${MI_TELEFONO}?text=${encodeURIComponent(m)}`,'_blank'); }
+        // NUEVA LÓGICA DE LOGIN / REGISTRO PARA EVITAR ERRORES SILENCIOSOS
+        function handleAuth(type) {
+            const em = document.getElementById('authEmail').value;
+            const pw = document.getElementById('authPass').value;
+            const errorP = document.getElementById('authError');
+            errorP.innerText = "";
+
+            if(!em || !pw) { errorP.innerText = "Por favor, rellena ambos campos."; return; }
+
+            if(type === 'login') {
+                auth.signInWithEmailAndPassword(em, pw)
+                    .then(() => alert("¡Bienvenido de nuevo!"))
+                    .catch(e => {
+                        console.error(e);
+                        if(e.code === 'auth/wrong-password') errorP.innerText = "Contraseña incorrecta.";
+                        else if(e.code === 'auth/user-not-found') errorP.innerText = "Usuario no encontrado. Regístrate primero.";
+                        else errorP.innerText = "Error: " + e.message;
+                    });
+            } else {
+                auth.createUserWithEmailAndPassword(em, pw)
+                    .then(() => alert("¡Cuenta creada con éxito!"))
+                    .catch(e => {
+                        if(e.code === 'auth/email-already-in-use') errorP.innerText = "Este email ya está registrado. Intenta iniciar sesión.";
+                        else if(e.code === 'auth/weak-password') errorP.innerText = "La contraseña debe tener al menos 6 caracteres.";
+                        else errorP.innerText = "Error: " + e.message;
+                    });
+            }
+        }
+
+        // CARRITO & WHATSAPP
+        function addCart(id,n,p){ carrito.push({n,p}); document.getElementById('cart-count').innerText=carrito.length; alert("Añadido al carrito"); }
+        function realizarPedido(){ if(!carrito.length)return; let m="Hola, quiero realizar este pedido:\n"; carrito.forEach(i=>m+=`- ${i.n} (${i.p}€)\n`); window.open(`https://wa.me/${MI_TELEFONO}?text=${encodeURIComponent(m)}`,'_blank'); }
         function pedirCita(c,d,p){ window.open(`https://wa.me/${MI_TELEFONO}?text=${encodeURIComponent(`Consulta: ${c}\nDetalle: ${d}\nPrecio ref: ${p}`)}`,'_blank'); }
+        
         function gestionarPerfil(){ usuarioActual ? abrirModal('profile-modal') : abrirModal('auth-modal'); }
         function cargarFavoritos(){ if(!usuarioActual)return; db.collection('usuarios').doc(usuarioActual.uid).collection('favoritos').get().then(s=>{ favoritos=[]; s.forEach(d=>favoritos.push(d.id)); cargarProductos(); }); }
         function toggleFavorito(id,n){ if(!usuarioActual) return abrirModal('auth-modal'); const i=favoritos.indexOf(id); if(i===-1){ db.collection('usuarios').doc(usuarioActual.uid).collection('favoritos').doc(id).set({n}); favoritos.push(id); } else { db.collection('usuarios').doc(usuarioActual.uid).collection('favoritos').doc(id).delete(); favoritos.splice(i,1); } cargarProductos(); }
@@ -555,9 +716,19 @@
         window.cerrarModal=(id)=>document.getElementById(id).classList.add('hidden');
 
         // QUIZ LOGIC
-        let currentQuestion = 0; let score = 0; let answered = false;
+        let currentQuestion = 0; let score = 0;
+        function cargarQuiz() {
+            db.collection("quiz").orderBy("fecha", "desc").onSnapshot(s => {
+                allQuestions = [];
+                const listDiv = document.getElementById('admin-quiz-list'); if(listDiv) listDiv.innerHTML = "";
+                s.forEach(doc => {
+                    const q = doc.data(); allQuestions.push({...q, id: doc.id});
+                    if(esAdmin && listDiv) { listDiv.innerHTML += `<div class="q-list-item"><div><b>${q.pregunta}</b></div><button class="btn-delete" onclick="borrar('quiz','${doc.id}')">🗑️</button></div>`; }
+                });
+            });
+        }
         function startQuiz() {
-            if(allQuestions.length === 0) return alert("Aún no hay preguntas cargadas.");
+            if(allQuestions.length === 0) return alert("Cargando preguntas...");
             currentQuestion = 0; score = 0;
             document.getElementById('quiz-start').classList.add('hidden');
             document.getElementById('quiz-result').classList.add('hidden');
@@ -565,7 +736,7 @@
             showQuestion();
         }
         function showQuestion() {
-            answered = false; document.getElementById('nextBtn').classList.add('hidden');
+            document.getElementById('nextBtn').classList.add('hidden');
             const q = allQuestions[currentQuestion];
             document.getElementById('questionText').innerText = q.pregunta;
             document.getElementById('progressBar').style.width = `${((currentQuestion) / allQuestions.length) * 100}%`;
@@ -573,16 +744,15 @@
             q.opciones.forEach((opt, index) => {
                 const btn = document.createElement('button'); btn.className = "quiz-btn";
                 btn.innerHTML = `<span style="font-weight:800; margin-right:10px;">${String.fromCharCode(65+index)}</span> ${opt}`;
-                btn.onclick = () => checkAnswer(index, btn);
+                btn.onclick = () => checkAnswer(index, btn, q.correcta);
                 optsDiv.appendChild(btn);
             });
         }
-        function checkAnswer(selected, btnElement) {
-            if(answered) return; answered = true;
-            const q = allQuestions[currentQuestion];
+        function checkAnswer(selected, btnElement, correct) {
             const allBtns = document.querySelectorAll('.quiz-btn');
-            if(selected === q.correcta) { btnElement.classList.add('correct'); btnElement.innerHTML += ' <i class="fas fa-check-circle"></i>'; score++; } 
-            else { btnElement.classList.add('wrong'); btnElement.innerHTML += ' <i class="fas fa-times-circle"></i>'; if(allBtns[q.correcta]) allBtns[q.correcta].classList.add('correct'); }
+            allBtns.forEach(b => b.disabled = true);
+            if(selected === correct) { btnElement.classList.add('correct'); score++; } 
+            else { btnElement.classList.add('wrong'); if(allBtns[correct]) allBtns[correct].classList.add('correct'); }
             document.getElementById('nextBtn').classList.remove('hidden');
         }
         function nextQuestion() { currentQuestion++; if(currentQuestion < allQuestions.length) showQuestion(); else showResult(); }
@@ -590,11 +760,14 @@
             document.getElementById('quiz-game').classList.add('hidden');
             document.getElementById('quiz-result').classList.remove('hidden');
             document.getElementById('finalScore').innerText = `${score} / ${allQuestions.length}`;
-            let msg = score === allQuestions.length ? "¡INCREÍBLE! ERES UN EXPERTO 🏆" : (score > allQuestions.length / 2 ? "¡MUY BIEN! SABES BASTANTE 👍" : "¡INTÉNTALO DE NUEVO! 💪");
+            let msg = score === allQuestions.length ? "¡INCREÍBLE! 🏆" : (score > allQuestions.length / 2 ? "¡MUY BIEN! 👍" : "¡INTÉNTALO DE NUEVO! 💪");
             document.getElementById('feedbackText').innerText = msg;
         }
 
-        cargarProductos(); cargarReparaciones(); mostrarWebs(); cargarQuiz();
+        function cargarTodo() {
+            cargarProductos(); cargarPCs(); cargarReacondicionados(); cargarReparaciones(); mostrarWebs(); cargarQuiz();
+        }
+        cargarTodo();
     </script>
 </body>
 </html>
