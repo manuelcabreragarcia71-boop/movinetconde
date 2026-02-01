@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>MOVINETCONDE | Expertos en Tecnología</title>
+    <title>MOVINETCONDE | Tecnología & Servicios</title>
     
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;800&display=swap" rel="stylesheet">
@@ -11,11 +11,12 @@
     <style>
         :root {
             --primary: #000000;
-            --accent: #ff8c00; /* Naranja corporativo */
+            --accent: #ff8c00;
+            --white: #ffffff;
             --text: #333333;
             --bg-glass: rgba(255, 255, 255, 0.9); 
-            --success: #2ecc71; /* Verde confirmado */
-            --pending: #f39c12; /* Naranja pendiente */
+            --success: #2ecc71;
+            --pending: #f39c12;
             --error: #e74c3c;
         }
 
@@ -34,7 +35,7 @@
         .logo-text { font-size: 1.4rem; font-weight: 800; margin: 0; }
         .logo-text span { color: var(--accent); }
         .nav-icons { display: flex; gap: 15px; }
-        .btn-icon { background: none; border: none; font-size: 1.2rem; cursor: pointer; color: var(--primary); position: relative; }
+        .btn-icon { background: none; border: none; font-size: 1.2rem; cursor: pointer; color: var(--primary); }
         
         .nav-menu { display: flex; gap: 10px; overflow-x: auto; padding-bottom: 5px; -webkit-overflow-scrolling: touch; scrollbar-width: none; }
         .menu-btn { background: rgba(255,255,255,0.8); border: none; padding: 8px 15px; border-radius: 20px; font-weight: 600; cursor: pointer; white-space: nowrap; font-size: 0.9rem; transition: 0.3s; }
@@ -51,7 +52,11 @@
         .section-title { text-align: center; color: var(--primary); text-transform: uppercase; margin-bottom: 20px; border-bottom: 2px solid var(--accent); display: inline-block; padding-bottom: 5px; font-weight: 800; }
         .center-wrapper { text-align: center; }
 
-        /* CARDS */
+        /* CARDS & FILTROS */
+        .filter-scroll { display: flex; gap: 10px; overflow-x: auto; padding: 10px 0; margin-bottom: 20px; }
+        .filter-badge { background: rgba(255,255,255,0.8); border: 2px solid rgba(0,0,0,0.1); padding: 8px 15px; border-radius: 15px; cursor: pointer; font-weight: bold; white-space: nowrap; transition: 0.3s; }
+        .filter-badge.active { border-color: var(--accent); color: var(--accent); background: #fff; }
+
         .grid-container { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px; }
         .product-card, .repair-card, .review-card { 
             background: rgba(255, 255, 255, 0.85); padding: 15px; border-radius: 10px; text-align: center; border: 1px solid rgba(0,0,0,0.1); position: relative; box-shadow: 0 5px 15px rgba(0,0,0,0.05); 
@@ -60,12 +65,16 @@
         .brand-tag, .condition-tag { position: absolute; top: 15px; padding: 2px 8px; border-radius: 4px; font-size: 0.7rem; font-weight: bold; text-transform: uppercase; color: white; }
         .brand-tag { left: 15px; background: rgba(0,0,0,0.8); }
         .condition-tag { right: 15px; background: var(--success); }
+        
+        .repair-img { width: 100px; height: 100px; object-fit: cover; border-radius: 50%; margin: 0 auto 10px; border: 3px solid var(--accent); }
+        .specs-list { list-style: none; padding: 0; text-align: left; font-size: 0.85rem; margin: 10px 0; background: rgba(255,255,255,0.5); padding: 10px; border-radius: 5px; }
+        .specs-list li { margin-bottom: 4px; display: flex; align-items: center; gap: 5px; }
 
         .price { font-size: 1.3rem; font-weight: 800; color: var(--accent); margin: 10px 0; }
         .btn-primary { background: var(--primary); color: white; border: none; padding: 10px; width: 100%; border-radius: 5px; cursor: pointer; font-weight: bold; text-transform: uppercase; margin-top: 5px; }
         .btn-secondary { background: white; color: var(--primary); border: 2px solid var(--primary); padding: 10px; width: 100%; border-radius: 5px; cursor: pointer; font-weight: bold; text-transform: uppercase; margin-top: 5px; }
 
-        /* ESTADO DE PEDIDOS (USER PROFILE) */
+        /* PEDIDOS Y ESTADOS */
         .order-card { background: white; padding: 15px; margin-bottom: 10px; border-radius: 8px; border-left: 5px solid #ccc; text-align: left; }
         .order-card.pendiente { border-left-color: var(--pending); }
         .order-card.confirmado { border-left-color: var(--success); background: #f0fff4; }
@@ -73,25 +82,19 @@
         .bg-pending { background: var(--pending); }
         .bg-success { background: var(--success); }
 
-        /* REVIEWS */
-        .stars { color: gold; font-size: 1.2rem; }
-        .review-card { text-align: left; border-left: 3px solid var(--accent); }
-        
-        /* ADMIN & FORMS */
-        .form-box { max-width: 600px; margin: 0 auto; background: rgba(255,255,255,0.9); padding: 30px; border-radius: 10px; }
-        input, textarea, select { width: 100%; padding: 12px; margin-bottom: 15px; border: 1px solid #ccc; border-radius: 5px; box-sizing: border-box; background: rgba(255,255,255,0.9); }
-        
+        /* ADMIN */
         .admin-panel { background: rgba(255, 248, 225, 0.95); border: 2px dashed var(--accent); margin-bottom: 20px; padding: 20px; }
         .admin-tabs { display: flex; gap: 10px; margin-bottom: 20px; border-bottom: 1px solid #ccc; padding-bottom: 10px; overflow-x: auto; }
         .admin-tab-btn { background: none; border: none; font-weight: bold; cursor: pointer; opacity: 0.5; font-size: 0.9rem; white-space: nowrap; }
         .admin-tab-btn.active { opacity: 1; color: var(--accent); border-bottom: 2px solid var(--accent); }
-        
-        .admin-actions { display: flex; gap: 5px; margin-top: 5px; }
-        .btn-edit { background: #f1c40f; padding: 5px; border-radius:5px; border:none; cursor:pointer; flex:1; }
-        .btn-delete { background: #e74c3c; color:white; padding: 5px; border-radius:5px; border:none; cursor:pointer; flex:1; }
-        .btn-confirm { background: var(--success); color:white; padding: 5px; border-radius:5px; border:none; cursor:pointer; flex:2; font-weight:bold; }
+        .admin-actions { display: flex; gap: 5px; margin-top: 10px; padding-top: 10px; border-top: 1px solid rgba(0,0,0,0.1); }
+        .btn-edit { background: #f1c40f; color: black; border: none; padding: 5px; flex: 1; cursor: pointer; border-radius: 5px; font-weight: bold; }
+        .btn-delete { background: #e74c3c; color: white; border: none; padding: 5px; flex: 1; cursor: pointer; border-radius: 5px; font-weight: bold; }
+        .btn-confirm { background: var(--success); color: white; padding: 8px; border:none; border-radius:5px; cursor:pointer; width:100%; margin-top:5px; font-weight:bold;}
 
-        /* MODALES */
+        /* MODALES Y FORMULARIOS */
+        .form-box { max-width: 600px; margin: 0 auto; background: rgba(255,255,255,0.9); padding: 30px; border-radius: 10px; }
+        input, textarea, select { width: 100%; padding: 12px; margin-bottom: 15px; border: 1px solid #ccc; border-radius: 5px; box-sizing: border-box; background: rgba(255,255,255,0.9); }
         .modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); z-index: 2000; display: flex; justify-content: center; align-items: center; }
         .modal-content { background: rgba(255,255,255,0.98); padding: 30px; width: 90%; max-width: 500px; border-radius: 10px; position: relative; max-height: 90vh; overflow-y: auto; }
         .close { position: absolute; top: 10px; right: 20px; font-size: 1.8rem; cursor: pointer; }
@@ -120,9 +123,11 @@
             <div class="nav-menu">
                 <button onclick="verSeccion('catalogo')" class="menu-btn active" id="btn-catalogo">📱 Móviles</button>
                 <button onclick="verSeccion('pcs')" class="menu-btn" id="btn-pcs">🖥️ PC</button>
+                <button onclick="verSeccion('reacondicionados')" class="menu-btn" id="btn-reacondicionados">♻️ Segunda Mano</button>
                 <button onclick="verSeccion('reparaciones')" class="menu-btn" id="btn-reparaciones">🔧 Taller</button>
-                <button onclick="verSeccion('resenas')" class="menu-btn" id="btn-resenas">⭐ Opiniones</button>
                 <button onclick="verSeccion('webs')" class="menu-btn" id="btn-webs">💻 Web</button>
+                <button onclick="verSeccion('resenas')" class="menu-btn" id="btn-resenas">⭐ Reseñas</button>
+                <button onclick="verSeccion('quiz')" class="menu-btn" id="btn-quiz">❓ Quiz</button>
             </div>
         </div>
     </nav>
@@ -130,88 +135,161 @@
     <div id="admin-panel" class="container admin-panel hidden">
         <h3 style="margin-top:0;">Panel de Administración</h3>
         <div class="admin-tabs">
-            <button class="admin-tab-btn active" onclick="verAdminTab('pedidos')">📦 Pedidos Clientes</button>
-            <button class="admin-tab-btn" onclick="verAdminTab('citas')">🔧 Citas Taller</button>
+            <button class="admin-tab-btn active" onclick="verAdminTab('pedidos')">🚨 PEDIDOS</button>
+            <button class="admin-tab-btn" onclick="verAdminTab('citas')">🔧 Citas</button>
             <button class="admin-tab-btn" onclick="verAdminTab('productos')">Móviles</button>
             <button class="admin-tab-btn" onclick="verAdminTab('pcs')">PC/Gaming</button>
+            <button class="admin-tab-btn" onclick="verAdminTab('reacondicionados')">Reacondicionados</button>
             <button class="admin-tab-btn" onclick="verAdminTab('reparaciones')">Servicios</button>
+            <button class="admin-tab-btn" onclick="verAdminTab('webs')">Webs</button>
         </div>
 
         <div id="admin-tab-pedidos">
-            <h4>Pedidos Pendientes de Confirmar</h4>
-            <div id="admin-orders-list" class="grid-container" style="grid-template-columns: 1fr;"></div>
+            <h4 style="color:var(--accent);">Últimos Pedidos (Tiempo Real)</h4>
+            <div id="admin-orders-list" class="grid-container" style="grid-template-columns: 1fr;">Cargando pedidos...</div>
         </div>
 
         <div id="admin-tab-citas" class="hidden">
-            <h4>Solicitudes de Reparación</h4>
-            <div id="admin-citas-list" class="grid-container" style="grid-template-columns: 1fr;"></div>
+            <h4 style="color:var(--accent);">Citas de Taller</h4>
+            <div id="admin-citas-list" class="grid-container" style="grid-template-columns: 1fr;">Cargando citas...</div>
         </div>
 
         <div id="admin-tab-productos" class="hidden">
-            <h4>Añadir Móvil</h4>
+            <h3>Nuevo Móvil</h3>
             <form id="addProductForm">
-                <input type="text" id="newBrand" placeholder="Marca" required>
+                <input type="hidden" id="editProductId">
+                <input type="file" id="newImg" accept="image/*">
+                <input type="text" id="newBrand" placeholder="Marca (Samsung)" required>
                 <input type="text" id="newName" placeholder="Modelo" required>
-                <input type="number" id="newPrice" placeholder="Precio" required>
-                <input type="text" id="newImg" placeholder="URL Imagen (o dejar vacío)" style="display:none;"> <button type="submit" class="btn-primary">Añadir Móvil</button>
+                <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px;">
+                    <input type="text" id="newRam" placeholder="RAM">
+                    <input type="text" id="newStorage" placeholder="Memoria">
+                </div>
+                <input type="text" id="newColors" placeholder="Colores">
+                <input type="number" id="newPrice" placeholder="Precio (€)" required>
+                <button type="submit" class="btn-primary" id="btnSaveProduct">GUARDAR MÓVIL</button>
+                <button type="button" onclick="resetFormProduct()" style="margin-top:5px;width:100%;border:none;background:#ccc;">Cancelar</button>
             </form>
-            <div style="margin-top:10px; font-size:0.8rem; color:#666;">*Usa el formulario completo anterior para subir fotos. Esto es un acceso rápido.</div>
+        </div>
+        
+        <div id="admin-tab-pcs" class="hidden">
+            <h3>Nuevo PC / Gaming</h3>
+            <form id="addPcForm">
+                <input type="hidden" id="editPcId">
+                <input type="file" id="pcImg" accept="image/*">
+                <input type="text" id="pcTitle" placeholder="Título (PC Gamer X)" required>
+                <input type="text" id="pcCpu" placeholder="CPU (i5/Ryzen 5)" required>
+                <input type="text" id="pcRam" placeholder="RAM" required>
+                <input type="text" id="pcGpu" placeholder="Gráfica" required>
+                <input type="text" id="pcSsd" placeholder="Disco Duro" required>
+                <input type="number" id="pcPrice" placeholder="Precio" required>
+                <button type="submit" class="btn-primary" id="btnSavePc">GUARDAR PC</button>
+                 <button type="button" onclick="resetFormPc()" style="margin-top:5px;width:100%;border:none;background:#ccc;">Cancelar</button>
+            </form>
         </div>
 
-        <div id="admin-tab-pcs" class="hidden"><p>Gestión de PCs (Usa lógica similar a móviles)</p></div>
-        <div id="admin-tab-reparaciones" class="hidden"><p>Gestión de Servicios</p></div>
+        <div id="admin-tab-reacondicionados" class="hidden">
+            <h3>Nuevo Reacondicionado</h3>
+            <form id="addReacoForm">
+                <input type="hidden" id="editReacoId">
+                <input type="file" id="reacoImg" accept="image/*">
+                <input type="text" id="reacoTitle" placeholder="Producto" required>
+                <input type="text" id="reacoCondition" placeholder="Estado (Grado A)" required>
+                <textarea id="reacoDesc" placeholder="Descripción"></textarea>
+                <input type="number" id="reacoPrice" placeholder="Precio" required>
+                <button type="submit" class="btn-primary" id="btnSaveReaco">GUARDAR</button>
+                <button type="button" onclick="resetFormReaco()" style="margin-top:5px;width:100%;border:none;background:#ccc;">Cancelar</button>
+            </form>
+        </div>
 
-        <button onclick="cerrarSesionAdmin()" style="margin-top:20px; background:#333; color:white; border:none; padding:10px; width:100%;">Cerrar Admin</button>
+        <div id="admin-tab-reparaciones" class="hidden">
+            <h3>Nuevo Servicio Taller</h3>
+            <form id="addRepairForm">
+                <input type="hidden" id="editRepairId">
+                <input type="file" id="repairImg" accept="image/*">
+                <input type="text" id="repairService" placeholder="Servicio (Cambio Pantalla)" required>
+                <textarea id="repairDesc" placeholder="Descripción"></textarea>
+                <input type="text" id="repairPriceText" placeholder="Texto Precio (Desde 20€)" required>
+                <button type="submit" class="btn-primary" id="btnSaveRepair">GUARDAR SERVICIO</button>
+                <button type="button" onclick="resetFormRepair()" style="margin-top:5px;width:100%;border:none;background:#ccc;">Cancelar</button>
+            </form>
+        </div>
+
+        <div id="admin-tab-webs" class="hidden">
+            <h3>Diseño Web</h3>
+            <form id="addWebForm">
+                <input type="hidden" id="editWebId">
+                <input type="text" id="webIcon" placeholder="Icono (fas fa-desktop)" value="fas fa-desktop">
+                <input type="text" id="webTitle" placeholder="Título" required>
+                <textarea id="webDesc" placeholder="Descripción"></textarea>
+                <button type="submit" class="btn-primary" id="btnSaveWeb">GUARDAR WEB</button>
+                <button type="button" onclick="resetFormWeb()" style="margin-top:5px;width:100%;border:none;background:#ccc;">Cancelar</button>
+            </form>
+        </div>
+
+        <button onclick="cerrarSesionAdmin()" style="margin-top:20px; background:#333; color:white; border:none; padding:10px; width:100%;">Cerrar Sesión Admin</button>
     </div>
 
     <div id="sec-catalogo" class="container">
         <div class="center-wrapper"><h2 class="section-title">Móviles</h2></div>
+        <div id="brand-filters" class="filter-scroll">
+            <button class="filter-badge active" onclick="filtrarMarca('all')">Todo</button>
+        </div>
         <div id="productos-container" class="grid-container">Cargando...</div>
     </div>
 
     <div id="sec-pcs" class="container hidden">
-        <div class="center-wrapper"><h2 class="section-title">Ordenadores</h2></div>
+        <div class="center-wrapper"><h2 class="section-title">Ordenadores & Gaming</h2></div>
         <div id="pcs-container" class="grid-container">Cargando...</div>
     </div>
 
-    <div id="sec-reparaciones" class="container hidden">
-        <div class="center-wrapper"><h2 class="section-title">Reparaciones</h2></div>
-        <div id="reparaciones-container" class="grid-container" style="margin-bottom: 30px;"></div>
-        
-        <div class="form-box glass-effect">
-            <h3>Solicitar Reparación / Presupuesto</h3>
-            <p style="font-size:0.9rem;">Tu solicitud quedará registrada en tu perfil.</p>
-            <form id="tallerForm">
-                <input type="text" id="tallerNombre" placeholder="Tu Nombre" required>
-                <input type="text" id="tallerDispositivo" placeholder="Dispositivo y Avería (Ej: iPhone X Pantalla Rota)" required>
-                <button type="submit" class="btn-primary">ENVIAR SOLICITUD Y CONTACTAR</button>
-            </form>
-        </div>
+    <div id="sec-reacondicionados" class="container hidden">
+        <div class="center-wrapper"><h2 class="section-title">Reacondicionados</h2></div>
+        <div id="reaco-container" class="grid-container">Cargando...</div>
     </div>
 
-    <div id="sec-resenas" class="container hidden">
-        <div class="center-wrapper"><h2 class="section-title">Opiniones de Clientes</h2></div>
-        <div style="text-align:center; margin-bottom:20px;">
-            <button onclick="abrirModal('review-modal')" class="btn-primary" style="width:auto; padding: 10px 30px;">ESCRIBIR RESEÑA</button>
-        </div>
-        <div id="reviews-container" class="grid-container">
-            <p style="text-align:center;">Cargando opiniones...</p>
+    <div id="sec-reparaciones" class="container hidden">
+        <div class="center-wrapper"><h2 class="section-title">Servicios de Taller</h2></div>
+        <div id="reparaciones-container" class="grid-container" style="margin-bottom:30px;">Cargando...</div>
+        
+        <div class="form-box glass-effect">
+            <h3>Solicitar Reparación</h3>
+            <form id="tallerForm">
+                <input type="text" id="tallerNombre" placeholder="Tu Nombre" required>
+                <input type="text" id="tallerDispositivo" placeholder="Dispositivo y Avería" required>
+                <button type="submit" class="btn-primary">ENVIAR Y ABRIR WHATSAPP</button>
+            </form>
         </div>
     </div>
 
     <div id="sec-webs" class="container hidden">
         <div class="center-wrapper"><h2 class="section-title">Diseño Web</h2></div>
-        <p style="text-align:center;">Contáctanos para tu web a medida.</p>
+        <div id="webs-container" class="grid-container"></div>
+    </div>
+
+    <div id="sec-resenas" class="container hidden">
+        <div class="center-wrapper"><h2 class="section-title">Opiniones</h2></div>
+        <div style="text-align:center; margin-bottom:20px;">
+            <button onclick="abrirModal('review-modal')" class="btn-primary" style="width:auto;">Escribir Reseña</button>
+        </div>
+        <div id="reviews-container" class="grid-container">Cargando...</div>
+    </div>
+
+    <div id="sec-quiz" class="container hidden">
+        <div class="center-wrapper"><h2 class="section-title">Trivia Tech</h2></div>
+        <div style="text-align:center; background:white; padding:20px; border-radius:10px;">
+            <h3>¡Muy Pronto!</h3>
+            <p>Estamos preparando las mejores preguntas para ti.</p>
+        </div>
     </div>
 
     <div id="cart-modal" class="modal hidden">
         <div class="modal-content">
             <span class="close" onclick="cerrarModal('cart-modal')">&times;</span>
-            <h2>Tu Pedido</h2>
+            <h2>Carrito</h2>
             <ul id="cart-items" style="list-style:none; padding:0; margin:20px 0;"></ul>
             <h3>Total: <span id="total-price">0</span>€</h3>
-            <p style="font-size:0.8rem; color:#666;">Al pulsar "Comprar", el pedido se guardará en tu perfil y se abrirá WhatsApp.</p>
-            <button onclick="realizarPedido()" class="btn-primary">CONFIRMAR Y ABRIR WHATSAPP</button>
+            <button onclick="realizarPedido()" class="btn-primary">FINALIZAR COMPRA (WHATSAPP)</button>
         </div>
     </div>
 
@@ -219,23 +297,14 @@
         <div class="modal-content" style="max-width:600px;">
             <span class="close" onclick="cerrarModal('profile-modal')">&times;</span>
             <h2 id="profile-name">Mi Perfil</h2>
-            
             <div class="profile-tabs">
                 <button class="profile-tab active" onclick="verTabPerfil('pedidos')">Mis Pedidos</button>
                 <button class="profile-tab" onclick="verTabPerfil('reparaciones')">Reparaciones</button>
                 <button class="profile-tab" onclick="verTabPerfil('favoritos')">Favoritos</button>
             </div>
-
-            <div id="tab-pedidos">
-                <div id="user-orders-list">Cargando pedidos...</div>
-            </div>
-            <div id="tab-reparaciones" class="hidden">
-                <div id="user-repairs-list">Cargando reparaciones...</div>
-            </div>
-            <div id="tab-favoritos" class="hidden">
-                <ul id="fav-list" style="list-style:none; padding:0"></ul>
-            </div>
-
+            <div id="tab-pedidos"><div id="user-orders-list">Cargando...</div></div>
+            <div id="tab-reparaciones" class="hidden"><div id="user-repairs-list">Cargando...</div></div>
+            <div id="tab-favoritos" class="hidden"><ul id="fav-list" style="list-style:none;"></ul></div>
             <button onclick="auth.signOut(); cerrarModal('profile-modal');" class="btn-delete" style="background:#333; margin-top:20px;">Cerrar Sesión</button>
         </div>
     </div>
@@ -243,18 +312,16 @@
     <div id="review-modal" class="modal hidden">
         <div class="modal-content">
             <span class="close" onclick="cerrarModal('review-modal')">&times;</span>
-            <h3>Escribir Opinión</h3>
+            <h3>Tu Opinión</h3>
             <form id="addReviewForm">
-                <input type="text" id="reviewName" placeholder="Tu Nombre" required>
+                <input type="text" id="reviewName" placeholder="Nombre" required>
                 <select id="reviewStars" required>
-                    <option value="5">⭐⭐⭐⭐⭐ Excelente</option>
-                    <option value="4">⭐⭐⭐⭐ Muy bueno</option>
-                    <option value="3">⭐⭐⭐ Normal</option>
-                    <option value="2">⭐⭐ Regular</option>
-                    <option value="1">⭐ Malo</option>
+                    <option value="5">⭐⭐⭐⭐⭐</option>
+                    <option value="4">⭐⭐⭐⭐</option>
+                    <option value="3">⭐⭐⭐</option>
                 </select>
-                <textarea id="reviewText" placeholder="Cuéntanos tu experiencia..." rows="3" required></textarea>
-                <button type="submit" class="btn-primary">PUBLICAR RESEÑA</button>
+                <textarea id="reviewText" placeholder="Comentario..." required></textarea>
+                <button type="submit" class="btn-primary">Publicar</button>
             </form>
         </div>
     </div>
@@ -263,30 +330,29 @@
         <div class="modal-content">
             <span class="close" onclick="cerrarModal('auth-modal')">&times;</span>
             <h2 style="text-align:center">Acceso Clientes</h2>
-            <p style="text-align:center; font-size:0.9rem;">Inicia sesión para guardar tus pedidos y ver su estado.</p>
             <form id="authForm">
                 <input type="email" id="authEmail" placeholder="Email" required>
                 <input type="password" id="authPass" placeholder="Contraseña" required>
                 <div style="display:flex; gap:10px;">
-                    <button type="button" class="btn-primary" onclick="handleAuth('login')">ENTRAR</button>
-                    <button type="button" class="btn-secondary" onclick="handleAuth('register')">REGISTRARSE</button>
+                    <button type="button" class="btn-primary" onclick="handleAuth('login')">Entrar</button>
+                    <button type="button" class="btn-secondary" onclick="handleAuth('register')">Registrarse</button>
                 </div>
-                <p id="authError" style="color:red; text-align:center; font-size:0.8rem; margin-top:10px;"></p>
+                <p id="authError" style="color:red; text-align:center; margin-top:10px;"></p>
             </form>
         </div>
     </div>
-    
+
     <div id="admin-login-modal" class="modal hidden">
         <div class="modal-content" style="max-width:300px; text-align:center;">
             <span class="close" onclick="cerrarModal('admin-login-modal')">&times;</span>
             <h3>Zona Admin</h3>
-            <input type="password" id="adminPassInput" placeholder="Contraseña">
+            <input type="password" id="adminPassInput" placeholder="Clave">
             <button onclick="verificarAdmin()" class="btn-primary">Entrar</button>
         </div>
     </div>
 
     <footer>
-        <a href="https://www.instagram.com/movinetconde/" target="_blank" style="color:orange; font-size:2rem;"><i class="fab fa-instagram"></i></a>
+        <a href="https://www.instagram.com/movinetconde/" target="_blank" style="color:var(--accent); font-size:2rem;"><i class="fab fa-instagram"></i></a>
         <p>&copy; 2025 MOVINETCONDE</p>
     </footer>
 
@@ -306,211 +372,35 @@
         const auth = firebase.auth();
 
         let carrito = []; let usuarioActual = null; let esAdmin = false; let favoritos = [];
+        let allProducts = []; let filtroMarcaActual = 'all';
+        let editImgProduct="", editImgPc="", editImgReaco="", editImgRepair="";
         const MI_TELEFONO = "34613509309"; 
 
-        // --- AUTH ---
+        // ------------------ AUTH ------------------
         auth.onAuthStateChanged(u => { 
             usuarioActual = u; 
             if(u) {
                 cerrarModal('auth-modal'); 
-                document.getElementById('profile-name').innerText = "Perfil de " + (u.email.split('@')[0]);
+                document.getElementById('profile-name').innerText = "Perfil: " + u.email.split('@')[0];
                 cargarDatosPerfil();
-            } else {
-                favoritos = [];
-            }
+            } else { favoritos = []; }
         });
 
         function handleAuth(type) {
-            const em = document.getElementById('authEmail').value; const pw = document.getElementById('authPass').value;
+            const em = document.getElementById('authEmail').value, pw = document.getElementById('authPass').value;
             const err = document.getElementById('authError'); err.innerText="";
-            if(!em || !pw){ err.innerText="Rellena todo."; return; }
+            if(!em || !pw) { err.innerText="Rellena todo."; return; }
             const p = type === 'login' ? auth.signInWithEmailAndPassword(em,pw) : auth.createUserWithEmailAndPassword(em,pw);
-            p.catch(e => err.innerText = e.message);
+            p.then(()=>alert("Bienvenido")).catch(e => err.innerText = e.message);
         }
 
-        // --- NAVEGACIÓN ---
+        // ------------------ NAVEGACIÓN ------------------
         function verSeccion(id) {
             document.querySelectorAll('[id^="sec-"]').forEach(s => s.classList.add('hidden'));
             document.querySelectorAll('.menu-btn').forEach(b => b.classList.remove('active'));
             document.getElementById(`sec-${id}`).classList.remove('hidden');
             document.getElementById(`btn-${id}`).classList.add('active');
         }
-
-        // --- GESTIÓN DE PEDIDOS Y CITAS (Lógica Nueva) ---
-        
-        // 1. REALIZAR PEDIDO (Guardar en DB -> WhatsApp)
-        async function realizarPedido(){
-            if(!carrito.length) return;
-            
-            if(!usuarioActual) {
-                alert("Debes iniciar sesión para que el pedido se guarde en tu historial.");
-                abrirModal('auth-modal');
-                return;
-            }
-
-            let total = 0;
-            let itemsTexto = "";
-            carrito.forEach(i => { total += i.p; itemsTexto += `${i.n} (${i.p}€), `; });
-
-            // Guardar en Firestore
-            try {
-                await db.collection('pedidos').add({
-                    uid: usuarioActual.uid,
-                    email: usuarioActual.email,
-                    items: carrito,
-                    total: total,
-                    fecha: new Date().toISOString(),
-                    estado: 'pendiente' // Estado inicial
-                });
-
-                // Enviar a WhatsApp
-                let m = `Hola, soy ${usuarioActual.email}. He realizado un pedido en la web:\n${itemsTexto}\nTotal: ${total}€`;
-                window.open(`https://wa.me/${MI_TELEFONO}?text=${encodeURIComponent(m)}`,'_blank');
-                
-                carrito = []; 
-                document.getElementById('cart-count').innerText = "0";
-                cerrarModal('cart-modal');
-                alert("Pedido registrado en tu perfil y WhatsApp abierto.");
-                cargarDatosPerfil(); // Refrescar perfil
-            } catch(e) {
-                alert("Error al guardar pedido: " + e.message);
-            }
-        }
-
-        // 2. SOLICITAR REPARACIÓN (Guardar en DB -> WhatsApp)
-        document.getElementById('tallerForm').addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const nombre = document.getElementById('tallerNombre').value;
-            const disp = document.getElementById('tallerDispositivo').value;
-
-            if(!usuarioActual) { alert("Inicia sesión para guardar el seguimiento."); abrirModal('auth-modal'); return; }
-
-            try {
-                await db.collection('citas').add({
-                    uid: usuarioActual.uid,
-                    email: usuarioActual.email,
-                    nombre: nombre,
-                    dispositivo: disp,
-                    fecha: new Date().toISOString(),
-                    estado: 'pendiente'
-                });
-                
-                window.open(`https://wa.me/${MI_TELEFONO}?text=${encodeURIComponent(`Hola, soy ${nombre}. Consulta taller: ${disp}`)}`,'_blank');
-                document.getElementById('tallerForm').reset();
-            } catch(e) { alert("Error: " + e.message); }
-        });
-
-        // 3. RESEÑAS
-        document.getElementById('addReviewForm').addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const n = document.getElementById('reviewName').value;
-            const s = document.getElementById('reviewStars').value;
-            const t = document.getElementById('reviewText').value;
-
-            await db.collection('resenas').add({
-                nombre: n, estrellas: s, texto: t, fecha: new Date().toISOString(),
-                uid: usuarioActual ? usuarioActual.uid : 'anonimo'
-            });
-            alert("¡Gracias por tu opinión!");
-            cerrarModal('review-modal');
-            cargarResenas();
-        });
-
-        function cargarResenas() {
-            db.collection('resenas').orderBy('fecha', 'desc').limit(10).onSnapshot(snap => {
-                const div = document.getElementById('reviews-container');
-                div.innerHTML = "";
-                snap.forEach(doc => {
-                    const r = doc.data();
-                    const stars = "⭐".repeat(r.estrellas);
-                    div.innerHTML += `
-                        <div class="review-card">
-                            <div class="stars">${stars}</div>
-                            <b>${r.nombre}</b>
-                            <p>"${r.texto}"</p>
-                        </div>
-                    `;
-                });
-            });
-        }
-
-        // --- PERFIL DE USUARIO ---
-        function gestionarPerfil() { usuarioActual ? abrirModal('profile-modal') : abrirModal('auth-modal'); }
-        
-        function verTabPerfil(tab) {
-            document.querySelectorAll('[id^="tab-"]').forEach(t => t.classList.add('hidden'));
-            document.querySelectorAll('.profile-tab').forEach(b => b.classList.remove('active'));
-            document.getElementById(`tab-${tab}`).classList.remove('hidden');
-            event.target.classList.add('active');
-        }
-
-        function cargarDatosPerfil() {
-            if(!usuarioActual) return;
-
-            // Cargar Pedidos
-            db.collection('pedidos').where('uid', '==', usuarioActual.uid).orderBy('fecha', 'desc').onSnapshot(snap => {
-                const div = document.getElementById('user-orders-list');
-                div.innerHTML = "";
-                if(snap.empty) { div.innerHTML = "<p>No tienes pedidos.</p>"; return; }
-                
-                snap.forEach(doc => {
-                    const d = doc.data();
-                    const fecha = new Date(d.fecha).toLocaleDateString();
-                    const claseEstado = d.estado === 'confirmado' ? 'bg-success' : 'bg-pending';
-                    const bordeEstado = d.estado === 'confirmado' ? 'confirmado' : 'pendiente';
-                    
-                    let listaItems = d.items.map(i => `<li>${i.n}</li>`).join('');
-
-                    div.innerHTML += `
-                        <div class="order-card ${bordeEstado}">
-                            <div style="display:flex; justify-content:space-between;">
-                                <b>${fecha}</b>
-                                <span class="status-badge ${claseEstado}">${d.estado.toUpperCase()}</span>
-                            </div>
-                            <ul style="margin:5px 0; padding-left:20px; font-size:0.9rem;">${listaItems}</ul>
-                            <div style="text-align:right; font-weight:bold;">Total: ${d.total}€</div>
-                        </div>
-                    `;
-                });
-            });
-
-            // Cargar Citas
-            db.collection('citas').where('uid', '==', usuarioActual.uid).orderBy('fecha', 'desc').onSnapshot(snap => {
-                const div = document.getElementById('user-repairs-list');
-                div.innerHTML = "";
-                if(snap.empty) { div.innerHTML = "<p>No tienes reparaciones registradas.</p>"; return; }
-
-                snap.forEach(doc => {
-                    const d = doc.data();
-                    const claseEstado = d.estado === 'confirmado' ? 'bg-success' : 'bg-pending';
-                    const bordeEstado = d.estado === 'confirmado' ? 'confirmado' : 'pendiente';
-
-                    div.innerHTML += `
-                        <div class="order-card ${bordeEstado}">
-                             <div style="display:flex; justify-content:space-between;">
-                                <b>${d.dispositivo}</b>
-                                <span class="status-badge ${claseEstado}">${d.estado.toUpperCase()}</span>
-                            </div>
-                            <p style="margin:5px 0;">${new Date(d.fecha).toLocaleDateString()}</p>
-                        </div>
-                    `;
-                });
-            });
-            
-            // Cargar Favoritos (Simplificado)
-            cargarFavoritos();
-        }
-
-        // --- ADMIN ---
-        function verificarAdmin() { 
-            if(document.getElementById('adminPassInput').value === "4354"){ 
-                esAdmin = true; 
-                document.getElementById('admin-panel').classList.remove('hidden'); 
-                cerrarModal('admin-login-modal');
-                cargarAdminData(); 
-            } else alert("Error"); 
-        }
-
         function verAdminTab(t) {
             document.querySelectorAll('[id^="admin-tab-"]').forEach(x => x.classList.add('hidden'));
             document.querySelectorAll('.admin-tab-btn').forEach(b => b.classList.remove('active'));
@@ -518,99 +408,263 @@
             event.target.classList.add('active');
         }
 
-        function cargarAdminData() {
-            // Cargar TODOS los pedidos para Admin
+        // ------------------ CARGA DE DATOS (MÓVILES, PC, ETC) ------------------
+        function cargarProductos() {
+            db.collection("productos").orderBy("fecha", "desc").onSnapshot(snap => {
+                allProducts = []; snap.forEach(doc => allProducts.push({...doc.data(), id: doc.id}));
+                renderizarMarcas(); renderizarProductos();
+            });
+        }
+        function cargarPCs() {
+            db.collection("pcs").orderBy("fecha", "desc").onSnapshot(snap => {
+                const c = document.getElementById('pcs-container'); c.innerHTML="";
+                snap.forEach(doc => {
+                    const p = doc.data();
+                    let adminBtns = esAdmin ? `<div class="admin-actions"><button class="btn-edit" onclick="editarPc('${doc.id}', '${JSON.stringify(p).replace(/"/g, '&quot;')}')">✏️</button><button class="btn-delete" onclick="borrar('pcs','${doc.id}')">🗑️</button></div>` : '';
+                    c.innerHTML += `<div class="product-card"><img src="${p.img}" class="product-photo"><h3>${p.titulo}</h3><ul class="specs-list"><li>💾 ${p.ram}</li><li>⚙️ ${p.cpu}</li><li>🎮 ${p.gpu}</li></ul><p class="price">${p.precio}€</p><button class="btn-primary" onclick="addCart('${doc.id}','${p.titulo}',${p.precio})">AÑADIR</button>${adminBtns}</div>`;
+                });
+            });
+        }
+        function cargarReacos() {
+            db.collection("reacondicionados").orderBy("fecha", "desc").onSnapshot(snap => {
+                const c = document.getElementById('reaco-container'); c.innerHTML="";
+                snap.forEach(doc => {
+                    const r = doc.data();
+                    let adminBtns = esAdmin ? `<div class="admin-actions"><button class="btn-edit" onclick="editarReaco('${doc.id}', '${JSON.stringify(r).replace(/"/g, '&quot;')}')">✏️</button><button class="btn-delete" onclick="borrar('reacondicionados','${doc.id}')">🗑️</button></div>` : '';
+                    c.innerHTML += `<div class="product-card"><span class="condition-tag">${r.condicion}</span><img src="${r.img}" class="product-photo"><h3>${r.titulo}</h3><p>${r.descripcion}</p><p class="price">${r.precio}€</p><button class="btn-primary" onclick="addCart('${doc.id}','${r.titulo}',${r.precio})">AÑADIR</button>${adminBtns}</div>`;
+                });
+            });
+        }
+        function cargarReparaciones() {
+            db.collection("reparaciones").onSnapshot(snap => {
+                const c = document.getElementById('reparaciones-container'); c.innerHTML="";
+                snap.forEach(doc => {
+                    const r = doc.data();
+                    let adminBtns = esAdmin ? `<div class="admin-actions"><button class="btn-edit" onclick="editarRepair('${doc.id}', '${JSON.stringify(r).replace(/"/g, '&quot;')}')">✏️</button><button class="btn-delete" onclick="borrar('reparaciones','${doc.id}')">🗑️</button></div>` : '';
+                    const img = r.img ? `<img src="${r.img}" class="repair-img">` : '';
+                    c.innerHTML += `<div class="repair-card">${img}<h4>${r.servicio}</h4><p>${r.descripcion}</p><p class="price">${r.precioTexto}</p>${adminBtns}</div>`;
+                });
+            });
+        }
+        function cargarWebs() {
+            db.collection("webs").onSnapshot(snap => {
+                const c = document.getElementById('webs-container'); c.innerHTML="";
+                snap.forEach(doc => {
+                    const w = doc.data();
+                    let adminBtns = esAdmin ? `<div class="admin-actions"><button class="btn-edit" onclick="editarWeb('${doc.id}', '${JSON.stringify(w).replace(/"/g, '&quot;')}')">✏️</button><button class="btn-delete" onclick="borrar('webs','${doc.id}')">🗑️</button></div>` : '';
+                    c.innerHTML += `<div class="product-card"><i class="${w.icono}" style="font-size:3rem; color:var(--accent);"></i><h3>${w.titulo}</h3><p>${w.descripcion}</p>${adminBtns}</div>`;
+                });
+            });
+        }
+
+        // ------------------ RENDERIZADO MÓVILES ------------------
+        function renderizarMarcas() {
+            const marcas = ['all', ...new Set(allProducts.map(p => p.marca ? p.marca.trim() : 'Otros'))];
+            document.getElementById('brand-filters').innerHTML = marcas.map(m => `<button class="filter-badge ${filtroMarcaActual === m ? 'active' : ''}" onclick="filtrarMarca('${m}')">${m === 'all' ? 'Todo' : m}</button>`).join('');
+        }
+        function renderizarProductos() {
+            const c = document.getElementById('productos-container'); c.innerHTML = "";
+            const filtrados = filtroMarcaActual === 'all' ? allProducts : allProducts.filter(p => (p.marca || 'Otros') === filtroMarcaActual);
+            filtrados.forEach(p => {
+                let adminBtns = esAdmin ? `<div class="admin-actions"><button class="btn-edit" onclick="editarProducto('${p.id}', '${JSON.stringify(p).replace(/"/g, '&quot;')}')">✏️</button><button class="btn-delete" onclick="borrar('productos','${p.id}')">🗑️</button></div>` : '';
+                c.innerHTML += `<div class="product-card"><span class="brand-tag">${p.marca}</span><img src="${p.img}" class="product-photo"><h3>${p.nombre}</h3><p style="font-size:0.8rem">${p.ram} | ${p.storage} | ${p.colores}</p><p class="price">${p.precio}€</p><button class="btn-primary" onclick="addCart('${p.id}','${p.nombre}',${p.precio})">AÑADIR</button>${adminBtns}</div>`;
+            });
+        }
+        function filtrarMarca(m) { filtroMarcaActual = m; renderizarMarcas(); renderizarProductos(); }
+
+        // ------------------ LÓGICA PEDIDOS Y WHATSAPP ------------------
+        
+        async function realizarPedido(){
+            if(!carrito.length) return;
+            if(!usuarioActual) { alert("Inicia sesión para que podamos guardar tu pedido."); abrirModal('auth-modal'); return; }
+
+            let total = 0; let itemsTexto = "";
+            carrito.forEach(i => { total += i.p; itemsTexto += `${i.n} (${i.p}€), `; });
+
+            const pedidoData = {
+                uid: usuarioActual.uid,
+                email: usuarioActual.email,
+                items: carrito,
+                total: total,
+                fecha: new Date().toISOString(),
+                estado: 'pendiente' // Naranja
+            };
+
+            try {
+                // 1. Guardar en Base de Datos (ADMIN LO VERÁ)
+                await db.collection('pedidos').add(pedidoData);
+                
+                // 2. ABRIR WHATSAPP INMEDIATAMENTE
+                let msg = `Hola MovinetConde, soy ${usuarioActual.email}. He pedido: ${itemsTexto}. Total: ${total}€`;
+                window.open(`https://wa.me/${MI_TELEFONO}?text=${encodeURIComponent(msg)}`, '_blank');
+                
+                // 3. Limpiar
+                carrito = []; document.getElementById('cart-count').innerText = "0";
+                cerrarModal('cart-modal');
+                alert("Pedido guardado correctamente. Revisa WhatsApp.");
+                cargarDatosPerfil();
+
+            } catch(e) {
+                alert("Error de conexión: " + e.message);
+            }
+        }
+
+        document.getElementById('tallerForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const n = document.getElementById('tallerNombre').value;
+            const d = document.getElementById('tallerDispositivo').value;
+            
+            if(usuarioActual) {
+                await db.collection('citas').add({ uid: usuarioActual.uid, email: usuarioActual.email, nombre: n, dispositivo: d, fecha: new Date().toISOString(), estado: 'pendiente' });
+            }
+            window.open(`https://wa.me/${MI_TELEFONO}?text=${encodeURIComponent(`Hola, soy ${n}. Consulta taller: ${d}`)}`, '_blank');
+        });
+
+        // ------------------ ADMIN ------------------
+        function verificarAdmin() { 
+            if(document.getElementById('adminPassInput').value==="4354"){ 
+                esAdmin=true; document.getElementById('admin-panel').classList.remove('hidden'); cerrarModal('admin-login-modal'); 
+                cargarTodo(); cargarPedidosAdmin();
+            } else alert("Error"); 
+        }
+        function cerrarSesionAdmin(){ esAdmin=false; document.getElementById('admin-panel').classList.add('hidden'); cargarTodo(); }
+
+        // ESCUCHAR PEDIDOS EN ADMIN
+        function cargarPedidosAdmin() {
             db.collection('pedidos').orderBy('fecha', 'desc').onSnapshot(snap => {
                 const div = document.getElementById('admin-orders-list'); div.innerHTML = "";
                 snap.forEach(doc => {
                     const d = doc.data();
-                    const btnAccion = d.estado === 'pendiente' 
-                        ? `<button class="btn-confirm" onclick="cambiarEstado('pedidos', '${doc.id}', 'confirmado')">✅ Confirmar Pedido</button>` 
-                        : `<button class="btn-secondary" onclick="cambiarEstado('pedidos', '${doc.id}', 'pendiente')">⏪ Reabrir</button>`;
+                    const color = d.estado === 'confirmado' ? '#e8f5e9' : '#fff3e0';
+                    const btn = d.estado === 'pendiente' 
+                        ? `<button class="btn-confirm" onclick="cambiarEstado('pedidos','${doc.id}','confirmado')">✅ CONFIRMAR PEDIDO</button>`
+                        : `<span style="color:green; font-weight:bold;">¡Confirmado!</span>`;
                     
-                    div.innerHTML += `
-                        <div class="review-card" style="background:${d.estado==='confirmado'?'#e8f5e9':'#fff3e0'}">
-                            <small>${d.email} - ${new Date(d.fecha).toLocaleString()}</small>
-                            <p><b>Items:</b> ${d.items.map(i=>i.n).join(', ')}</p>
-                            <p><b>Total:</b> ${d.total}€</p>
-                            ${btnAccion}
-                        </div>`;
+                    div.innerHTML += `<div class="review-card" style="background:${color}; text-align:left;">
+                        <small>${d.email} - ${new Date(d.fecha).toLocaleString()}</small>
+                        <p><b>Items:</b> ${d.items.map(i=>i.n).join(', ')}</p>
+                        <p><b>Total:</b> ${d.total}€</p>
+                        ${btn}
+                    </div>`;
                 });
             });
 
-            // Cargar TODAS las citas para Admin
             db.collection('citas').orderBy('fecha', 'desc').onSnapshot(snap => {
                 const div = document.getElementById('admin-citas-list'); div.innerHTML = "";
                 snap.forEach(doc => {
                     const d = doc.data();
-                    const btnAccion = d.estado === 'pendiente' 
-                        ? `<button class="btn-confirm" onclick="cambiarEstado('citas', '${doc.id}', 'confirmado')">✅ Reparación Lista</button>` 
-                        : `<button class="btn-secondary" onclick="cambiarEstado('citas', '${doc.id}', 'pendiente')">⏪ Poner Pendiente</button>`;
-                    
-                    div.innerHTML += `
-                        <div class="review-card" style="background:${d.estado==='confirmado'?'#e8f5e9':'#fff3e0'}">
-                            <small>${d.email} - ${d.nombre}</small>
-                            <h3>${d.dispositivo}</h3>
-                            ${btnAccion}
-                        </div>`;
+                    const btn = d.estado === 'pendiente' 
+                        ? `<button class="btn-confirm" onclick="cambiarEstado('citas','${doc.id}','confirmado')">✅ CONFIRMAR REPARACIÓN</button>`
+                        : `<span style="color:green; font-weight:bold;">¡Lista!</span>`;
+                    div.innerHTML += `<div class="review-card" style="text-align:left;"><small>${d.email}</small><h3>${d.dispositivo}</h3>${btn}</div>`;
                 });
             });
         }
+        function cambiarEstado(col, id, est) { db.collection(col).doc(id).update({estado: est}); }
 
-        function cambiarEstado(col, id, estado) {
-            db.collection(col).doc(id).update({ estado: estado });
+        // ------------------ CRUD ADMIN (Guardar, Editar, Borrar) ------------------
+        async function guardarItem(col, id, data, fileIn, oldImg) {
+            const f = document.getElementById(fileIn) ? document.getElementById(fileIn).files[0] : null;
+            let imgF = oldImg;
+            if(f) { const r = new FileReader(); r.readAsDataURL(f); await new Promise(res => r.onload = ()=> { imgF = r.result; res(); }); }
+            if(imgF) data.img = imgF;
+            if(id) await db.collection(col).doc(id).update(data);
+            else await db.collection(col).add({...data, fecha: new Date().toISOString()});
+            alert("Guardado");
         }
-        function cerrarSesionAdmin() { document.getElementById('admin-panel').classList.add('hidden'); esAdmin=false; }
+        
+        // Listeners Formularios Admin
+        document.getElementById('addProductForm').addEventListener('submit', e=>{ e.preventDefault(); 
+            guardarItem('productos', document.getElementById('editProductId').value, {
+                nombre: document.getElementById('newName').value, marca: document.getElementById('newBrand').value, 
+                ram: document.getElementById('newRam').value, storage: document.getElementById('newStorage').value, 
+                colores: document.getElementById('newColors').value, precio: Number(document.getElementById('newPrice').value)
+            }, 'newImg', editImgProduct).then(resetFormProduct); 
+        });
+        document.getElementById('addPcForm').addEventListener('submit', e=>{ e.preventDefault();
+            guardarItem('pcs', document.getElementById('editPcId').value, {
+                titulo: document.getElementById('pcTitle').value, cpu: document.getElementById('pcCpu').value,
+                ram: document.getElementById('pcRam').value, ssd: document.getElementById('pcSsd').value,
+                gpu: document.getElementById('pcGpu').value, precio: Number(document.getElementById('pcPrice').value)
+            }, 'pcImg', editImgPc).then(resetFormPc);
+        });
+        document.getElementById('addReacoForm').addEventListener('submit', e=>{ e.preventDefault();
+            guardarItem('reacondicionados', document.getElementById('editReacoId').value, {
+                titulo: document.getElementById('reacoTitle').value, condition: document.getElementById('reacoCondition').value,
+                descripcion: document.getElementById('reacoDesc').value, precio: Number(document.getElementById('reacoPrice').value)
+            }, 'reacoImg', editImgReaco).then(resetFormReaco);
+        });
+        document.getElementById('addRepairForm').addEventListener('submit', e=>{ e.preventDefault();
+            guardarItem('reparaciones', document.getElementById('editRepairId').value, {
+                servicio: document.getElementById('repairService').value, descripcion: document.getElementById('repairDesc').value,
+                precioTexto: document.getElementById('repairPriceText').value
+            }, 'repairImg', editImgRepair).then(resetFormRepair);
+        });
+        document.getElementById('addWebForm').addEventListener('submit', e=>{ e.preventDefault();
+            guardarItem('webs', document.getElementById('editWebId').value, {
+                icono: document.getElementById('webIcon').value, titulo: document.getElementById('webTitle').value, descripcion: document.getElementById('webDesc').value
+            }, null, null).then(resetFormWeb);
+        });
 
-        // --- CARGA INICIAL DE PRODUCTOS (Reutilizando lógica anterior simplificada) ---
-        function cargarProductosBase() {
-            db.collection("productos").limit(8).get().then(s => {
-                const c = document.getElementById('productos-container'); c.innerHTML = "";
-                s.forEach(d => {
-                     const p = d.data();
-                     c.innerHTML += `<div class="product-card"><h3>${p.nombre}</h3><p class="price">${p.precio}€</p><button class="btn-primary" onclick="addCart('${d.id}','${p.nombre}',${p.precio})">Añadir</button></div>`;
-                });
-            });
-             db.collection("pcs").limit(4).get().then(s => {
-                const c = document.getElementById('pcs-container'); c.innerHTML = "";
-                s.forEach(d => {
-                     const p = d.data();
-                     c.innerHTML += `<div class="product-card"><h3>${p.titulo}</h3><p class="price">${p.precio}€</p><button class="btn-primary" onclick="addCart('${d.id}','${p.titulo}',${p.precio})">Añadir</button></div>`;
-                });
-            });
-            // Servicios de reparación
-             db.collection("reparaciones").get().then(s => {
-                const c = document.getElementById('reparaciones-container'); c.innerHTML = "";
-                s.forEach(d => {
-                     const p = d.data();
-                     c.innerHTML += `<div class="repair-card"><h4>${p.servicio}</h4><p>${p.precioTexto}</p></div>`;
-                });
-            });
+        // Funciones Editar
+        function editarProducto(id, j) { const p=JSON.parse(j); document.getElementById('editProductId').value=id; document.getElementById('newName').value=p.nombre; document.getElementById('newBrand').value=p.marca; document.getElementById('newPrice').value=p.precio; editImgProduct=p.img; document.getElementById('btnSaveProduct').innerText="ACTUALIZAR"; verAdminTab('productos'); }
+        function editarPc(id, j) { const p=JSON.parse(j); document.getElementById('editPcId').value=id; document.getElementById('pcTitle').value=p.titulo; document.getElementById('pcPrice').value=p.precio; editImgPc=p.img; document.getElementById('btnSavePc').innerText="ACTUALIZAR"; verAdminTab('pcs'); }
+        function editarReaco(id, j) { const p=JSON.parse(j); document.getElementById('editReacoId').value=id; document.getElementById('reacoTitle').value=p.titulo; document.getElementById('reacoPrice').value=p.precio; editImgReaco=p.img; document.getElementById('btnSaveReaco').innerText="ACTUALIZAR"; verAdminTab('reacondicionados'); }
+        function editarRepair(id, j) { const p=JSON.parse(j); document.getElementById('editRepairId').value=id; document.getElementById('repairService').value=p.servicio; document.getElementById('repairPriceText').value=p.precioTexto; editImgRepair=p.img; document.getElementById('btnSaveRepair').innerText="ACTUALIZAR"; verAdminTab('reparaciones'); }
+        function editarWeb(id, j) { const p=JSON.parse(j); document.getElementById('editWebId').value=id; document.getElementById('webTitle').value=p.titulo; document.getElementById('btnSaveWeb').innerText="ACTUALIZAR"; verAdminTab('webs'); }
+        function borrar(c,i){ if(confirm("¿Borrar?")) db.collection(c).doc(i).delete(); }
+
+        // Resets
+        function resetFormProduct(){ document.getElementById('addProductForm').reset(); document.getElementById('editProductId').value=""; editImgProduct=""; document.getElementById('btnSaveProduct').innerText="GUARDAR"; }
+        function resetFormPc(){ document.getElementById('addPcForm').reset(); document.getElementById('editPcId').value=""; editImgPc=""; document.getElementById('btnSavePc').innerText="GUARDAR"; }
+        function resetFormReaco(){ document.getElementById('addReacoForm').reset(); document.getElementById('editReacoId').value=""; editImgReaco=""; document.getElementById('btnSaveReaco').innerText="GUARDAR"; }
+        function resetFormRepair(){ document.getElementById('addRepairForm').reset(); document.getElementById('editRepairId').value=""; editImgRepair=""; document.getElementById('btnSaveRepair').innerText="GUARDAR"; }
+        function resetFormWeb(){ document.getElementById('addWebForm').reset(); document.getElementById('editWebId').value=""; document.getElementById('btnSaveWeb').innerText="GUARDAR"; }
+
+        // ------------------ PERFIL ------------------
+        function gestionarPerfil() { usuarioActual ? abrirModal('profile-modal') : abrirModal('auth-modal'); }
+        function verTabPerfil(tab) {
+            document.querySelectorAll('[id^="tab-"]').forEach(t => t.classList.add('hidden'));
+            document.querySelectorAll('.profile-tab').forEach(b => b.classList.remove('active'));
+            document.getElementById(`tab-${tab}`).classList.remove('hidden');
+            event.target.classList.add('active');
         }
-
-        // --- UTILIDADES ---
-        function addCart(id, n, p){ carrito.push({n,p}); document.getElementById('cart-count').innerText=carrito.length; alert("Añadido"); }
-        window.abrirModal = (id) => { 
-            document.getElementById(id).classList.remove('hidden'); 
-            if(id === 'cart-modal'){
-                const ul = document.getElementById('cart-items'); ul.innerHTML=""; let t=0;
-                carrito.forEach(i => { ul.innerHTML+=`<li>${i.n} - ${i.p}€</li>`; t+=i.p; });
-                document.getElementById('total-price').innerText = t;
-            }
-        };
-        window.cerrarModal = (id) => document.getElementById(id).classList.add('hidden');
-
-        function cargarFavoritos(){ 
-            if(!usuarioActual)return; 
+        function cargarDatosPerfil() {
+            if(!usuarioActual) return;
+            db.collection('pedidos').where('uid', '==', usuarioActual.uid).orderBy('fecha', 'desc').onSnapshot(snap => {
+                const div = document.getElementById('user-orders-list'); div.innerHTML = "";
+                snap.forEach(doc => {
+                    const d = doc.data();
+                    const color = d.estado === 'confirmado' ? 'bg-success' : 'bg-pending';
+                    const borde = d.estado === 'confirmado' ? 'confirmado' : 'pendiente';
+                    div.innerHTML += `<div class="order-card ${borde}"><div style="display:flex; justify-content:space-between;"><b>${new Date(d.fecha).toLocaleDateString()}</b><span class="status-badge ${color}">${d.estado.toUpperCase()}</span></div><p>Total: ${d.total}€</p></div>`;
+                });
+            });
+            db.collection('citas').where('uid', '==', usuarioActual.uid).orderBy('fecha', 'desc').onSnapshot(snap => {
+                const div = document.getElementById('user-repairs-list'); div.innerHTML = "";
+                snap.forEach(doc => {
+                    const d = doc.data();
+                    const color = d.estado === 'confirmado' ? 'bg-success' : 'bg-pending';
+                    const borde = d.estado === 'confirmado' ? 'confirmado' : 'pendiente';
+                    div.innerHTML += `<div class="order-card ${borde}"><div style="display:flex; justify-content:space-between;"><b>${d.dispositivo}</b><span class="status-badge ${color}">${d.estado.toUpperCase()}</span></div></div>`;
+                });
+            });
             db.collection('usuarios').doc(usuarioActual.uid).collection('favoritos').get().then(s=>{ 
-                const ul = document.getElementById('fav-list'); ul.innerHTML="";
-                s.forEach(d => ul.innerHTML += `<li>${d.data().n}</li>`);
+                const ul = document.getElementById('fav-list'); ul.innerHTML=""; s.forEach(d => ul.innerHTML += `<li>${d.data().n}</li>`);
             }); 
         }
 
-        // Inicializar
-        cargarProductosBase();
-        cargarResenas();
+        // ------------------ EXTRAS ------------------
+        function addCart(id, n, p){ carrito.push({n,p}); document.getElementById('cart-count').innerText=carrito.length; alert("Añadido"); }
+        window.abrirModal = (id) => { document.getElementById(id).classList.remove('hidden'); if(id==='cart-modal'){ const ul = document.getElementById('cart-items'); ul.innerHTML=""; let t=0; carrito.forEach(i => { ul.innerHTML+=`<li>${i.n} - ${i.p}€</li>`; t+=i.p; }); document.getElementById('total-price').innerText = t; }};
+        window.cerrarModal = (id) => document.getElementById(id).classList.add('hidden');
+        
+        document.getElementById('addReviewForm').addEventListener('submit', async (e) => { e.preventDefault(); await db.collection('resenas').add({ nombre: document.getElementById('reviewName').value, estrellas: document.getElementById('reviewStars').value, texto: document.getElementById('reviewText').value, fecha: new Date().toISOString() }); alert("Enviada"); cerrarModal('review-modal'); });
+        
+        function cargarResenas() { db.collection('resenas').orderBy('fecha', 'desc').onSnapshot(snap => { const d = document.getElementById('reviews-container'); d.innerHTML=""; snap.forEach(doc => { const r = doc.data(); d.innerHTML += `<div class="review-card"><div style="color:gold;">${"⭐".repeat(r.estrellas)}</div><b>${r.nombre}</b><p>${r.texto}</p></div>`; }); }); }
+
+        function cargarTodo() { cargarProductos(); cargarPCs(); cargarReacos(); cargarReparaciones(); cargarWebs(); cargarResenas(); }
+        cargarTodo();
 
     </script>
 </body>
