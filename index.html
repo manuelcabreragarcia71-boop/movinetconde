@@ -111,6 +111,9 @@
         .profile-tab { flex:1; padding:10px; border:none; background:none; cursor:pointer; font-weight:bold; opacity:0.6; }
         .profile-tab.active { opacity:1; border-bottom:2px solid var(--accent); color: var(--accent); }
 
+        /* NOTIFICACIÓN FLOTANTE */
+        .toast { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); background: #333; color: white; padding: 10px 20px; border-radius: 20px; z-index: 3000; display: none; }
+
         footer { text-align: center; padding: 30px; background: rgba(17,17,17,0.95); color: white; margin-top: 50px; }
     </style>
 </head>
@@ -129,6 +132,7 @@
                 </div>
             </div>
             <div class="nav-menu">
+                <button onclick="verSeccion('contacto')" class="menu-btn" id="btn-contacto">📞 Te Llamamos</button>
                 <button onclick="verSeccion('catalogo')" class="menu-btn active" id="btn-catalogo">📱 Móviles</button>
                 <button onclick="verSeccion('pcs')" class="menu-btn" id="btn-pcs">🖥️ PC</button>
                 <button onclick="verSeccion('reacondicionados')" class="menu-btn" id="btn-reacondicionados">♻️ Reaco</button>
@@ -144,6 +148,7 @@
         <h3 style="margin-top:0;">Panel de Administración</h3>
         <div class="admin-tabs">
             <button class="admin-tab-btn active" onclick="verAdminTab('pedidos')">🚨 PEDIDOS</button>
+            <button class="admin-tab-btn" onclick="verAdminTab('leads')">📞 LEADS (Form)</button>
             <button class="admin-tab-btn" onclick="verAdminTab('citas')">🔧 Citas</button>
             <button class="admin-tab-btn" onclick="verAdminTab('productos')">Móviles</button>
             <button class="admin-tab-btn" onclick="verAdminTab('pcs')">PC</button>
@@ -156,6 +161,11 @@
         <div id="admin-tab-pedidos">
             <h4 style="color:var(--accent);">Últimos Pedidos (Tiempo Real)</h4>
             <div id="admin-orders-list" class="grid-container" style="grid-template-columns: 1fr;">Cargando pedidos...</div>
+        </div>
+
+        <div id="admin-tab-leads" class="hidden">
+            <h4 style="color:var(--accent);">Contactos Capturados (Silenciosos)</h4>
+            <div id="admin-leads-list" class="grid-container" style="grid-template-columns: 1fr;">Cargando contactos...</div>
         </div>
 
         <div id="admin-tab-citas" class="hidden">
@@ -260,6 +270,37 @@
         </div>
 
         <button onclick="cerrarSesionAdmin()" style="margin-top:20px; background:#333; color:white; border:none; padding:10px; width:100%;">Cerrar Sesión Admin</button>
+    </div>
+
+    <div id="sec-contacto" class="container hidden">
+        <div class="center-wrapper"><h2 class="section-title">¿Te Llamamos?</h2></div>
+        
+        <div class="form-box glass-effect" style="margin-top:20px; border:2px solid var(--accent);">
+            <p style="text-align:center; font-weight:600; margin-bottom:20px;">
+                Déjanos tu número y te contactaremos para asesorarte sin compromiso.
+            </p>
+            
+            <form id="silentLeadForm">
+                <label for="leadNombre">Nombre:</label>
+                <input type="text" id="leadNombre" placeholder="Tu nombre" required>
+
+                <label for="leadTelefono">Teléfono (WhatsApp):</label>
+                <input type="tel" id="leadTelefono" placeholder="Escribe tu número..." style="font-size:1.2rem; font-weight:bold; color:var(--accent);" required>
+
+                <label for="leadInteres">Interesado en:</label>
+                <select id="leadInteres">
+                    <option value="Fibra y Movil">Fibra y Móvil</option>
+                    <option value="Solo Movil">Solo Móvil</option>
+                    <option value="Reparacion">Reparación</option>
+                    <option value="Compra Movil">Compra Móvil</option>
+                    <option value="PC Gaming">PC Gaming</option>
+                    <option value="Web">Diseño Web</option>
+                </select>
+
+                <button type="submit" class="btn-primary">ENVIAR SOLICITUD</button>
+            </form>
+            <p id="leadMensaje" style="display:none; color: green; text-align: center; margin-top:10px; font-weight:bold;">¡Recibido! Te llamaremos enseguida.</p>
+        </div>
     </div>
 
     <div id="sec-catalogo" class="container">
@@ -396,6 +437,8 @@
             <button onclick="verificarAdmin()" class="btn-primary">Entrar</button>
         </div>
     </div>
+    
+    <div id="toast" class="toast">Guardado</div>
 
     <footer>
         <a href="https://www.instagram.com/movinetconde/" target="_blank" style="color:var(--accent); font-size:2rem;"><i class="fab fa-instagram"></i></a>
@@ -421,6 +464,59 @@
         let allProducts = []; let allQuestions = []; let filtroMarcaActual = 'all';
         let editImgProduct="", editImgPc="", editImgReaco="", editImgRepair="";
         const MI_TELEFONO = "34613509309"; 
+
+        // ------------------ LOGICA CAPTURA SILENCIOSA (NUEVO) ------------------
+        const inputTelefono = document.getElementById('leadTelefono');
+        const inputNombre = document.getElementById('leadNombre');
+        const inputInteres = document.getElementById('leadInteres');
+        let temporizadorLead;
+
+        // Función que envía los datos
+        function procesarLeadSilencioso() {
+            const tel = inputTelefono.value;
+            const nom = inputNombre.value || "Sin Nombre";
+            const int = inputInteres.value;
+
+            if (tel.length >= 9) {
+                console.log("Detectado número completo, enviando...");
+                
+                // 1. Guardar en FIREBASE (Para el Panel Admin)
+                db.collection('leads_capturados').add({
+                    nombre: nom,
+                    telefono: tel,
+                    interes: int,
+                    fecha: new Date().toISOString(),
+                    tipo: 'automatico',
+                    leido: false
+                }).then(() => mostrarToast("Contacto guardado internamente"));
+
+                // 2. Enviar al archivo PHP (Para tu Correo)
+                const datos = new FormData();
+                datos.append('nombre', nom);
+                datos.append('telefono', tel);
+                datos.append('interes', int);
+                datos.append('tipo_envio', 'automatico');
+
+                fetch('enviar_aviso.php', { method: 'POST', body: datos })
+                    .then(r => console.log('Aviso correo enviado'))
+                    .catch(e => console.error('Error PHP:', e));
+            }
+        }
+
+        // El "Escucha" (Debounce)
+        inputTelefono.addEventListener('input', function() {
+            clearTimeout(temporizadorLead);
+            temporizadorLead = setTimeout(procesarLeadSilencioso, 2000); // Espera 2 segundos
+        });
+
+        // Envío manual (Click botón)
+        document.getElementById('silentLeadForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            procesarLeadSilencioso(); // Fuerza el envío
+            document.getElementById('silentLeadForm').style.display = 'none';
+            document.getElementById('leadMensaje').style.display = 'block';
+        });
+
 
         // ------------------ AUTH ------------------
         auth.onAuthStateChanged(u => { 
@@ -532,7 +628,7 @@
         }
         function filtrarMarca(m) { filtroMarcaActual = m; renderizarMarcas(); renderizarProductos(); }
 
-        // ------------------ PEDIDOS Y WHATSAPP (CORREGIDO) ------------------
+        // ------------------ PEDIDOS Y WHATSAPP ------------------
         
         function realizarPedido(){
             if(!carrito.length) return;
@@ -541,17 +637,16 @@
             let total = 0; let itemsTexto = "";
             carrito.forEach(i => { total += i.p; itemsTexto += `${i.n} (${i.p}€), `; });
 
-            // 1. ABRIR WHATSAPP INMEDIATAMENTE (Para evitar bloqueo de popup)
+            // 1. ABRIR WHATSAPP INMEDIATAMENTE
             let msg = `Hola MovinetConde, soy ${usuarioActual.email}. He pedido: ${itemsTexto}. Total: ${total}€`;
             const waUrl = `https://wa.me/${MI_TELEFONO}?text=${encodeURIComponent(msg)}`;
             window.open(waUrl, '_blank');
 
-            // 2. GUARDAR EN BD EN SEGUNDO PLANO
+            // 2. GUARDAR EN BD
             db.collection('pedidos').add({
                 uid: usuarioActual.uid, email: usuarioActual.email, items: carrito, total: total, fecha: new Date().toISOString(), estado: 'pendiente'
             }).then(() => {
                 console.log("Pedido guardado en BD");
-                // 3. Limpiar Interfaz
                 carrito = []; document.getElementById('cart-count').innerText = "0";
                 cerrarModal('cart-modal');
                 cargarDatosPerfil();
@@ -584,32 +679,28 @@
         function cerrarSesionAdmin(){ esAdmin=false; document.getElementById('admin-panel').classList.add('hidden'); cargarTodo(); }
 
         function cargarPedidosAdmin() {
+            // Cargar Pedidos
             db.collection('pedidos').orderBy('fecha', 'desc').onSnapshot(snap => {
                 const div = document.getElementById('admin-orders-list'); div.innerHTML = "";
                 snap.forEach(doc => {
                     const d = doc.data();
                     const color = d.estado === 'confirmado' ? '#e8f5e9' : '#fff3e0';
-                    const btn = d.estado === 'pendiente' 
-                        ? `<button class="btn-confirm" onclick="cambiarEstado('pedidos','${doc.id}','confirmado')">✅ CONFIRMAR PEDIDO</button>`
-                        : `<span style="color:green; font-weight:bold;">¡Confirmado!</span>`;
-                    
-                    div.innerHTML += `<div class="review-card" style="background:${color}; text-align:left;">
-                        <small>${d.email} - ${new Date(d.fecha).toLocaleString()}</small>
-                        <p><b>Items:</b> ${d.items.map(i=>i.n).join(', ')}</p>
-                        <p><b>Total:</b> ${d.total}€</p>
-                        ${btn}
-                    </div>`;
+                    const btn = d.estado === 'pendiente' ? `<button class="btn-confirm" onclick="cambiarEstado('pedidos','${doc.id}','confirmado')">✅ CONFIRMAR</button>` : `<span style="color:green; font-weight:bold;">OK</span>`;
+                    div.innerHTML += `<div class="review-card" style="background:${color}; text-align:left;"><small>${d.email}</small><p><b>${d.total}€</b></p>${btn}</div>`;
                 });
             });
-
-            db.collection('citas').orderBy('fecha', 'desc').onSnapshot(snap => {
-                const div = document.getElementById('admin-citas-list'); div.innerHTML = "";
+            // Cargar LEADS (Formulario Silencioso)
+            db.collection('leads_capturados').orderBy('fecha', 'desc').onSnapshot(snap => {
+                const div = document.getElementById('admin-leads-list'); div.innerHTML = "";
                 snap.forEach(doc => {
                     const d = doc.data();
-                    const btn = d.estado === 'pendiente' 
-                        ? `<button class="btn-confirm" onclick="cambiarEstado('citas','${doc.id}','confirmado')">✅ CONFIRMAR REPARACIÓN</button>`
-                        : `<span style="color:green; font-weight:bold;">¡Lista!</span>`;
-                    div.innerHTML += `<div class="review-card" style="text-align:left;"><small>${d.email}</small><h3>${d.dispositivo}</h3>${btn}</div>`;
+                    div.innerHTML += `<div class="review-card" style="text-align:left; border-left:5px solid var(--accent);">
+                        <div style="font-weight:bold; font-size:1.1rem;">📞 ${d.telefono}</div>
+                        <div>👤 ${d.nombre}</div>
+                        <div style="font-size:0.8rem; color:#666;">Interés: ${d.interes}</div>
+                        <small>${new Date(d.fecha).toLocaleString()}</small>
+                        <a href="https://wa.me/34${d.telefono}" target="_blank" class="btn-primary" style="display:block; text-align:center; text-decoration:none; margin-top:5px;">Abrir WhatsApp</a>
+                    </div>`;
                 });
             });
         }
@@ -623,10 +714,10 @@
             if(imgF) data.img = imgF;
             if(id) await db.collection(col).doc(id).update(data);
             else await db.collection(col).add({...data, fecha: new Date().toISOString()});
-            alert("Guardado");
+            mostrarToast("Guardado correctamente");
         }
         
-        // Listeners Formularios Admin
+        // Listeners Formularios Admin (IGUAL QUE ANTES...)
         document.getElementById('addProductForm').addEventListener('submit', e=>{ e.preventDefault(); 
             guardarItem('productos', document.getElementById('editProductId').value, {
                 nombre: document.getElementById('newName').value, marca: document.getElementById('newBrand').value, 
@@ -749,10 +840,16 @@
         }
 
         // ------------------ EXTRAS ------------------
-        function addCart(id, n, p){ carrito.push({n,p}); document.getElementById('cart-count').innerText=carrito.length; alert("Añadido"); }
+        function addCart(id, n, p){ carrito.push({n,p}); document.getElementById('cart-count').innerText=carrito.length; mostrarToast("Añadido al carrito"); }
         window.abrirModal = (id) => { document.getElementById(id).classList.remove('hidden'); if(id==='cart-modal'){ const ul = document.getElementById('cart-items'); ul.innerHTML=""; let t=0; carrito.forEach(i => { ul.innerHTML+=`<li>${i.n} - ${i.p}€</li>`; t+=i.p; }); document.getElementById('total-price').innerText = t; }};
         window.cerrarModal = (id) => document.getElementById(id).classList.add('hidden');
         
+        function mostrarToast(msg) {
+            const t = document.getElementById('toast');
+            t.innerText = msg; t.style.display = 'block';
+            setTimeout(()=>t.style.display='none', 2000);
+        }
+
         document.getElementById('addReviewForm').addEventListener('submit', async (e) => { e.preventDefault(); await db.collection('resenas').add({ nombre: document.getElementById('reviewName').value, estrellas: document.getElementById('reviewStars').value, texto: document.getElementById('reviewText').value, fecha: new Date().toISOString() }); alert("Enviada"); cerrarModal('review-modal'); });
         function cargarResenas() { db.collection('resenas').orderBy('fecha', 'desc').onSnapshot(snap => { const d = document.getElementById('reviews-container'); d.innerHTML=""; snap.forEach(doc => { const r = doc.data(); d.innerHTML += `<div class="review-card"><div style="color:gold;">${"⭐".repeat(r.estrellas)}</div><b>${r.nombre}</b><p>${r.texto}</p></div>`; }); }); }
 
