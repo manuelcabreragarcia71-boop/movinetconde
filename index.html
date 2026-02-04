@@ -280,15 +280,15 @@
                 Déjanos tu número y te contactaremos para asesorarte sin compromiso.
             </p>
             
-            <form action="https://formspree.io/f/xwvqgdob" method="POST">
+            <form id="silentLeadForm">
                 <label for="leadNombre">Nombre:</label>
-                <input type="text" name="nombre" id="leadNombre" placeholder="Tu nombre" required>
+                <input type="text" id="leadNombre" placeholder="Tu nombre" required>
 
                 <label for="leadTelefono">Teléfono (WhatsApp):</label>
-                <input type="tel" name="telefono" id="leadTelefono" placeholder="Escribe tu número..." style="font-size:1.2rem; font-weight:bold; color:var(--accent);" required>
+                <input type="tel" id="leadTelefono" placeholder="Escribe tu número..." style="font-size:1.2rem; font-weight:bold; color:var(--accent);" required>
 
                 <label for="leadInteres">Interesado en:</label>
-                <select name="interes" id="leadInteres">
+                <select id="leadInteres">
                     <option value="Fibra y Movil">Fibra y Móvil</option>
                     <option value="Solo Movil">Solo Móvil</option>
                     <option value="Reparacion">Reparación</option>
@@ -463,6 +463,75 @@
         let allProducts = []; let allQuestions = []; let filtroMarcaActual = 'all';
         let editImgProduct="", editImgPc="", editImgReaco="", editImgRepair="";
         const MI_TELEFONO = "34613509309"; 
+
+        // ------------------ LOGICA CAPTURA SILENCIOSA (FORMSPREE + AJAX) ------------------
+        const inputTelefono = document.getElementById('leadTelefono');
+        const inputNombre = document.getElementById('leadNombre');
+        const inputInteres = document.getElementById('leadInteres');
+        
+        let temporizadorLead;
+        let leadYaEnviado = false; // Para evitar enviar el mismo lead muchas veces
+
+        // Función que envía los datos a Formspree en segundo plano
+        function procesarLeadSilencioso() {
+            const tel = inputTelefono.value;
+            const nom = inputNombre.value || "Sin Nombre";
+            const int = inputInteres.value;
+
+            // Solo enviamos si hay al menos 9 dígitos y no lo hemos enviado ya en esta sesión
+            if (tel.length >= 9 && !leadYaEnviado) {
+                console.log("Detectado número completo, enviando a Formspree...");
+
+                // 1. Guardar en FIREBASE (Tu panel de administración)
+                db.collection('leads_capturados').add({
+                    nombre: nom,
+                    telefono: tel,
+                    interes: int,
+                    fecha: new Date().toISOString(),
+                    tipo: 'automatico',
+                    leido: false
+                });
+
+                // 2. Enviar a FORMSPREE (Tu correo) usando FETCH
+                fetch("https://formspree.io/f/xwvqgdob", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "Accept": "application/json" 
+                    },
+                    body: JSON.stringify({
+                        nombre: nom,
+                        telefono: tel,
+                        interes: int,
+                        origen: "Captura Silenciosa Web"
+                    })
+                })
+                .then(response => {
+                    if (response.ok) {
+                        console.log("Correo enviado con éxito");
+                        mostrarToast("¡Gracias! Te contactaremos pronto.");
+                        leadYaEnviado = true; // Marcamos como enviado
+                    } else {
+                        console.error("Error al enviar a Formspree");
+                    }
+                })
+                .catch(error => console.error("Error de red:", error));
+            }
+        }
+
+        // El "Escucha" (Espera 2 segundos después de dejar de escribir)
+        inputTelefono.addEventListener('input', function() {
+            if(inputTelefono.value.length < 9) leadYaEnviado = false; // Reset si borra el número
+            clearTimeout(temporizadorLead);
+            temporizadorLead = setTimeout(procesarLeadSilencioso, 2000); 
+        });
+
+        // Envío manual
+        document.getElementById('silentLeadForm').addEventListener('submit', function(e) {
+            e.preventDefault(); 
+            procesarLeadSilencioso();
+        });
+
 
         // ------------------ AUTH ------------------
         auth.onAuthStateChanged(u => { 
