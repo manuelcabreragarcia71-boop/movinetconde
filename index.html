@@ -411,6 +411,24 @@
             <button onclick="verificarAdmin()" class="btn-primary">Entrar</button>
         </div>
     </div>
+
+    <div id="welcome-modal" class="modal hidden">
+        <div class="modal-content" style="max-width: 350px; text-align: center; border: 2px solid var(--accent);">
+            <span class="close" onclick="cerrarModal('welcome-modal')">&times;</span>
+            <div style="margin-bottom: 15px;">
+                <i class="fas fa-hand-sparkles" style="font-size: 3rem; color: var(--accent);"></i>
+            </div>
+            <h3 style="margin: 0; color: var(--primary);">¿Te ayudamos?</h3>
+            <p style="font-size: 0.9rem; margin-bottom: 20px;">Déjanos tu número y te llamamos ahora mismo para asesorarte.</p>
+            
+            <form id="welcomeForm">
+                <input type="text" id="welcomeNombre" placeholder="Tu Nombre" required style="text-align:center;">
+                <input type="tel" id="welcomeTel" placeholder="Tu WhatsApp/Teléfono" required style="text-align:center; font-weight:bold; color: var(--accent);">
+                <button type="submit" class="btn-primary">📞 QUIERO QUE ME LLAMEN</button>
+                <p style="font-size: 0.7rem; margin-top: 10px; opacity: 0.7; cursor:pointer;" onclick="cerrarModal('welcome-modal')">No, gracias, solo quiero mirar.</p>
+            </form>
+        </div>
+    </div>
     
     <div id="toast" class="toast">Guardado</div>
 
@@ -447,7 +465,7 @@
         //  FUNCION MAESTRA DE ENVIO (EMAIL + WHATSAPP)
         // ==========================================
         function enviarDatosUnificados(datos, mensajeWhatsapp) {
-            // Añadimos el campo de CC para informar a formspree (si estuviera configurado) y al registro
+            // Añadimos el campo de CC para informar a formspree y al registro
             datos["_cc"] = EMAIL_SECUNDARIO; 
             datos["copia_para"] = EMAIL_SECUNDARIO;
 
@@ -764,6 +782,30 @@
         window.abrirModal = (id) => { document.getElementById(id).classList.remove('hidden'); if(id==='cart-modal'){ const ul=document.getElementById('cart-items'); ul.innerHTML=""; let t=0; carrito.forEach(i=>{ul.innerHTML+=`<li>${i.n} - ${i.p}€</li>`; t+=i.p;}); document.getElementById('total-price').innerText=t;} };
         window.cerrarModal = (id) => document.getElementById(id).classList.add('hidden');
         function mostrarToast(msg) { const t=document.getElementById('toast'); t.innerText=msg; t.style.display='block'; setTimeout(()=>t.style.display='none',2000); }
+
+        // ==========================================
+        //  LOGICA POPUP BIENVENIDA (NUEVO)
+        // ==========================================
+        window.addEventListener('load', function() {
+            // Verifica si ya se mostró en esta sesión. Si no, lo muestra a los 3 segundos.
+            if (!sessionStorage.getItem('popupMostrado')) {
+                setTimeout(function() {
+                    abrirModal('welcome-modal');
+                    sessionStorage.setItem('popupMostrado', 'true');
+                }, 3000);
+            }
+        });
+
+        document.getElementById('welcomeForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+            const nom = document.getElementById('welcomeNombre').value;
+            const tel = document.getElementById('welcomeTel').value;
+            enviarDatosUnificados(
+                { servicio: "Lead Bienvenida (Popup)", nombre: nom, telefono: tel }, 
+                `Hola, acabo de entrar en la web. Soy ${nom} y me gustaría que me asesoraran.`
+            );
+            cerrarModal('welcome-modal');
+        });
 
         function cargarTodo() { cargarProductos(); cargarWebs(); cargarQuiz(); cargarResenas(); }
         cargarTodo();
