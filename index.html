@@ -164,7 +164,7 @@
         </div>
 
         <div id="admin-tab-leads" class="hidden">
-            <h4 style="color:var(--accent);">Contactos Capturados (Silenciosos)</h4>
+            <h4 style="color:var(--accent);">Contactos Capturados</h4>
             <div id="admin-leads-list" class="grid-container" style="grid-template-columns: 1fr;">Cargando contactos...</div>
         </div>
 
@@ -280,15 +280,15 @@
                 Déjanos tu número y te contactaremos para asesorarte sin compromiso.
             </p>
             
-            <form id="silentLeadForm">
+            <form action="https://formspree.io/f/xwvqgdob" method="POST">
                 <label for="leadNombre">Nombre:</label>
-                <input type="text" id="leadNombre" placeholder="Tu nombre" required>
+                <input type="text" name="nombre" id="leadNombre" placeholder="Tu nombre" required>
 
                 <label for="leadTelefono">Teléfono (WhatsApp):</label>
-                <input type="tel" id="leadTelefono" placeholder="Escribe tu número..." style="font-size:1.2rem; font-weight:bold; color:var(--accent);" required>
+                <input type="tel" name="telefono" id="leadTelefono" placeholder="Escribe tu número..." style="font-size:1.2rem; font-weight:bold; color:var(--accent);" required>
 
                 <label for="leadInteres">Interesado en:</label>
-                <select id="leadInteres">
+                <select name="interes" id="leadInteres">
                     <option value="Fibra y Movil">Fibra y Móvil</option>
                     <option value="Solo Movil">Solo Móvil</option>
                     <option value="Reparacion">Reparación</option>
@@ -299,7 +299,6 @@
 
                 <button type="submit" class="btn-primary">ENVIAR SOLICITUD</button>
             </form>
-            <p id="leadMensaje" style="display:none; color: green; text-align: center; margin-top:10px; font-weight:bold;">¡Recibido! Te llamaremos enseguida.</p>
         </div>
     </div>
 
@@ -464,59 +463,6 @@
         let allProducts = []; let allQuestions = []; let filtroMarcaActual = 'all';
         let editImgProduct="", editImgPc="", editImgReaco="", editImgRepair="";
         const MI_TELEFONO = "34613509309"; 
-
-        // ------------------ LOGICA CAPTURA SILENCIOSA (NUEVO) ------------------
-        const inputTelefono = document.getElementById('leadTelefono');
-        const inputNombre = document.getElementById('leadNombre');
-        const inputInteres = document.getElementById('leadInteres');
-        let temporizadorLead;
-
-        // Función que envía los datos
-        function procesarLeadSilencioso() {
-            const tel = inputTelefono.value;
-            const nom = inputNombre.value || "Sin Nombre";
-            const int = inputInteres.value;
-
-            if (tel.length >= 9) {
-                console.log("Detectado número completo, enviando...");
-                
-                // 1. Guardar en FIREBASE (Para el Panel Admin)
-                db.collection('leads_capturados').add({
-                    nombre: nom,
-                    telefono: tel,
-                    interes: int,
-                    fecha: new Date().toISOString(),
-                    tipo: 'automatico',
-                    leido: false
-                }).then(() => mostrarToast("Contacto guardado internamente"));
-
-                // 2. Enviar al archivo PHP (Para tu Correo)
-                const datos = new FormData();
-                datos.append('nombre', nom);
-                datos.append('telefono', tel);
-                datos.append('interes', int);
-                datos.append('tipo_envio', 'automatico');
-
-                fetch('enviar_aviso.php', { method: 'POST', body: datos })
-                    .then(r => console.log('Aviso correo enviado'))
-                    .catch(e => console.error('Error PHP:', e));
-            }
-        }
-
-        // El "Escucha" (Debounce)
-        inputTelefono.addEventListener('input', function() {
-            clearTimeout(temporizadorLead);
-            temporizadorLead = setTimeout(procesarLeadSilencioso, 2000); // Espera 2 segundos
-        });
-
-        // Envío manual (Click botón)
-        document.getElementById('silentLeadForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-            procesarLeadSilencioso(); // Fuerza el envío
-            document.getElementById('silentLeadForm').style.display = 'none';
-            document.getElementById('leadMensaje').style.display = 'block';
-        });
-
 
         // ------------------ AUTH ------------------
         auth.onAuthStateChanged(u => { 
