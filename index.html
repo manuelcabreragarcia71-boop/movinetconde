@@ -75,7 +75,7 @@
         .section-title { text-align: center; color: var(--primary); text-transform: uppercase; margin-bottom: 20px; border-bottom: 2px solid var(--accent); display: inline-block; padding-bottom: 5px; font-weight: 800; }
         .center-wrapper { text-align: center; }
 
-        /* ESTILOS HOME MENU (NUEVO) */
+        /* ESTILOS HOME MENU */
         .home-grid {
             display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px;
         }
@@ -749,6 +749,58 @@
             if(nom) enviarDatosUnificados({servicio: "Interes Oferta Teleco", oferta: titulo, nombre: nom}, `Hola, me interesa la oferta de telecomunicaciones: ${titulo}. Soy ${nom}.`);
         }
 
+        // --- FUNCIÓN MEJORADA: COMPRIME LAS FOTOS PARA QUE NO SE BORREN ---
+        async function guardarItem(col, id, data, fileIn) {
+            const f = document.getElementById(fileIn) ? document.getElementById(fileIn).files[0] : null;
+            
+            if(f) { 
+                // Si hay foto, la comprimimos antes de subir
+                try {
+                    const imagenComprimida = await comprimirImagen(f);
+                    data.img = imagenComprimida;
+                } catch (error) {
+                    console.error("Error al comprimir", error);
+                    alert("Hubo un error con la imagen. Intenta con otra.");
+                    return;
+                }
+            }
+            
+            // Guardamos en la base de datos
+            await db.collection(col).add({...data, fecha: new Date().toISOString()});
+            mostrarToast("Guardado correctamente");
+        }
+
+        function comprimirImagen(file) {
+            return new Promise((resolve, reject) => {
+                const reader = new FileReader();
+                reader.readAsDataURL(file);
+                reader.onload = (event) => {
+                    const img = new Image();
+                    img.src = event.target.result;
+                    img.onload = () => {
+                        const canvas = document.createElement('canvas');
+                        const ctx = canvas.getContext('2d');
+                        
+                        // Reducimos la imagen a un máximo de 800px de ancho
+                        const maxWidth = 800;
+                        const scaleSize = maxWidth / img.width;
+                        const newWidth = (img.width > maxWidth) ? maxWidth : img.width;
+                        const newHeight = (img.width > maxWidth) ? (img.height * scaleSize) : img.height;
+
+                        canvas.width = newWidth;
+                        canvas.height = newHeight;
+                        ctx.drawImage(img, 0, 0, newWidth, newHeight);
+
+                        // Calidad al 70% JPEG
+                        resolve(canvas.toDataURL('image/jpeg', 0.7)); 
+                    };
+                    img.onerror = (error) => reject(error);
+                };
+                reader.onerror = (error) => reject(error);
+            });
+        }
+
+        // --- EVENT LISTENERS DE FORMULARIOS ADMIN ---
         document.getElementById('addFolderForm').addEventListener('submit', e => {
             e.preventDefault();
             guardarItem('telecom_carpetas', null, { nombre: document.getElementById('folderName').value }, 'folderImg')
@@ -765,6 +817,17 @@
             };
             guardarItem('telecom_ofertas', null, data, 'offerImg')
             .then(() => document.getElementById('addOfferForm').reset());
+        });
+
+        document.getElementById('addProductForm').addEventListener('submit', e=>{ e.preventDefault(); 
+            guardarItem('productos', null, {
+                nombre: document.getElementById('newName').value, marca: document.getElementById('newBrand').value, 
+                precio: Number(document.getElementById('newPrice').value)
+            }, 'newImg').then(()=>{document.getElementById('addProductForm').reset()}); 
+        });
+
+        document.getElementById('addWebForm').addEventListener('submit', e=>{ e.preventDefault();
+            guardarItem('webs', null, { titulo: document.getElementById('webTitle').value }, 'webImg').then(()=>{document.getElementById('addWebForm').reset()});
         });
 
         // --- FORMS ---
@@ -948,22 +1011,6 @@
             event.target.classList.add('active');
         }
 
-        async function guardarItem(col, id, data, fileIn) {
-            const f = document.getElementById(fileIn) ? document.getElementById(fileIn).files[0] : null;
-            if(f) { const r = new FileReader(); r.readAsDataURL(f); await new Promise(res => r.onload = ()=> { data.img = r.result; res(); }); }
-            await db.collection(col).add({...data, fecha: new Date().toISOString()});
-            mostrarToast("Guardado");
-        }
-
-        document.getElementById('addProductForm').addEventListener('submit', e=>{ e.preventDefault(); 
-            guardarItem('productos', null, {
-                nombre: document.getElementById('newName').value, marca: document.getElementById('newBrand').value, 
-                precio: Number(document.getElementById('newPrice').value)
-            }, 'newImg').then(()=>{document.getElementById('addProductForm').reset()}); 
-        });
-        document.getElementById('addWebForm').addEventListener('submit', e=>{ e.preventDefault();
-            guardarItem('webs', null, { titulo: document.getElementById('webTitle').value }, 'webImg').then(()=>{document.getElementById('addWebForm').reset()});
-        });
         document.getElementById('addQuizForm').addEventListener('submit', async (e) => {
             e.preventDefault();
             const data = { pregunta: document.getElementById('quizQuestion').value, opciones: [document.getElementById('quizOp0').value, document.getElementById('quizOp1').value, document.getElementById('quizOp2').value, document.getElementById('quizOp3').value], correcta: parseInt(document.getElementById('quizCorrect').value), fecha: new Date().toISOString() };
