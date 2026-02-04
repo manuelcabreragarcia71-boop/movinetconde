@@ -235,13 +235,12 @@
                     <form id="addFolderForm" style="margin-bottom:15px;">
                         <input type="file" id="folderImg" accept="image/*" required>
                         <input type="text" id="folderName" placeholder="Nombre Carpeta (Ej: Luz, Fibra)" required>
-                        <button type="submit" class="btn-primary">CREAR CARPETA</button>
+                        <button type="submit" class="btn-primary" id="btn-save-folder">CREAR CARPETA</button>
                     </form>
                     
                     <div style="border-top: 2px dashed #eee; padding-top: 10px;">
                         <h5 style="margin:0 0 10px 0;">📂 Borrar Carpetas:</h5>
-                        <div id="admin-folders-list" style="max-height: 300px; overflow-y: auto;">
-                            </div>
+                        <div id="admin-folders-list" style="max-height: 300px; overflow-y: auto;"></div>
                     </div>
                 </div>
 
@@ -255,7 +254,7 @@
                         <input type="text" id="offerTitle" placeholder="Título Oferta (Ej: Fibra 600Mb)" required>
                         <input type="text" id="offerDesc" placeholder="Descripción breve" required>
                         <input type="number" id="offerPrice" placeholder="Precio (Opcional)">
-                        <button type="submit" class="btn-primary">CREAR OFERTA</button>
+                        <button type="submit" class="btn-primary" id="btn-save-offer">CREAR OFERTA</button>
                     </form>
 
                     <div style="border-top: 2px dashed #eee; padding-top: 10px;">
@@ -273,7 +272,7 @@
             <form id="addWebForm">
                 <input type="file" id="webImg" accept="image/*">
                 <input type="text" id="webTitle" placeholder="Nombre Plantilla (Ej: Restaurante)" required>
-                <button type="submit" class="btn-primary" id="btnSaveWeb">GUARDAR DISEÑO</button>
+                <button type="submit" class="btn-primary" id="btn-save-web">GUARDAR DISEÑO</button>
             </form>
         </div>
 
@@ -749,25 +748,45 @@
             if(nom) enviarDatosUnificados({servicio: "Interes Oferta Teleco", oferta: titulo, nombre: nom}, `Hola, me interesa la oferta de telecomunicaciones: ${titulo}. Soy ${nom}.`);
         }
 
-        // --- FUNCIÓN MEJORADA: COMPRIME LAS FOTOS PARA QUE NO SE BORREN ---
-        async function guardarItem(col, id, data, fileIn) {
+        // --- FUNCIÓN MEJORADA: COMPRESIÓN AGRESIVA PARA EVITAR ERRORES DE TAMAÑO ---
+        async function guardarItem(col, id, data, fileIn, btnId) {
+            const btn = document.getElementById(btnId);
+            const originalBtnText = btn ? btn.innerText : 'GUARDAR';
+            
+            if(btn) { btn.disabled = true; btn.innerText = "⏳ COMPRIMIENDO Y SUBIENDO..."; }
+
             const f = document.getElementById(fileIn) ? document.getElementById(fileIn).files[0] : null;
             
             if(f) { 
-                // Si hay foto, la comprimimos antes de subir
                 try {
                     const imagenComprimida = await comprimirImagen(f);
+                    
+                    // VERIFICACIÓN DE SEGURIDAD: SI LA FOTO SIGUE SIENDO ENORME, AVISAR
+                    if (imagenComprimida.length > 950000) {
+                        alert("⚠️ La imagen sigue siendo demasiado pesada incluso comprimida. Por favor, elige una imagen más simple o hazle una captura de pantalla y sube la captura.");
+                        if(btn) { btn.disabled = false; btn.innerText = originalBtnText; }
+                        return;
+                    }
+
                     data.img = imagenComprimida;
                 } catch (error) {
                     console.error("Error al comprimir", error);
                     alert("Hubo un error con la imagen. Intenta con otra.");
+                    if(btn) { btn.disabled = false; btn.innerText = originalBtnText; }
                     return;
                 }
             }
             
             // Guardamos en la base de datos
-            await db.collection(col).add({...data, fecha: new Date().toISOString()});
-            mostrarToast("Guardado correctamente");
+            try {
+                await db.collection(col).add({...data, fecha: new Date().toISOString()});
+                mostrarToast("Guardado correctamente");
+            } catch (error) {
+                console.error(error);
+                alert("Error al guardar en Google: " + error.message);
+            } finally {
+                if(btn) { btn.disabled = false; btn.innerText = originalBtnText; }
+            }
         }
 
         function comprimirImagen(file) {
@@ -781,18 +800,23 @@
                         const canvas = document.createElement('canvas');
                         const ctx = canvas.getContext('2d');
                         
-                        // Reducimos la imagen a un máximo de 800px de ancho
-                        const maxWidth = 800;
+                        // REDUCCIÓN DRÁSTICA: MÁXIMO 500PX (Suficiente para móviles)
+                        const maxWidth = 500; 
                         const scaleSize = maxWidth / img.width;
                         const newWidth = (img.width > maxWidth) ? maxWidth : img.width;
                         const newHeight = (img.width > maxWidth) ? (img.height * scaleSize) : img.height;
 
                         canvas.width = newWidth;
                         canvas.height = newHeight;
+                        
+                        // Fondo blanco por si es PNG transparente (evita fondo negro)
+                        ctx.fillStyle = "#FFFFFF";
+                        ctx.fillRect(0, 0, newWidth, newHeight);
+                        
                         ctx.drawImage(img, 0, 0, newWidth, newHeight);
 
-                        // Calidad al 70% JPEG
-                        resolve(canvas.toDataURL('image/jpeg', 0.7)); 
+                        // CALIDAD BAJA (0.6) para asegurar que pese poco
+                        resolve(canvas.toDataURL('image/jpeg', 0.6)); 
                     };
                     img.onerror = (error) => reject(error);
                 };
@@ -803,7 +827,7 @@
         // --- EVENT LISTENERS DE FORMULARIOS ADMIN ---
         document.getElementById('addFolderForm').addEventListener('submit', e => {
             e.preventDefault();
-            guardarItem('telecom_carpetas', null, { nombre: document.getElementById('folderName').value }, 'folderImg')
+            guardarItem('telecom_carpetas', null, { nombre: document.getElementById('folderName').value }, 'folderImg', 'btn-save-folder')
             .then(() => document.getElementById('addFolderForm').reset());
         });
 
@@ -815,7 +839,7 @@
                 descripcion: document.getElementById('offerDesc').value,
                 precio: document.getElementById('offerPrice').value
             };
-            guardarItem('telecom_ofertas', null, data, 'offerImg')
+            guardarItem('telecom_ofertas', null, data, 'offerImg', 'btn-save-offer')
             .then(() => document.getElementById('addOfferForm').reset());
         });
 
@@ -823,11 +847,11 @@
             guardarItem('productos', null, {
                 nombre: document.getElementById('newName').value, marca: document.getElementById('newBrand').value, 
                 precio: Number(document.getElementById('newPrice').value)
-            }, 'newImg').then(()=>{document.getElementById('addProductForm').reset()}); 
+            }, 'newImg', null).then(()=>{document.getElementById('addProductForm').reset()}); 
         });
 
         document.getElementById('addWebForm').addEventListener('submit', e=>{ e.preventDefault();
-            guardarItem('webs', null, { titulo: document.getElementById('webTitle').value }, 'webImg').then(()=>{document.getElementById('addWebForm').reset()});
+            guardarItem('webs', null, { titulo: document.getElementById('webTitle').value }, 'webImg', 'btn-save-web').then(()=>{document.getElementById('addWebForm').reset()});
         });
 
         // --- FORMS ---
