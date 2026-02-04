@@ -75,6 +75,25 @@
         .section-title { text-align: center; color: var(--primary); text-transform: uppercase; margin-bottom: 20px; border-bottom: 2px solid var(--accent); display: inline-block; padding-bottom: 5px; font-weight: 800; }
         .center-wrapper { text-align: center; }
 
+        /* ESTILOS HOME MENU (NUEVO) */
+        .home-grid {
+            display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px;
+        }
+        @media (min-width: 768px) { .home-grid { grid-template-columns: repeat(4, 1fr); } }
+        
+        .home-card {
+            background: rgba(255,255,255,0.9); padding: 25px 15px; border-radius: 15px;
+            text-align: center; border: 2px solid rgba(0,0,0,0.05); cursor: pointer;
+            transition: all 0.3s ease; display: flex; flex-direction: column; align-items: center; justify-content: center;
+        }
+        .home-card:hover {
+            transform: translateY(-5px) scale(1.02);
+            border-color: var(--accent);
+            box-shadow: 0 10px 20px rgba(255,140,0,0.2);
+        }
+        .home-icon { font-size: 2.5rem; color: var(--accent); margin-bottom: 10px; }
+        .home-title { font-weight: 800; text-transform: uppercase; font-size: 0.9rem; color: var(--primary); }
+
         /* ELEMENTOS VISUALES */
         .filter-scroll { display: flex; gap: 10px; overflow-x: auto; padding: 10px 0; margin-bottom: 20px; }
         .filter-badge { background: rgba(255,255,255,0.8); border: 2px solid rgba(0,0,0,0.1); padding: 8px 15px; border-radius: 15px; cursor: pointer; font-weight: bold; white-space: nowrap; transition: 0.3s; }
@@ -89,7 +108,7 @@
         .brand-tag { left: 15px; background: rgba(0,0,0,0.8); }
         .condition-tag { right: 15px; background: var(--success); }
         
-        /* ESTILOS ESPECIFICOS TELECO (CARPETAS) */
+        /* ESTILOS TELECO Y PC */
         .folder-card {
             background: white; border-radius: 15px; padding: 20px; text-align: center;
             border: 2px solid #eee; transition: 0.3s; cursor: pointer; position: relative; overflow: hidden;
@@ -97,9 +116,7 @@
         .folder-card:hover { border-color: var(--accent); transform: translateY(-3px); box-shadow: 0 10px 25px rgba(255,140,0,0.15); }
         .folder-icon { width: 80px; height: 80px; object-fit: contain; margin-bottom: 10px; }
         .folder-title { font-weight: 800; font-size: 1.1rem; text-transform: uppercase; }
-        .folder-count { font-size: 0.8rem; color: #777; }
 
-        /* ESTILOS ESPECIFICOS PC OPCIONES */
         .pc-option-card {
             background: white; padding: 30px; border-radius: 15px; text-align: center; 
             border: 2px solid #eee; transition: 0.3s; cursor: pointer;
@@ -163,9 +180,10 @@
                 </div>
             </div>
             <div class="nav-menu">
-                <button onclick="verSeccion('contacto')" class="menu-btn" id="btn-contacto">📞 Te Llamamos</button>
-                <button onclick="verSeccion('catalogo')" class="menu-btn active" id="btn-catalogo">📱 Móviles</button>
-                <button onclick="verSeccion('reparaciones')" class="menu-btn" id="btn-reparaciones">🔧 Rep. Móviles</button>
+                <button onclick="verSeccion('inicio')" class="menu-btn active" id="btn-inicio">🏠 Inicio</button>
+                <button onclick="verSeccion('contacto')" class="menu-btn" id="btn-contacto">📞 Contacto</button>
+                <button onclick="verSeccion('catalogo')" class="menu-btn" id="btn-catalogo">📱 Móviles</button>
+                <button onclick="verSeccion('reparaciones')" class="menu-btn" id="btn-reparaciones">🔧 Taller</button>
                 <button onclick="verSeccion('teleco')" class="menu-btn" id="btn-teleco">📡 Telecom</button>
                 <button onclick="verSeccion('pcs')" class="menu-btn" id="btn-pcs">🖥️ PC</button>
                 <button onclick="verSeccion('patines')" class="menu-btn" id="btn-patines">🛴 Patines</button>
@@ -221,7 +239,6 @@
                     </form>
                     <div id="admin-folders-list" style="margin-top:10px;"></div>
                 </div>
-
                 <div style="background:white; padding:15px; border-radius:10px;">
                     <h4>2. Crear Oferta</h4>
                     <form id="addOfferForm">
@@ -278,6 +295,54 @@
         <button onclick="cerrarSesionAdmin()" style="margin-top:20px; background:#333; color:white; border:none; padding:10px; width:100%;">Cerrar Sesión Admin</button>
     </div>
 
+    <div id="sec-inicio" class="container">
+        <div class="center-wrapper">
+            <h2 class="section-title">¿Qué estás buscando?</h2>
+        </div>
+        <div class="home-grid">
+            <div class="home-card" onclick="verSeccion('catalogo')">
+                <i class="fas fa-mobile-alt home-icon"></i>
+                <div class="home-title">Móviles</div>
+            </div>
+            <div class="home-card" onclick="verSeccion('reparaciones')">
+                <i class="fas fa-tools home-icon"></i>
+                <div class="home-title">Reparaciones</div>
+            </div>
+            <div class="home-card" onclick="verSeccion('teleco')">
+                <i class="fas fa-satellite-dish home-icon"></i>
+                <div class="home-title">Telecom</div>
+            </div>
+            <div class="home-card" onclick="verSeccion('pcs')">
+                <i class="fas fa-desktop home-icon"></i>
+                <div class="home-title">Zona PC</div>
+            </div>
+            <div class="home-card" onclick="verSeccion('patines')">
+                <i class="fas fa-scooter home-icon"></i>
+                <div class="home-title">Patines</div>
+            </div>
+            <div class="home-card" onclick="verSeccion('webs')">
+                <i class="fas fa-paint-brush home-icon"></i>
+                <div class="home-title">Diseño Web</div>
+            </div>
+            <div class="home-card" onclick="verSeccion('reacondicionados')">
+                <i class="fas fa-recycle home-icon"></i>
+                <div class="home-title">Reacondicionados</div>
+            </div>
+            <div class="home-card" onclick="verSeccion('quiz')">
+                <i class="fas fa-gamepad home-icon"></i>
+                <div class="home-title">Quiz Tech</div>
+            </div>
+            <div class="home-card" onclick="verSeccion('resenas')">
+                <i class="fas fa-star home-icon"></i>
+                <div class="home-title">Opiniones</div>
+            </div>
+            <div class="home-card" onclick="verSeccion('contacto')">
+                <i class="fas fa-headset home-icon"></i>
+                <div class="home-title">Contacto</div>
+            </div>
+        </div>
+    </div>
+
     <div id="sec-contacto" class="container hidden">
         <div class="center-wrapper"><h2 class="section-title">¿Te Llamamos?</h2></div>
         <div class="form-box glass-effect" style="margin-top:20px; border:2px solid var(--accent);">
@@ -300,7 +365,7 @@
         </div>
     </div>
 
-    <div id="sec-catalogo" class="container">
+    <div id="sec-catalogo" class="container hidden">
         <div class="center-wrapper"><h2 class="section-title">Móviles</h2></div>
         <div id="brand-filters" class="filter-scroll">
             <button class="filter-badge active" onclick="filtrarMarca('all')">Todo</button>
@@ -337,8 +402,7 @@
         <div id="teleco-offers-view" class="hidden">
             <button class="btn-back" onclick="volverACarpetas()"><i class="fas fa-arrow-left"></i> Volver a Categorías</button>
             <h3 id="current-folder-title" style="margin-left:10px; display:inline-block;"></h3>
-            <div id="offers-container" class="grid-container">
-                </div>
+            <div id="offers-container" class="grid-container"></div>
         </div>
     </div>
 
@@ -527,7 +591,6 @@
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
 
     <script>
-        // CONFIGURACION FIREBASE (Tus credenciales)
         const firebaseConfig = {
             apiKey: "AIzaSyAO9sshvU5zUf_S9d12toWwrioeXBonlRc",
             authDomain: "movinet-conde-web.firebaseapp.com",
@@ -538,18 +601,14 @@
         const db = firebase.firestore();
         const auth = firebase.auth();
 
-        // VARIABLES GLOBALES
         let carrito = []; let usuarioActual = null; let esAdmin = false;
         let allProducts = []; let filtroMarcaActual = 'all'; 
         let allQuestions = []; 
-        let telecomFolders = []; // Almacena las carpetas de teleco
+        let telecomFolders = [];
         const MI_TELEFONO = "34613509309"; 
         const FORMSPREE_URL = "https://formspree.io/f/xwvqgdob";
         const EMAIL_SECUNDARIO = "movinetconde@gmail.com";
 
-        // ==========================================
-        //  FUNCION MAESTRA DE ENVIO
-        // ==========================================
         function enviarDatosUnificados(datos, mensajeWhatsapp) {
             datos["_cc"] = EMAIL_SECUNDARIO; 
             datos["copia_para"] = EMAIL_SECUNDARIO;
@@ -563,11 +622,7 @@
             mostrarToast("Solicitud enviada correctamente");
         }
 
-        // ==========================================
-        //  LOGICA TELECOMUNICACION (CARPETAS Y OFERTAS)
-        // ==========================================
-        
-        // 1. Cargar Carpetas (Vista Usuario)
+        // --- LOGICA TELECO ---
         function cargarCarpetasTeleco() {
             db.collection("telecom_carpetas").orderBy("nombre").onSnapshot(snap => {
                 telecomFolders = [];
@@ -583,43 +638,30 @@
                     const f = doc.data();
                     const id = doc.id;
                     telecomFolders.push({...f, id});
-
-                    // Vista Usuario: Grid de Carpetas
                     container.innerHTML += `
                         <div class="folder-card" onclick="verOfertasDeCarpeta('${id}', '${f.nombre}')">
                             <img src="${f.img}" class="folder-icon">
                             <div class="folder-title">${f.nombre}</div>
                         </div>
                     `;
-
-                    // Vista Admin: Select para nuevas ofertas
                     selectAdmin.innerHTML += `<option value="${id}">${f.nombre}</option>`;
-
-                    // Vista Admin: Lista para borrar
-                    if(listAdmin) {
-                        listAdmin.innerHTML += `<div style="display:flex; justify-content:space-between; margin-bottom:5px; border-bottom:1px solid #eee;"><span>${f.nombre}</span> <button class="btn-delete" onclick="borrar('telecom_carpetas','${id}')">X</button></div>`;
-                    }
+                    if(listAdmin) listAdmin.innerHTML += `<div style="display:flex; justify-content:space-between; margin-bottom:5px; border-bottom:1px solid #eee;"><span>${f.nombre}</span> <button class="btn-delete" onclick="borrar('telecom_carpetas','${id}')">X</button></div>`;
                 });
             });
         }
 
-        // 2. Ver Ofertas dentro de una carpeta
         function verOfertasDeCarpeta(folderId, folderName) {
             document.getElementById('teleco-folders-view').classList.add('hidden');
             document.getElementById('teleco-offers-view').classList.remove('hidden');
             document.getElementById('current-folder-title').innerText = folderName;
-            
             const container = document.getElementById('offers-container');
             container.innerHTML = "Cargando ofertas...";
-
             db.collection("telecom_ofertas").where("folderId", "==", folderId).onSnapshot(snap => {
                 container.innerHTML = "";
                 if(snap.empty) { container.innerHTML = "<p>No hay ofertas en esta categoría aún.</p>"; return; }
-                
                 snap.forEach(doc => {
                     const o = doc.data();
                     let adminBtns = esAdmin ? `<div class="admin-actions"><button class="btn-delete" onclick="borrar('telecom_ofertas','${doc.id}')">🗑️</button></div>` : '';
-                    
                     container.innerHTML += `
                         <div class="product-card">
                             <img src="${o.img}" class="product-photo" style="object-fit: contain; background:white;">
@@ -644,14 +686,12 @@
             if(nom) enviarDatosUnificados({servicio: "Interes Oferta Teleco", oferta: titulo, nombre: nom}, `Hola, me interesa la oferta de telecomunicaciones: ${titulo}. Soy ${nom}.`);
         }
 
-        // 3. Crear Carpeta (Admin)
         document.getElementById('addFolderForm').addEventListener('submit', e => {
             e.preventDefault();
             guardarItem('telecom_carpetas', null, { nombre: document.getElementById('folderName').value }, 'folderImg')
             .then(() => document.getElementById('addFolderForm').reset());
         });
 
-        // 4. Crear Oferta (Admin)
         document.getElementById('addOfferForm').addEventListener('submit', e => {
             e.preventDefault();
             const data = {
@@ -664,17 +704,12 @@
             .then(() => document.getElementById('addOfferForm').reset());
         });
 
-
-        // ==========================================
-        //  LOGICA FORMULARIOS OTROS
-        // ==========================================
-
+        // --- FORMS ---
         function abrirModalPC(tipo) {
             document.getElementById('pcTipoServicio').value = tipo;
             document.getElementById('pc-modal-title').innerText = tipo === 'reparacion' ? "Presupuesto Reparación PC" : "Fabricación PC a Medida";
             abrirModal('modal-pc-form');
         }
-
         document.getElementById('pcRequestForm').addEventListener('submit', (e) => {
             e.preventDefault();
             const tipo = document.getElementById('pcTipoServicio').value;
@@ -684,7 +719,6 @@
             enviarDatosUnificados({ servicio: "PC " + tipo, nombre: nom, telefono: tel, detalles: desc }, `Hola, soy ${nom}. Interesado en PC (${tipo}). Detalles: ${desc}`);
             cerrarModal('modal-pc-form'); document.getElementById('pcRequestForm').reset();
         });
-
         document.getElementById('patinForm').addEventListener('submit', (e) => {
             e.preventDefault();
             const nom = document.getElementById('patinNombre').value;
@@ -694,7 +728,6 @@
             enviarDatosUnificados({ servicio: "Reparacion Patin", nombre: nom, telefono: tel, modelo: mod, averia: av }, `Hola MovinetConde. Tengo un patín ${mod}. Avería: ${av}. Soy ${nom}.`);
             document.getElementById('patinForm').reset();
         });
-
         document.getElementById('tallerForm').addEventListener('submit', (e) => {
             e.preventDefault();
             const nom = document.getElementById('tallerNombre').value;
@@ -727,9 +760,7 @@
             enviarDatosUnificados({servicio: "Contacto General", nombre: nom, telefono: tel, interes: interes}, `Hola, me interesa: ${interes}. Soy ${nom}.`);
         });
 
-        // ==========================================
-        //  NAVEGACIÓN Y RENDERIZADO
-        // ==========================================
+        // --- NAVEGACION ---
         function verSeccion(id) {
             document.querySelectorAll('[id^="sec-"]').forEach(s => s.classList.add('hidden'));
             document.querySelectorAll('.menu-btn').forEach(b => b.classList.remove('active'));
@@ -767,12 +798,9 @@
                 });
             });
         }
-        
         function abrirModalWebPersonalizada(diseno = "General") {
             const nom = prompt("Dinos tu nombre:");
-            if(nom) {
-                enviarDatosUnificados({servicio: "Interes Web", diseño: diseno, nombre: nom}, `Hola, me interesa el diseño web: ${diseno}. Soy ${nom}.`);
-            }
+            if(nom) enviarDatosUnificados({servicio: "Interes Web", diseño: diseno, nombre: nom}, `Hola, me interesa el diseño web: ${diseno}. Soy ${nom}.`);
         }
 
         document.getElementById('addReviewForm').addEventListener('submit', async (e) => { 
@@ -789,9 +817,7 @@
                 snap.forEach(doc => { 
                     const r = doc.data(); 
                     d.innerHTML += `<div class="review-card"><div style="color:gold;">${"⭐".repeat(r.estrellas)}</div><b>${r.nombre}</b><p>${r.texto}</p></div>`; 
-                    if(esAdmin && adminList) {
-                        adminList.innerHTML += `<div class="review-card" style="text-align:left;"><b>${r.nombre}</b> (${r.estrellas}⭐)<p>${r.texto}</p><button class="btn-delete" onclick="borrar('resenas','${doc.id}')">Eliminar</button></div>`;
-                    }
+                    if(esAdmin && adminList) adminList.innerHTML += `<div class="review-card" style="text-align:left;"><b>${r.nombre}</b> (${r.estrellas}⭐)<p>${r.texto}</p><button class="btn-delete" onclick="borrar('resenas','${doc.id}')">Eliminar</button></div>`;
                 }); 
             }); 
         }
@@ -804,9 +830,7 @@
                 snap.forEach(doc => {
                     const q = doc.data(); 
                     allQuestions.push({...q, id: doc.id});
-                    if(esAdmin && listDiv) { 
-                        listDiv.innerHTML += `<div style="padding:10px; border-bottom:1px solid #ccc; display:flex; justify-content:space-between;"><div><b>${q.pregunta}</b><br><small>✅ ${q.opciones[q.correcta]}</small></div><button class="btn-delete" style="width:auto;" onclick="borrar('quiz','${doc.id}')">🗑️</button></div>`; 
-                    }
+                    if(esAdmin && listDiv) listDiv.innerHTML += `<div style="padding:10px; border-bottom:1px solid #ccc; display:flex; justify-content:space-between;"><div><b>${q.pregunta}</b><br><small>✅ ${q.opciones[q.correcta]}</small></div><button class="btn-delete" style="width:auto;" onclick="borrar('quiz','${doc.id}')">🗑️</button></div>`; 
                 });
             });
         }
@@ -846,9 +870,7 @@
             document.getElementById('finalScore').innerText = `${score} / ${allQuestions.length}`;
         }
 
-        // ==========================================
-        //  ADMINISTRACIÓN
-        // ==========================================
+        // --- ADMIN ---
         function verificarAdmin() { 
             if(document.getElementById('adminPassInput').value==="4354"){ 
                 esAdmin=true; document.getElementById('admin-panel').classList.remove('hidden'); cerrarModal('admin-login-modal'); 
@@ -876,11 +898,9 @@
                 precio: Number(document.getElementById('newPrice').value)
             }, 'newImg').then(()=>{document.getElementById('addProductForm').reset()}); 
         });
-
         document.getElementById('addWebForm').addEventListener('submit', e=>{ e.preventDefault();
             guardarItem('webs', null, { titulo: document.getElementById('webTitle').value }, 'webImg').then(()=>{document.getElementById('addWebForm').reset()});
         });
-        
         document.getElementById('addQuizForm').addEventListener('submit', async (e) => {
             e.preventDefault();
             const data = { pregunta: document.getElementById('quizQuestion').value, opciones: [document.getElementById('quizOp0').value, document.getElementById('quizOp1').value, document.getElementById('quizOp2').value, document.getElementById('quizOp3').value], correcta: parseInt(document.getElementById('quizCorrect').value), fecha: new Date().toISOString() };
@@ -935,8 +955,6 @@
         function mostrarToast(msg) { const t=document.getElementById('toast'); t.innerText=msg; t.style.display='block'; setTimeout(()=>t.style.display='none',2000); }
 
         window.addEventListener('load', function() {
-            // El Intro de Bienvenida se oculta solo con CSS/Animación
-            // El Popup de Formulario aparece a los 4 segundos (para dejar pasar la intro)
             if (!sessionStorage.getItem('popupMostrado')) {
                 setTimeout(function() {
                     abrirModal('welcome-modal');
