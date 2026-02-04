@@ -6,7 +6,7 @@
     <title>MOVINETCONDE | Tecnología & Servicios</title>
     
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;800&family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
 
     <style>
         :root {
@@ -25,7 +25,30 @@
             background-image: url('fondo.JPG');
             background-repeat: no-repeat; background-position: center center; background-attachment: fixed; background-size: cover;       
             touch-action: manipulation;
+            overflow-x: hidden;
         }
+
+        /* INTRO BIENVENIDA TECH */
+        #welcome-screen {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: #000; z-index: 9999;
+            display: flex; flex-direction: column; justify-content: center; align-items: center;
+            color: white; text-align: center;
+            animation: fadeOutUp 1s ease-in-out 2.5s forwards;
+        }
+        .tech-logo {
+            font-family: 'Orbitron', sans-serif; font-size: 3rem; font-weight: 800;
+            letter-spacing: 2px; text-transform: uppercase;
+            animation: pulseGlow 1.5s infinite alternate;
+        }
+        .tech-logo span { color: var(--accent); }
+        .loader-line {
+            width: 0; height: 3px; background: var(--accent); margin-top: 20px;
+            animation: loadWidth 2s ease-in-out forwards;
+        }
+        @keyframes pulseGlow { 0% { text-shadow: 0 0 10px rgba(255,140,0,0.2); } 100% { text-shadow: 0 0 30px rgba(255,140,0,0.8); } }
+        @keyframes loadWidth { 0% { width: 0; } 100% { width: 200px; } }
+        @keyframes fadeOutUp { 0% { opacity: 1; transform: translateY(0); } 100% { opacity: 0; transform: translateY(-100%); pointer-events: none; } }
 
         /* NAVEGACIÓN */
         .navbar { background: rgba(255, 255, 255, 0.98); padding: 10px 0; position: sticky; top: 0; z-index: 1000; border-bottom: 3px solid var(--accent); box-shadow: 0 4px 10px rgba(0,0,0,0.3); }
@@ -66,6 +89,16 @@
         .brand-tag { left: 15px; background: rgba(0,0,0,0.8); }
         .condition-tag { right: 15px; background: var(--success); }
         
+        /* ESTILOS ESPECIFICOS TELECO (CARPETAS) */
+        .folder-card {
+            background: white; border-radius: 15px; padding: 20px; text-align: center;
+            border: 2px solid #eee; transition: 0.3s; cursor: pointer; position: relative; overflow: hidden;
+        }
+        .folder-card:hover { border-color: var(--accent); transform: translateY(-3px); box-shadow: 0 10px 25px rgba(255,140,0,0.15); }
+        .folder-icon { width: 80px; height: 80px; object-fit: contain; margin-bottom: 10px; }
+        .folder-title { font-weight: 800; font-size: 1.1rem; text-transform: uppercase; }
+        .folder-count { font-size: 0.8rem; color: #777; }
+
         /* ESTILOS ESPECIFICOS PC OPCIONES */
         .pc-option-card {
             background: white; padding: 30px; border-radius: 15px; text-align: center; 
@@ -79,6 +112,7 @@
         .btn-primary { background: var(--primary); color: white; border: none; padding: 12px; width: 100%; border-radius: 5px; cursor: pointer; font-weight: bold; text-transform: uppercase; margin-top: 5px; font-size: 1rem; }
         .btn-secondary { background: white; color: var(--primary); border: 2px solid var(--primary); padding: 10px; width: 100%; border-radius: 5px; cursor: pointer; font-weight: bold; text-transform: uppercase; margin-top: 5px; }
         .btn-delete { background: #e74c3c; color: white; border: none; padding: 5px; cursor: pointer; border-radius: 5px; font-weight: bold; }
+        .btn-back { background: #eee; border: none; padding: 10px 20px; border-radius: 20px; font-weight: bold; margin-bottom: 15px; cursor: pointer; display: inline-flex; align-items: center; gap: 5px; }
 
         /* ADMIN */
         .admin-panel { background: rgba(255, 248, 225, 0.98); border: 2px dashed var(--accent); margin-bottom: 20px; padding: 20px; }
@@ -110,6 +144,12 @@
 </head>
 <body>
 
+    <div id="welcome-screen">
+        <div class="tech-logo">MOVINET<span>CONDE</span></div>
+        <p style="text-transform:uppercase; letter-spacing:1px; margin-top:10px;">Bienvenido al Futuro</p>
+        <div class="loader-line"></div>
+    </div>
+
     <nav class="navbar">
         <div class="nav-container">
             <div class="nav-top">
@@ -126,6 +166,7 @@
                 <button onclick="verSeccion('contacto')" class="menu-btn" id="btn-contacto">📞 Te Llamamos</button>
                 <button onclick="verSeccion('catalogo')" class="menu-btn active" id="btn-catalogo">📱 Móviles</button>
                 <button onclick="verSeccion('reparaciones')" class="menu-btn" id="btn-reparaciones">🔧 Rep. Móviles</button>
+                <button onclick="verSeccion('teleco')" class="menu-btn" id="btn-teleco">📡 Telecom</button>
                 <button onclick="verSeccion('pcs')" class="menu-btn" id="btn-pcs">🖥️ PC</button>
                 <button onclick="verSeccion('patines')" class="menu-btn" id="btn-patines">🛴 Patines</button>
                 <button onclick="verSeccion('webs')" class="menu-btn" id="btn-webs">🎨 Webs</button>
@@ -142,6 +183,7 @@
             <button class="admin-tab-btn active" onclick="verAdminTab('pedidos')">🚨 PEDIDOS</button>
             <button class="admin-tab-btn" onclick="verAdminTab('leads')">📞 LEADS</button>
             <button class="admin-tab-btn" onclick="verAdminTab('productos')">Móviles</button>
+            <button class="admin-tab-btn" onclick="verAdminTab('teleco')">Telecom</button>
             <button class="admin-tab-btn" onclick="verAdminTab('webs')">Webs</button>
             <button class="admin-tab-btn" onclick="verAdminTab('quiz')">TRIVIA</button>
             <button class="admin-tab-btn" onclick="verAdminTab('resenas')">Opiniones</button>
@@ -160,19 +202,45 @@
         <div id="admin-tab-productos" class="hidden">
             <h3>Nuevo Móvil</h3>
             <form id="addProductForm">
-                <input type="hidden" id="editProductId">
                 <input type="file" id="newImg" accept="image/*">
                 <input type="text" id="newBrand" placeholder="Marca (Samsung)" required>
                 <input type="text" id="newName" placeholder="Modelo" required>
                 <input type="number" id="newPrice" placeholder="Precio (€)" required>
-                <button type="submit" class="btn-primary" id="btnSaveProduct">GUARDAR MÓVIL</button>
+                <button type="submit" class="btn-primary">GUARDAR MÓVIL</button>
             </form>
+        </div>
+
+        <div id="admin-tab-teleco" class="hidden">
+            <div style="display:grid; grid-template-columns: 1fr 1fr; gap:20px;">
+                <div style="background:white; padding:15px; border-radius:10px;">
+                    <h4>1. Crear Carpeta</h4>
+                    <form id="addFolderForm">
+                        <input type="file" id="folderImg" accept="image/*" required>
+                        <input type="text" id="folderName" placeholder="Nombre Carpeta (Ej: Luz, Fibra)" required>
+                        <button type="submit" class="btn-primary">CREAR CARPETA</button>
+                    </form>
+                    <div id="admin-folders-list" style="margin-top:10px;"></div>
+                </div>
+
+                <div style="background:white; padding:15px; border-radius:10px;">
+                    <h4>2. Crear Oferta</h4>
+                    <form id="addOfferForm">
+                        <select id="offerFolderSelect" required>
+                            <option value="">Selecciona Carpeta...</option>
+                        </select>
+                        <input type="file" id="offerImg" accept="image/*">
+                        <input type="text" id="offerTitle" placeholder="Título Oferta" required>
+                        <input type="text" id="offerDesc" placeholder="Descripción breve" required>
+                        <input type="number" id="offerPrice" placeholder="Precio (Opcional)">
+                        <button type="submit" class="btn-primary">CREAR OFERTA</button>
+                    </form>
+                </div>
+            </div>
         </div>
 
         <div id="admin-tab-webs" class="hidden">
             <h3>Subir Plantilla Web</h3>
             <form id="addWebForm">
-                <input type="hidden" id="editWebId">
                 <input type="file" id="webImg" accept="image/*">
                 <input type="text" id="webTitle" placeholder="Nombre Plantilla (Ej: Restaurante)" required>
                 <button type="submit" class="btn-primary" id="btnSaveWeb">GUARDAR DISEÑO</button>
@@ -253,6 +321,24 @@
                 <textarea id="tallerAveria" placeholder="Describe qué le pasa..." rows="3"></textarea>
                 <button type="submit" class="btn-primary">SOLICITAR PRESUPUESTO</button>
             </form>
+        </div>
+    </div>
+
+    <div id="sec-teleco" class="container hidden">
+        <div class="center-wrapper"><h2 class="section-title">Telecomunicación & Servicios</h2></div>
+        
+        <div id="teleco-folders-view">
+            <p style="text-align:center;">Selecciona una categoría para ver las ofertas disponibles.</p>
+            <div id="folders-container" class="grid-container" style="grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));">
+                Cargando carpetas...
+            </div>
+        </div>
+
+        <div id="teleco-offers-view" class="hidden">
+            <button class="btn-back" onclick="volverACarpetas()"><i class="fas fa-arrow-left"></i> Volver a Categorías</button>
+            <h3 id="current-folder-title" style="margin-left:10px; display:inline-block;"></h3>
+            <div id="offers-container" class="grid-container">
+                </div>
         </div>
     </div>
 
@@ -420,7 +506,6 @@
             </div>
             <h3 style="margin: 0; color: var(--primary);">¿Te ayudamos?</h3>
             <p style="font-size: 0.9rem; margin-bottom: 20px;">Déjanos tu número y te llamamos ahora mismo para asesorarte.</p>
-            
             <form id="welcomeForm">
                 <input type="text" id="welcomeNombre" placeholder="Tu Nombre" required style="text-align:center;">
                 <input type="tel" id="welcomeTel" placeholder="Tu WhatsApp/Teléfono" required style="text-align:center; font-weight:bold; color: var(--accent);">
@@ -456,45 +541,134 @@
         // VARIABLES GLOBALES
         let carrito = []; let usuarioActual = null; let esAdmin = false;
         let allProducts = []; let filtroMarcaActual = 'all'; 
-        let allQuestions = []; // Array para el Quiz
+        let allQuestions = []; 
+        let telecomFolders = []; // Almacena las carpetas de teleco
         const MI_TELEFONO = "34613509309"; 
         const FORMSPREE_URL = "https://formspree.io/f/xwvqgdob";
         const EMAIL_SECUNDARIO = "movinetconde@gmail.com";
 
         // ==========================================
-        //  FUNCION MAESTRA DE ENVIO (EMAIL + WHATSAPP)
+        //  FUNCION MAESTRA DE ENVIO
         // ==========================================
         function enviarDatosUnificados(datos, mensajeWhatsapp) {
-            // Añadimos el campo de CC para informar a formspree y al registro
             datos["_cc"] = EMAIL_SECUNDARIO; 
             datos["copia_para"] = EMAIL_SECUNDARIO;
-
-            // 1. Enviar Email (Silencioso en segundo plano)
             fetch(FORMSPREE_URL, {
-                method: "POST",
-                headers: { "Content-Type": "application/json", "Accept": "application/json" },
+                method: "POST", headers: { "Content-Type": "application/json", "Accept": "application/json" },
                 body: JSON.stringify(datos)
             }).then(r => console.log("Email enviado")).catch(e => console.error(e));
-
-            // 2. Guardar en Firebase (Base de Datos)
-            db.collection('leads_capturados').add({
-                ...datos,
-                fecha: new Date().toISOString(),
-                leido: false
-            });
-
-            // 3. Abrir WhatsApp
+            db.collection('leads_capturados').add({ ...datos, fecha: new Date().toISOString(), leido: false });
             const url = `https://wa.me/${MI_TELEFONO}?text=${encodeURIComponent(mensajeWhatsapp)}`;
             window.open(url, '_blank');
-
             mostrarToast("Solicitud enviada correctamente");
         }
 
         // ==========================================
-        //  LOGICA FORMULARIOS
+        //  LOGICA TELECOMUNICACION (CARPETAS Y OFERTAS)
+        // ==========================================
+        
+        // 1. Cargar Carpetas (Vista Usuario)
+        function cargarCarpetasTeleco() {
+            db.collection("telecom_carpetas").orderBy("nombre").onSnapshot(snap => {
+                telecomFolders = [];
+                const container = document.getElementById('folders-container');
+                const selectAdmin = document.getElementById('offerFolderSelect');
+                const listAdmin = document.getElementById('admin-folders-list');
+                
+                container.innerHTML = "";
+                selectAdmin.innerHTML = '<option value="">Selecciona Carpeta...</option>';
+                if(listAdmin) listAdmin.innerHTML = "";
+
+                snap.forEach(doc => {
+                    const f = doc.data();
+                    const id = doc.id;
+                    telecomFolders.push({...f, id});
+
+                    // Vista Usuario: Grid de Carpetas
+                    container.innerHTML += `
+                        <div class="folder-card" onclick="verOfertasDeCarpeta('${id}', '${f.nombre}')">
+                            <img src="${f.img}" class="folder-icon">
+                            <div class="folder-title">${f.nombre}</div>
+                        </div>
+                    `;
+
+                    // Vista Admin: Select para nuevas ofertas
+                    selectAdmin.innerHTML += `<option value="${id}">${f.nombre}</option>`;
+
+                    // Vista Admin: Lista para borrar
+                    if(listAdmin) {
+                        listAdmin.innerHTML += `<div style="display:flex; justify-content:space-between; margin-bottom:5px; border-bottom:1px solid #eee;"><span>${f.nombre}</span> <button class="btn-delete" onclick="borrar('telecom_carpetas','${id}')">X</button></div>`;
+                    }
+                });
+            });
+        }
+
+        // 2. Ver Ofertas dentro de una carpeta
+        function verOfertasDeCarpeta(folderId, folderName) {
+            document.getElementById('teleco-folders-view').classList.add('hidden');
+            document.getElementById('teleco-offers-view').classList.remove('hidden');
+            document.getElementById('current-folder-title').innerText = folderName;
+            
+            const container = document.getElementById('offers-container');
+            container.innerHTML = "Cargando ofertas...";
+
+            db.collection("telecom_ofertas").where("folderId", "==", folderId).onSnapshot(snap => {
+                container.innerHTML = "";
+                if(snap.empty) { container.innerHTML = "<p>No hay ofertas en esta categoría aún.</p>"; return; }
+                
+                snap.forEach(doc => {
+                    const o = doc.data();
+                    let adminBtns = esAdmin ? `<div class="admin-actions"><button class="btn-delete" onclick="borrar('telecom_ofertas','${doc.id}')">🗑️</button></div>` : '';
+                    
+                    container.innerHTML += `
+                        <div class="product-card">
+                            <img src="${o.img}" class="product-photo" style="object-fit: contain; background:white;">
+                            <h3>${o.titulo}</h3>
+                            <p>${o.descripcion}</p>
+                            ${o.precio ? `<p class="price">${o.precio}€</p>` : ''}
+                            <button class="btn-primary" onclick="pedirInfoOferta('${o.titulo}')">ME INTERESA</button>
+                            ${adminBtns}
+                        </div>
+                    `;
+                });
+            });
+        }
+
+        function volverACarpetas() {
+            document.getElementById('teleco-offers-view').classList.add('hidden');
+            document.getElementById('teleco-folders-view').classList.remove('hidden');
+        }
+
+        function pedirInfoOferta(titulo) {
+            const nom = prompt("Tu nombre:");
+            if(nom) enviarDatosUnificados({servicio: "Interes Oferta Teleco", oferta: titulo, nombre: nom}, `Hola, me interesa la oferta de telecomunicaciones: ${titulo}. Soy ${nom}.`);
+        }
+
+        // 3. Crear Carpeta (Admin)
+        document.getElementById('addFolderForm').addEventListener('submit', e => {
+            e.preventDefault();
+            guardarItem('telecom_carpetas', null, { nombre: document.getElementById('folderName').value }, 'folderImg')
+            .then(() => document.getElementById('addFolderForm').reset());
+        });
+
+        // 4. Crear Oferta (Admin)
+        document.getElementById('addOfferForm').addEventListener('submit', e => {
+            e.preventDefault();
+            const data = {
+                folderId: document.getElementById('offerFolderSelect').value,
+                titulo: document.getElementById('offerTitle').value,
+                descripcion: document.getElementById('offerDesc').value,
+                precio: document.getElementById('offerPrice').value
+            };
+            guardarItem('telecom_ofertas', null, data, 'offerImg')
+            .then(() => document.getElementById('addOfferForm').reset());
+        });
+
+
+        // ==========================================
+        //  LOGICA FORMULARIOS OTROS
         // ==========================================
 
-        // 1. PC (Se abre modal primero)
         function abrirModalPC(tipo) {
             document.getElementById('pcTipoServicio').value = tipo;
             document.getElementById('pc-modal-title').innerText = tipo === 'reparacion' ? "Presupuesto Reparación PC" : "Fabricación PC a Medida";
@@ -511,7 +685,6 @@
             cerrarModal('modal-pc-form'); document.getElementById('pcRequestForm').reset();
         });
 
-        // 2. Patines
         document.getElementById('patinForm').addEventListener('submit', (e) => {
             e.preventDefault();
             const nom = document.getElementById('patinNombre').value;
@@ -522,7 +695,6 @@
             document.getElementById('patinForm').reset();
         });
 
-        // 3. Taller Móviles
         document.getElementById('tallerForm').addEventListener('submit', (e) => {
             e.preventDefault();
             const nom = document.getElementById('tallerNombre').value;
@@ -533,10 +705,8 @@
             document.getElementById('tallerForm').reset();
         });
 
-        // 4. Contacto General (Lead Silencioso)
         let temporizadorLead; let leadYaEnviado = false;
         const inputTelLead = document.getElementById('leadTelefono');
-        
         inputTelLead.addEventListener('input', function() {
             if(inputTelLead.value.length < 9) leadYaEnviado = false;
             clearTimeout(temporizadorLead);
@@ -605,9 +775,6 @@
             }
         }
 
-        // ==========================================
-        //  RESEÑAS (RESTAURADO)
-        // ==========================================
         document.getElementById('addReviewForm').addEventListener('submit', async (e) => { 
             e.preventDefault(); 
             await db.collection('resenas').add({ nombre: document.getElementById('reviewName').value, estrellas: document.getElementById('reviewStars').value, texto: document.getElementById('reviewText').value, fecha: new Date().toISOString() }); 
@@ -617,16 +784,11 @@
         function cargarResenas() { 
             db.collection('resenas').orderBy('fecha', 'desc').onSnapshot(snap => { 
                 const d = document.getElementById('reviews-container'); d.innerHTML=""; 
-                // Admin List
                 const adminList = document.getElementById('admin-reviews-list');
                 if(esAdmin && adminList) adminList.innerHTML = "";
-
                 snap.forEach(doc => { 
                     const r = doc.data(); 
-                    // Vista Publica
                     d.innerHTML += `<div class="review-card"><div style="color:gold;">${"⭐".repeat(r.estrellas)}</div><b>${r.nombre}</b><p>${r.texto}</p></div>`; 
-                    
-                    // Vista Admin
                     if(esAdmin && adminList) {
                         adminList.innerHTML += `<div class="review-card" style="text-align:left;"><b>${r.nombre}</b> (${r.estrellas}⭐)<p>${r.texto}</p><button class="btn-delete" onclick="borrar('resenas','${doc.id}')">Eliminar</button></div>`;
                     }
@@ -634,9 +796,6 @@
             }); 
         }
 
-        // ==========================================
-        //  QUIZ (RESTAURADO & FUNCIONAL)
-        // ==========================================
         function cargarQuiz() {
             db.collection("quiz").orderBy("fecha", "desc").onSnapshot(snap => {
                 allQuestions = [];
@@ -645,7 +804,6 @@
                 snap.forEach(doc => {
                     const q = doc.data(); 
                     allQuestions.push({...q, id: doc.id});
-                    // Lista Admin
                     if(esAdmin && listDiv) { 
                         listDiv.innerHTML += `<div style="padding:10px; border-bottom:1px solid #ccc; display:flex; justify-content:space-between;"><div><b>${q.pregunta}</b><br><small>✅ ${q.opciones[q.correcta]}</small></div><button class="btn-delete" style="width:auto;" onclick="borrar('quiz','${doc.id}')">🗑️</button></div>`; 
                     }
@@ -653,7 +811,6 @@
             });
         }
         
-        // Juego
         let currentQuestion = 0; let score = 0;
         function startQuiz() {
             if(allQuestions.length === 0) return alert("Cargando preguntas...");
@@ -741,9 +898,6 @@
         }
         function borrar(c,i){ if(confirm("¿Borrar?")) db.collection(c).doc(i).delete(); }
 
-        // ==========================================
-        //  AUTH Y PERFIL
-        // ==========================================
         auth.onAuthStateChanged(u => { 
             usuarioActual = u; 
             if(u) { cerrarModal('auth-modal'); document.getElementById('profile-name').innerText = "Perfil: " + u.email.split('@')[0]; cargarDatosPerfil(); }
@@ -765,9 +919,6 @@
             });
         }
 
-        // ==========================================
-        //  CARRITO Y EXTRAS
-        // ==========================================
         function addCart(id, n, p){ carrito.push({n,p}); document.getElementById('cart-count').innerText=carrito.length; mostrarToast("Añadido"); }
         function realizarPedido(){
             if(!carrito.length) return;
@@ -783,16 +934,14 @@
         window.cerrarModal = (id) => document.getElementById(id).classList.add('hidden');
         function mostrarToast(msg) { const t=document.getElementById('toast'); t.innerText=msg; t.style.display='block'; setTimeout(()=>t.style.display='none',2000); }
 
-        // ==========================================
-        //  LOGICA POPUP BIENVENIDA (NUEVO)
-        // ==========================================
         window.addEventListener('load', function() {
-            // Verifica si ya se mostró en esta sesión. Si no, lo muestra a los 3 segundos.
+            // El Intro de Bienvenida se oculta solo con CSS/Animación
+            // El Popup de Formulario aparece a los 4 segundos (para dejar pasar la intro)
             if (!sessionStorage.getItem('popupMostrado')) {
                 setTimeout(function() {
                     abrirModal('welcome-modal');
                     sessionStorage.setItem('popupMostrado', 'true');
-                }, 3000);
+                }, 4000);
             }
         });
 
@@ -807,7 +956,7 @@
             cerrarModal('welcome-modal');
         });
 
-        function cargarTodo() { cargarProductos(); cargarWebs(); cargarQuiz(); cargarResenas(); }
+        function cargarTodo() { cargarProductos(); cargarWebs(); cargarQuiz(); cargarResenas(); cargarCarpetasTeleco(); }
         cargarTodo();
     </script>
 </body>
