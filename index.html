@@ -230,27 +230,40 @@
 
         <div id="admin-tab-teleco" class="hidden">
             <div style="display:grid; grid-template-columns: 1fr 1fr; gap:20px;">
-                <div style="background:white; padding:15px; border-radius:10px;">
-                    <h4>1. Crear Carpeta</h4>
-                    <form id="addFolderForm">
+                <div style="background:white; padding:15px; border-radius:10px; border: 1px solid #ccc;">
+                    <h4 style="color:var(--accent);">1. Carpetas (Categorías)</h4>
+                    <form id="addFolderForm" style="margin-bottom:15px;">
                         <input type="file" id="folderImg" accept="image/*" required>
                         <input type="text" id="folderName" placeholder="Nombre Carpeta (Ej: Luz, Fibra)" required>
                         <button type="submit" class="btn-primary">CREAR CARPETA</button>
                     </form>
-                    <div id="admin-folders-list" style="margin-top:10px;"></div>
+                    
+                    <div style="border-top: 2px dashed #eee; padding-top: 10px;">
+                        <h5 style="margin:0 0 10px 0;">📂 Borrar Carpetas:</h5>
+                        <div id="admin-folders-list" style="max-height: 300px; overflow-y: auto;">
+                            </div>
+                    </div>
                 </div>
-                <div style="background:white; padding:15px; border-radius:10px;">
-                    <h4>2. Crear Oferta</h4>
-                    <form id="addOfferForm">
+
+                <div style="background:white; padding:15px; border-radius:10px; border: 1px solid #ccc;">
+                    <h4 style="color:var(--accent);">2. Ofertas (Fotos)</h4>
+                    <form id="addOfferForm" style="margin-bottom:15px;">
                         <select id="offerFolderSelect" required>
                             <option value="">Selecciona Carpeta...</option>
                         </select>
                         <input type="file" id="offerImg" accept="image/*">
-                        <input type="text" id="offerTitle" placeholder="Título Oferta" required>
+                        <input type="text" id="offerTitle" placeholder="Título Oferta (Ej: Fibra 600Mb)" required>
                         <input type="text" id="offerDesc" placeholder="Descripción breve" required>
                         <input type="number" id="offerPrice" placeholder="Precio (Opcional)">
                         <button type="submit" class="btn-primary">CREAR OFERTA</button>
                     </form>
+
+                    <div style="border-top: 2px dashed #eee; padding-top: 10px;">
+                        <h5 style="margin:0 0 10px 0;">🖼️ Borrar Ofertas:</h5>
+                        <div id="admin-offers-admin-list" style="max-height: 300px; overflow-y: auto;">
+                            Cargando lista...
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -622,30 +635,82 @@
             mostrarToast("Solicitud enviada correctamente");
         }
 
-        // --- LOGICA TELECO ---
+        // --- LOGICA TELECO MEJORADA (VER Y BORRAR) ---
         function cargarCarpetasTeleco() {
             db.collection("telecom_carpetas").orderBy("nombre").onSnapshot(snap => {
                 telecomFolders = [];
-                const container = document.getElementById('folders-container');
-                const selectAdmin = document.getElementById('offerFolderSelect');
-                const listAdmin = document.getElementById('admin-folders-list');
+                const container = document.getElementById('folders-container'); // Vista usuario
+                const selectAdmin = document.getElementById('offerFolderSelect'); // Select Admin
+                const listAdmin = document.getElementById('admin-folders-list'); // Lista Admin para borrar
                 
-                container.innerHTML = "";
-                selectAdmin.innerHTML = '<option value="">Selecciona Carpeta...</option>';
+                // Limpiar contenedores
+                if(container) container.innerHTML = "";
+                if(selectAdmin) selectAdmin.innerHTML = '<option value="">Selecciona Carpeta...</option>';
                 if(listAdmin) listAdmin.innerHTML = "";
 
                 snap.forEach(doc => {
                     const f = doc.data();
                     const id = doc.id;
                     telecomFolders.push({...f, id});
-                    container.innerHTML += `
-                        <div class="folder-card" onclick="verOfertasDeCarpeta('${id}', '${f.nombre}')">
-                            <img src="${f.img}" class="folder-icon">
-                            <div class="folder-title">${f.nombre}</div>
-                        </div>
-                    `;
-                    selectAdmin.innerHTML += `<option value="${id}">${f.nombre}</option>`;
-                    if(listAdmin) listAdmin.innerHTML += `<div style="display:flex; justify-content:space-between; margin-bottom:5px; border-bottom:1px solid #eee;"><span>${f.nombre}</span> <button class="btn-delete" onclick="borrar('telecom_carpetas','${id}')">X</button></div>`;
+                    
+                    // 1. Vista Usuario
+                    if(container) {
+                        container.innerHTML += `
+                            <div class="folder-card" onclick="verOfertasDeCarpeta('${id}', '${f.nombre}')">
+                                <img src="${f.img}" class="folder-icon" style="object-fit:cover; border-radius:50%;">
+                                <div class="folder-title">${f.nombre}</div>
+                            </div>
+                        `;
+                    }
+
+                    // 2. Select del Admin (Crear oferta)
+                    if(selectAdmin) {
+                        selectAdmin.innerHTML += `<option value="${id}">${f.nombre}</option>`;
+                    }
+
+                    // 3. Lista Admin (Para borrar con foto)
+                    if(listAdmin) {
+                        listAdmin.innerHTML += `
+                            <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:8px; background:#f9f9f9; padding:5px; border-radius:5px;">
+                                <div style="display:flex; align-items:center; gap:10px;">
+                                    <img src="${f.img}" style="width:30px; height:30px; border-radius:50%; object-fit:cover;">
+                                    <span style="font-weight:bold; font-size:0.9rem;">${f.nombre}</span>
+                                </div>
+                                <button class="btn-delete" onclick="borrar('telecom_carpetas','${id}')"><i class="fas fa-trash"></i></button>
+                            </div>`;
+                    }
+                });
+            });
+        }
+
+        function cargarOfertasTelecoAdmin() {
+            // Esta función muestra TODAS las ofertas en el panel admin para poder borrarlas
+            db.collection("telecom_ofertas").orderBy("fecha", "desc").onSnapshot(snap => {
+                const listDiv = document.getElementById('admin-offers-admin-list');
+                if(!listDiv) return;
+                
+                listDiv.innerHTML = "";
+                if(snap.empty) {
+                    listDiv.innerHTML = "<small>No hay ofertas subidas.</small>";
+                    return;
+                }
+
+                snap.forEach(doc => {
+                    const o = doc.data();
+                    // Buscamos el nombre de la carpeta a la que pertenece
+                    const carpetaNombre = telecomFolders.find(f => f.id === o.folderId)?.nombre || 'Carpeta ??';
+
+                    listDiv.innerHTML += `
+                        <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:8px; background:#f9f9f9; padding:5px; border-radius:5px; border-left: 3px solid var(--accent);">
+                            <div style="display:flex; align-items:center; gap:10px; overflow:hidden;">
+                                <img src="${o.img}" style="width:30px; height:30px; object-fit:cover; border-radius:4px;">
+                                <div style="display:flex; flex-direction:column;">
+                                    <span style="font-weight:bold; font-size:0.8rem;">${o.titulo}</span>
+                                    <span style="font-size:0.7rem; color:#666;">📂 ${carpetaNombre}</span>
+                                </div>
+                            </div>
+                            <button class="btn-delete" onclick="borrar('telecom_ofertas','${doc.id}')"><i class="fas fa-trash"></i></button>
+                        </div>`;
                 });
             });
         }
@@ -661,7 +726,6 @@
                 if(snap.empty) { container.innerHTML = "<p>No hay ofertas en esta categoría aún.</p>"; return; }
                 snap.forEach(doc => {
                     const o = doc.data();
-                    let adminBtns = esAdmin ? `<div class="admin-actions"><button class="btn-delete" onclick="borrar('telecom_ofertas','${doc.id}')">🗑️</button></div>` : '';
                     container.innerHTML += `
                         <div class="product-card">
                             <img src="${o.img}" class="product-photo" style="object-fit: contain; background:white;">
@@ -669,7 +733,6 @@
                             <p>${o.descripcion}</p>
                             ${o.precio ? `<p class="price">${o.precio}€</p>` : ''}
                             <button class="btn-primary" onclick="pedirInfoOferta('${o.titulo}')">ME INTERESA</button>
-                            ${adminBtns}
                         </div>
                     `;
                 });
@@ -916,7 +979,7 @@
                 });
             });
         }
-        function borrar(c,i){ if(confirm("¿Borrar?")) db.collection(c).doc(i).delete(); }
+        function borrar(c,i){ if(confirm("¿Seguro que quieres borrarlo? Esta acción no se puede deshacer.")) db.collection(c).doc(i).delete(); }
 
         auth.onAuthStateChanged(u => { 
             usuarioActual = u; 
@@ -974,7 +1037,14 @@
             cerrarModal('welcome-modal');
         });
 
-        function cargarTodo() { cargarProductos(); cargarWebs(); cargarQuiz(); cargarResenas(); cargarCarpetasTeleco(); }
+        function cargarTodo() { 
+            cargarProductos(); 
+            cargarWebs(); 
+            cargarQuiz(); 
+            cargarResenas(); 
+            cargarCarpetasTeleco();
+            cargarOfertasTelecoAdmin(); // Carga la lista de borrado
+        }
         cargarTodo();
     </script>
 </body>
