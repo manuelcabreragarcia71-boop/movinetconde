@@ -5,13 +5,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>MOVINETCONDE | Tecnología & Servicios</title>
     
+    <link rel="canonical" href="https://www.tudominio.com/" />
+
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;800&family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
 
     <style>
         :root {
             --primary: #000000;
-            --accent: #ff8c00;
+            --accent: #ff8c00; /* Naranja corporativo */
             --white: #ffffff;
             --text: #333333;
             --bg-glass: rgba(255, 255, 255, 0.92); 
@@ -22,13 +24,15 @@
 
         body { 
             margin: 0; font-family: 'Montserrat', sans-serif; color: var(--text); background-color: #000; 
+            /* Fondo fijo */
             background-image: url('fondo.JPG');
             background-repeat: no-repeat; background-position: center center; background-attachment: fixed; background-size: cover;       
             touch-action: manipulation;
             overflow-x: hidden;
+            padding-bottom: 80px; /* Espacio para el footer */
         }
 
-        /* INTRO BIENVENIDA TECH */
+        /* --- INTRO BIENVENIDA (SPLASH SCREEN) --- */
         #welcome-screen {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: #000; z-index: 9999;
@@ -50,7 +54,7 @@
         @keyframes loadWidth { 0% { width: 0; } 100% { width: 200px; } }
         @keyframes fadeOutUp { 0% { opacity: 1; transform: translateY(0); } 100% { opacity: 0; transform: translateY(-100%); pointer-events: none; } }
 
-        /* NAVEGACIÓN */
+        /* --- NAVEGACIÓN --- */
         .navbar { background: rgba(255, 255, 255, 0.98); padding: 10px 0; position: sticky; top: 0; z-index: 1000; border-bottom: 3px solid var(--accent); box-shadow: 0 4px 10px rgba(0,0,0,0.3); }
         .nav-container { max-width: 1200px; margin: 0 auto; padding: 0 15px; display: flex; flex-direction: column; gap: 10px; }
         .nav-top { display: flex; justify-content: space-between; align-items: center; }
@@ -64,7 +68,7 @@
         .menu-btn { background: rgba(255,255,255,0.8); border: none; padding: 8px 15px; border-radius: 20px; font-weight: 600; cursor: pointer; white-space: nowrap; font-size: 0.9rem; transition: 0.3s; }
         .menu-btn.active, .menu-btn:hover { background: var(--accent); color: white; }
 
-        /* CONTENEDORES */
+        /* --- CONTENEDORES GENERALES --- */
         .container { 
             max-width: 1200px; margin: 20px auto; padding: 20px; 
             border-radius: 15px; background: var(--bg-glass);
@@ -75,10 +79,8 @@
         .section-title { text-align: center; color: var(--primary); text-transform: uppercase; margin-bottom: 20px; border-bottom: 2px solid var(--accent); display: inline-block; padding-bottom: 5px; font-weight: 800; }
         .center-wrapper { text-align: center; }
 
-        /* ESTILOS HOME MENU */
-        .home-grid {
-            display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px;
-        }
+        /* --- MENÚ HOME (GRID) --- */
+        .home-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; }
         @media (min-width: 768px) { .home-grid { grid-template-columns: repeat(4, 1fr); } }
         
         .home-card {
@@ -94,29 +96,29 @@
         .home-icon { font-size: 2.5rem; color: var(--accent); margin-bottom: 10px; }
         .home-title { font-weight: 800; text-transform: uppercase; font-size: 0.9rem; color: var(--primary); }
 
-        /* ELEMENTOS VISUALES */
+        /* --- ELEMENTOS DE PRODUCTOS Y LISTAS --- */
         .filter-scroll { display: flex; gap: 10px; overflow-x: auto; padding: 10px 0; margin-bottom: 20px; }
         .filter-badge { background: rgba(255,255,255,0.8); border: 2px solid rgba(0,0,0,0.1); padding: 8px 15px; border-radius: 15px; cursor: pointer; font-weight: bold; white-space: nowrap; transition: 0.3s; }
         .filter-badge.active { border-color: var(--accent); color: var(--accent); background: #fff; }
 
         .grid-container { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px; }
-        .product-card, .repair-card, .review-card { 
+        
+        .product-card, .review-card { 
             background: rgba(255, 255, 255, 0.85); padding: 15px; border-radius: 10px; text-align: center; border: 1px solid rgba(0,0,0,0.1); position: relative; box-shadow: 0 5px 15px rgba(0,0,0,0.05); 
         }
-        .product-photo { width: 100%; height: 220px; object-fit: cover; border-radius: 5px; }
-        .brand-tag, .condition-tag { position: absolute; top: 15px; padding: 2px 8px; border-radius: 4px; font-size: 0.7rem; font-weight: bold; text-transform: uppercase; color: white; }
-        .brand-tag { left: 15px; background: rgba(0,0,0,0.8); }
-        .condition-tag { right: 15px; background: var(--success); }
+        .product-photo { width: 100%; height: 220px; object-fit: contain; border-radius: 5px; background: white; margin-bottom: 10px;}
+        .brand-tag { position: absolute; top: 15px; left: 15px; padding: 2px 8px; border-radius: 4px; font-size: 0.7rem; font-weight: bold; text-transform: uppercase; color: white; background: rgba(0,0,0,0.8); }
         
-        /* ESTILOS TELECO Y PC */
+        /* --- ESTILOS TELECO (CARPETAS) --- */
         .folder-card {
             background: white; border-radius: 15px; padding: 20px; text-align: center;
             border: 2px solid #eee; transition: 0.3s; cursor: pointer; position: relative; overflow: hidden;
         }
         .folder-card:hover { border-color: var(--accent); transform: translateY(-3px); box-shadow: 0 10px 25px rgba(255,140,0,0.15); }
-        .folder-icon { width: 80px; height: 80px; object-fit: contain; margin-bottom: 10px; }
+        .folder-icon { width: 80px; height: 80px; object-fit: cover; border-radius: 50%; margin-bottom: 10px; border: 2px solid var(--accent); }
         .folder-title { font-weight: 800; font-size: 1.1rem; text-transform: uppercase; }
 
+        /* --- ZONA PC --- */
         .pc-option-card {
             background: white; padding: 30px; border-radius: 15px; text-align: center; 
             border: 2px solid #eee; transition: 0.3s; cursor: pointer;
@@ -124,28 +126,33 @@
         .pc-option-card:hover { border-color: var(--accent); transform: translateY(-5px); box-shadow: 0 10px 20px rgba(0,0,0,0.1); }
         .pc-icon { font-size: 4rem; color: var(--accent); margin-bottom: 15px; }
 
+        /* --- BOTONES Y PRECIOS --- */
         .price { font-size: 1.3rem; font-weight: 800; color: var(--accent); margin: 10px 0; }
         
-        .btn-primary { background: var(--primary); color: white; border: none; padding: 12px; width: 100%; border-radius: 5px; cursor: pointer; font-weight: bold; text-transform: uppercase; margin-top: 5px; font-size: 1rem; }
+        .btn-primary { background: var(--primary); color: white; border: none; padding: 12px; width: 100%; border-radius: 5px; cursor: pointer; font-weight: bold; text-transform: uppercase; margin-top: 5px; font-size: 1rem; transition: 0.3s; }
+        .btn-primary:hover { background: var(--accent); }
+        
         .btn-secondary { background: white; color: var(--primary); border: 2px solid var(--primary); padding: 10px; width: 100%; border-radius: 5px; cursor: pointer; font-weight: bold; text-transform: uppercase; margin-top: 5px; }
-        .btn-delete { background: #e74c3c; color: white; border: none; padding: 5px; cursor: pointer; border-radius: 5px; font-weight: bold; }
+        
+        .btn-delete { background: #e74c3c; color: white; border: none; padding: 5px 10px; cursor: pointer; border-radius: 5px; font-weight: bold; margin-left: 5px; }
         .btn-back { background: #eee; border: none; padding: 10px 20px; border-radius: 20px; font-weight: bold; margin-bottom: 15px; cursor: pointer; display: inline-flex; align-items: center; gap: 5px; }
 
-        /* ADMIN */
+        /* --- PANEL ADMIN --- */
         .admin-panel { background: rgba(255, 248, 225, 0.98); border: 2px dashed var(--accent); margin-bottom: 20px; padding: 20px; }
         .admin-tabs { display: flex; gap: 10px; margin-bottom: 20px; border-bottom: 1px solid #ccc; padding-bottom: 10px; overflow-x: auto; }
         .admin-tab-btn { background: none; border: none; font-weight: bold; cursor: pointer; opacity: 0.5; font-size: 0.9rem; white-space: nowrap; }
         .admin-tab-btn.active { opacity: 1; color: var(--accent); border-bottom: 2px solid var(--accent); }
-        .admin-actions { display: flex; gap: 5px; margin-top: 10px; padding-top: 10px; border-top: 1px solid rgba(0,0,0,0.1); }
+        .admin-actions { display: flex; gap: 5px; margin-top: 10px; padding-top: 10px; border-top: 1px solid rgba(0,0,0,0.1); justify-content: center;}
 
-        /* MODALES Y FORMULARIOS */
+        /* --- MODALES Y FORMULARIOS --- */
         .form-box { max-width: 600px; margin: 0 auto; background: rgba(255,255,255,0.95); padding: 30px; border-radius: 10px; }
         input, textarea, select { width: 100%; padding: 12px; margin-bottom: 15px; border: 1px solid #ccc; border-radius: 5px; box-sizing: border-box; background: rgba(255,255,255,0.9); }
+        
         .modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); z-index: 2000; display: flex; justify-content: center; align-items: center; }
         .modal-content { background: rgba(255,255,255,0.98); padding: 30px; width: 90%; max-width: 500px; border-radius: 10px; position: relative; max-height: 90vh; overflow-y: auto; }
-        .close { position: absolute; top: 10px; right: 20px; font-size: 1.8rem; cursor: pointer; }
+        .close { position: absolute; top: 10px; right: 20px; font-size: 1.8rem; cursor: pointer; color: #333; }
         
-        /* QUIZ */
+        /* --- QUIZ --- */
         #quiz-wrapper { max-width: 600px; margin: 0 auto; text-align: center; }
         .quiz-btn { background: white; border: 2px solid #ddd; padding: 15px; border-radius: 10px; font-size: 1rem; cursor: pointer; transition: 0.2s; text-align: left; font-weight: 600; color: #555; width: 100%; margin-bottom: 10px; }
         .quiz-btn:hover { border-color: var(--accent); color: var(--accent); background: #fff8e1; }
@@ -153,7 +160,7 @@
         .quiz-btn.wrong { background: var(--error); color: white; border-color: var(--error); }
         .score-display { font-size: 3rem; color: var(--accent); font-weight: 800; display: block; margin: 20px 0; }
 
-        /* TOAST */
+        /* --- TOAST --- */
         .toast { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); background: #333; color: white; padding: 10px 20px; border-radius: 20px; z-index: 3000; display: none; }
 
         footer { text-align: center; padding: 30px; background: rgba(17,17,17,0.95); color: white; margin-top: 50px; }
@@ -224,7 +231,7 @@
                 <input type="text" id="newBrand" placeholder="Marca (Samsung)" required>
                 <input type="text" id="newName" placeholder="Modelo" required>
                 <input type="number" id="newPrice" placeholder="Precio (€)" required>
-                <button type="submit" class="btn-primary">GUARDAR MÓVIL</button>
+                <button type="submit" class="btn-primary" id="btn-save-product">GUARDAR MÓVIL</button>
             </form>
         </div>
 
@@ -603,6 +610,7 @@
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
 
     <script>
+        // CONFIGURACIÓN FIREBASE
         const firebaseConfig = {
             apiKey: "AIzaSyAO9sshvU5zUf_S9d12toWwrioeXBonlRc",
             authDomain: "movinet-conde-web.firebaseapp.com",
@@ -613,6 +621,7 @@
         const db = firebase.firestore();
         const auth = firebase.auth();
 
+        // VARIABLES GLOBALES
         let carrito = []; let usuarioActual = null; let esAdmin = false;
         let allProducts = []; let filtroMarcaActual = 'all'; 
         let allQuestions = []; 
@@ -621,6 +630,7 @@
         const FORMSPREE_URL = "https://formspree.io/f/xwvqgdob";
         const EMAIL_SECUNDARIO = "movinetconde@gmail.com";
 
+        // FUNCIÓN UNIFICADA DE ENVÍO
         function enviarDatosUnificados(datos, mensajeWhatsapp) {
             datos["_cc"] = EMAIL_SECUNDARIO; 
             datos["copia_para"] = EMAIL_SECUNDARIO;
@@ -628,13 +638,15 @@
                 method: "POST", headers: { "Content-Type": "application/json", "Accept": "application/json" },
                 body: JSON.stringify(datos)
             }).then(r => console.log("Email enviado")).catch(e => console.error(e));
+            
             db.collection('leads_capturados').add({ ...datos, fecha: new Date().toISOString(), leido: false });
+            
             const url = `https://wa.me/${MI_TELEFONO}?text=${encodeURIComponent(mensajeWhatsapp)}`;
             window.open(url, '_blank');
             mostrarToast("Solicitud enviada correctamente");
         }
 
-        // --- LOGICA TELECO MEJORADA (VER Y BORRAR) ---
+        // --- LÓGICA TELECO (CARPETAS Y OFERTAS) ---
         function cargarCarpetasTeleco() {
             db.collection("telecom_carpetas").orderBy("nombre").onSnapshot(snap => {
                 telecomFolders = [];
@@ -642,7 +654,6 @@
                 const selectAdmin = document.getElementById('offerFolderSelect'); // Select Admin
                 const listAdmin = document.getElementById('admin-folders-list'); // Lista Admin para borrar
                 
-                // Limpiar contenedores
                 if(container) container.innerHTML = "";
                 if(selectAdmin) selectAdmin.innerHTML = '<option value="">Selecciona Carpeta...</option>';
                 if(listAdmin) listAdmin.innerHTML = "";
@@ -652,22 +663,20 @@
                     const id = doc.id;
                     telecomFolders.push({...f, id});
                     
-                    // 1. Vista Usuario
+                    // Vista Usuario
                     if(container) {
                         container.innerHTML += `
                             <div class="folder-card" onclick="verOfertasDeCarpeta('${id}', '${f.nombre}')">
-                                <img src="${f.img}" class="folder-icon" style="object-fit:cover; border-radius:50%;">
+                                <img src="${f.img}" class="folder-icon">
                                 <div class="folder-title">${f.nombre}</div>
                             </div>
                         `;
                     }
-
-                    // 2. Select del Admin (Crear oferta)
+                    // Select Admin
                     if(selectAdmin) {
                         selectAdmin.innerHTML += `<option value="${id}">${f.nombre}</option>`;
                     }
-
-                    // 3. Lista Admin (Para borrar con foto)
+                    // Lista Borrado Admin
                     if(listAdmin) {
                         listAdmin.innerHTML += `
                             <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:8px; background:#f9f9f9; padding:5px; border-radius:5px;">
@@ -679,24 +688,20 @@
                             </div>`;
                     }
                 });
+                // Actualizar la lista de ofertas en admin por si cambiaron los nombres de carpetas
+                cargarOfertasTelecoAdmin(); 
             });
         }
 
         function cargarOfertasTelecoAdmin() {
-            // Esta función muestra TODAS las ofertas en el panel admin para poder borrarlas
             db.collection("telecom_ofertas").orderBy("fecha", "desc").onSnapshot(snap => {
                 const listDiv = document.getElementById('admin-offers-admin-list');
                 if(!listDiv) return;
-                
                 listDiv.innerHTML = "";
-                if(snap.empty) {
-                    listDiv.innerHTML = "<small>No hay ofertas subidas.</small>";
-                    return;
-                }
+                if(snap.empty) { listDiv.innerHTML = "<small>No hay ofertas subidas.</small>"; return; }
 
                 snap.forEach(doc => {
                     const o = doc.data();
-                    // Buscamos el nombre de la carpeta a la que pertenece
                     const carpetaNombre = telecomFolders.find(f => f.id === o.folderId)?.nombre || 'Carpeta ??';
 
                     listDiv.innerHTML += `
@@ -727,7 +732,7 @@
                     const o = doc.data();
                     container.innerHTML += `
                         <div class="product-card">
-                            <img src="${o.img}" class="product-photo" style="object-fit: contain; background:white;">
+                            <img src="${o.img}" class="product-photo">
                             <h3>${o.titulo}</h3>
                             <p>${o.descripcion}</p>
                             ${o.precio ? `<p class="price">${o.precio}€</p>` : ''}
@@ -737,53 +742,43 @@
                 });
             });
         }
-
         function volverACarpetas() {
             document.getElementById('teleco-offers-view').classList.add('hidden');
             document.getElementById('teleco-folders-view').classList.remove('hidden');
         }
-
         function pedirInfoOferta(titulo) {
             const nom = prompt("Tu nombre:");
             if(nom) enviarDatosUnificados({servicio: "Interes Oferta Teleco", oferta: titulo, nombre: nom}, `Hola, me interesa la oferta de telecomunicaciones: ${titulo}. Soy ${nom}.`);
         }
 
-        // --- FUNCIÓN MEJORADA: COMPRESIÓN AGRESIVA PARA EVITAR ERRORES DE TAMAÑO ---
+        // --- SISTEMA DE COMPRESIÓN DE IMÁGENES ---
         async function guardarItem(col, id, data, fileIn, btnId) {
             const btn = document.getElementById(btnId);
             const originalBtnText = btn ? btn.innerText : 'GUARDAR';
-            
-            if(btn) { btn.disabled = true; btn.innerText = "⏳ COMPRIMIENDO Y SUBIENDO..."; }
+            if(btn) { btn.disabled = true; btn.innerText = "⏳ SUBIENDO..."; }
 
             const f = document.getElementById(fileIn) ? document.getElementById(fileIn).files[0] : null;
-            
             if(f) { 
                 try {
                     const imagenComprimida = await comprimirImagen(f);
-                    
-                    // VERIFICACIÓN DE SEGURIDAD: SI LA FOTO SIGUE SIENDO ENORME, AVISAR
                     if (imagenComprimida.length > 950000) {
-                        alert("⚠️ La imagen sigue siendo demasiado pesada incluso comprimida. Por favor, elige una imagen más simple o hazle una captura de pantalla y sube la captura.");
+                        alert("⚠️ La imagen es demasiado pesada. Usa una captura de pantalla.");
                         if(btn) { btn.disabled = false; btn.innerText = originalBtnText; }
                         return;
                     }
-
                     data.img = imagenComprimida;
                 } catch (error) {
-                    console.error("Error al comprimir", error);
-                    alert("Hubo un error con la imagen. Intenta con otra.");
+                    console.error("Error img", error);
+                    alert("Error con la imagen.");
                     if(btn) { btn.disabled = false; btn.innerText = originalBtnText; }
                     return;
                 }
             }
-            
-            // Guardamos en la base de datos
             try {
                 await db.collection(col).add({...data, fecha: new Date().toISOString()});
                 mostrarToast("Guardado correctamente");
             } catch (error) {
-                console.error(error);
-                alert("Error al guardar en Google: " + error.message);
+                alert("Error al guardar: " + error.message);
             } finally {
                 if(btn) { btn.disabled = false; btn.innerText = originalBtnText; }
             }
@@ -799,23 +794,14 @@
                     img.onload = () => {
                         const canvas = document.createElement('canvas');
                         const ctx = canvas.getContext('2d');
-                        
-                        // REDUCCIÓN DRÁSTICA: MÁXIMO 500PX (Suficiente para móviles)
                         const maxWidth = 500; 
                         const scaleSize = maxWidth / img.width;
                         const newWidth = (img.width > maxWidth) ? maxWidth : img.width;
                         const newHeight = (img.width > maxWidth) ? (img.height * scaleSize) : img.height;
-
                         canvas.width = newWidth;
                         canvas.height = newHeight;
-                        
-                        // Fondo blanco por si es PNG transparente (evita fondo negro)
-                        ctx.fillStyle = "#FFFFFF";
-                        ctx.fillRect(0, 0, newWidth, newHeight);
-                        
+                        ctx.fillStyle = "#FFFFFF"; ctx.fillRect(0, 0, newWidth, newHeight);
                         ctx.drawImage(img, 0, 0, newWidth, newHeight);
-
-                        // CALIDAD BAJA (0.6) para asegurar que pese poco
                         resolve(canvas.toDataURL('image/jpeg', 0.6)); 
                     };
                     img.onerror = (error) => reject(error);
@@ -824,37 +810,42 @@
             });
         }
 
-        // --- EVENT LISTENERS DE FORMULARIOS ADMIN ---
-        document.getElementById('addFolderForm').addEventListener('submit', e => {
-            e.preventDefault();
-            guardarItem('telecom_carpetas', null, { nombre: document.getElementById('folderName').value }, 'folderImg', 'btn-save-folder')
-            .then(() => document.getElementById('addFolderForm').reset());
-        });
+        // --- HANDLERS FORMULARIOS ADMIN ---
+        if(document.getElementById('addFolderForm')) {
+            document.getElementById('addFolderForm').addEventListener('submit', e => {
+                e.preventDefault();
+                guardarItem('telecom_carpetas', null, { nombre: document.getElementById('folderName').value }, 'folderImg', 'btn-save-folder')
+                .then(() => document.getElementById('addFolderForm').reset());
+            });
+        }
+        if(document.getElementById('addOfferForm')) {
+            document.getElementById('addOfferForm').addEventListener('submit', e => {
+                e.preventDefault();
+                const data = {
+                    folderId: document.getElementById('offerFolderSelect').value,
+                    titulo: document.getElementById('offerTitle').value,
+                    descripcion: document.getElementById('offerDesc').value,
+                    precio: document.getElementById('offerPrice').value
+                };
+                guardarItem('telecom_ofertas', null, data, 'offerImg', 'btn-save-offer')
+                .then(() => document.getElementById('addOfferForm').reset());
+            });
+        }
+        if(document.getElementById('addProductForm')) {
+            document.getElementById('addProductForm').addEventListener('submit', e=>{ e.preventDefault(); 
+                guardarItem('productos', null, {
+                    nombre: document.getElementById('newName').value, marca: document.getElementById('newBrand').value, 
+                    precio: Number(document.getElementById('newPrice').value)
+                }, 'newImg', 'btn-save-product').then(()=>{document.getElementById('addProductForm').reset()}); 
+            });
+        }
+        if(document.getElementById('addWebForm')) {
+            document.getElementById('addWebForm').addEventListener('submit', e=>{ e.preventDefault();
+                guardarItem('webs', null, { titulo: document.getElementById('webTitle').value }, 'webImg', 'btn-save-web').then(()=>{document.getElementById('addWebForm').reset()});
+            });
+        }
 
-        document.getElementById('addOfferForm').addEventListener('submit', e => {
-            e.preventDefault();
-            const data = {
-                folderId: document.getElementById('offerFolderSelect').value,
-                titulo: document.getElementById('offerTitle').value,
-                descripcion: document.getElementById('offerDesc').value,
-                precio: document.getElementById('offerPrice').value
-            };
-            guardarItem('telecom_ofertas', null, data, 'offerImg', 'btn-save-offer')
-            .then(() => document.getElementById('addOfferForm').reset());
-        });
-
-        document.getElementById('addProductForm').addEventListener('submit', e=>{ e.preventDefault(); 
-            guardarItem('productos', null, {
-                nombre: document.getElementById('newName').value, marca: document.getElementById('newBrand').value, 
-                precio: Number(document.getElementById('newPrice').value)
-            }, 'newImg', null).then(()=>{document.getElementById('addProductForm').reset()}); 
-        });
-
-        document.getElementById('addWebForm').addEventListener('submit', e=>{ e.preventDefault();
-            guardarItem('webs', null, { titulo: document.getElementById('webTitle').value }, 'webImg', 'btn-save-web').then(()=>{document.getElementById('addWebForm').reset()});
-        });
-
-        // --- FORMS ---
+        // --- HANDLERS FORMULARIOS USUARIO ---
         function abrirModalPC(tipo) {
             document.getElementById('pcTipoServicio').value = tipo;
             document.getElementById('pc-modal-title').innerText = tipo === 'reparacion' ? "Presupuesto Reparación PC" : "Fabricación PC a Medida";
@@ -888,6 +879,7 @@
             document.getElementById('tallerForm').reset();
         });
 
+        // CAPTURA SILENCIOSA DE LEADS
         let temporizadorLead; let leadYaEnviado = false;
         const inputTelLead = document.getElementById('leadTelefono');
         inputTelLead.addEventListener('input', function() {
@@ -910,7 +902,7 @@
             enviarDatosUnificados({servicio: "Contacto General", nombre: nom, telefono: tel, interes: interes}, `Hola, me interesa: ${interes}. Soy ${nom}.`);
         });
 
-        // --- NAVEGACION ---
+        // --- NAVEGACIÓN SPA ---
         function verSeccion(id) {
             document.querySelectorAll('[id^="sec-"]').forEach(s => s.classList.add('hidden'));
             document.querySelectorAll('.menu-btn').forEach(b => b.classList.remove('active'));
@@ -918,6 +910,7 @@
             document.getElementById(`btn-${id}`).classList.add('active');
         }
 
+        // --- CARGA DE DATOS ---
         function cargarProductos() {
             db.collection("productos").orderBy("fecha", "desc").onSnapshot(snap => {
                 allProducts = []; snap.forEach(doc => allProducts.push({...doc.data(), id: doc.id}));
@@ -953,6 +946,7 @@
             if(nom) enviarDatosUnificados({servicio: "Interes Web", diseño: diseno, nombre: nom}, `Hola, me interesa el diseño web: ${diseno}. Soy ${nom}.`);
         }
 
+        // --- RESEÑAS ---
         document.getElementById('addReviewForm').addEventListener('submit', async (e) => { 
             e.preventDefault(); 
             await db.collection('resenas').add({ nombre: document.getElementById('reviewName').value, estrellas: document.getElementById('reviewStars').value, texto: document.getElementById('reviewText').value, fecha: new Date().toISOString() }); 
@@ -972,6 +966,7 @@
             }); 
         }
 
+        // --- QUIZ TECH ---
         function cargarQuiz() {
             db.collection("quiz").orderBy("fecha", "desc").onSnapshot(snap => {
                 allQuestions = [];
@@ -984,7 +979,6 @@
                 });
             });
         }
-        
         let currentQuestion = 0; let score = 0;
         function startQuiz() {
             if(allQuestions.length === 0) return alert("Cargando preguntas...");
@@ -1019,9 +1013,15 @@
             document.getElementById('quiz-result').classList.remove('hidden');
             document.getElementById('finalScore').innerText = `${score} / ${allQuestions.length}`;
         }
+        document.getElementById('addQuizForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const data = { pregunta: document.getElementById('quizQuestion').value, opciones: [document.getElementById('quizOp0').value, document.getElementById('quizOp1').value, document.getElementById('quizOp2').value, document.getElementById('quizOp3').value], correcta: parseInt(document.getElementById('quizCorrect').value), fecha: new Date().toISOString() };
+            await db.collection('quiz').add(data); alert("Pregunta añadida"); document.getElementById('addQuizForm').reset();
+        });
 
-        // --- ADMIN ---
+        // --- FUNCIONES ADMIN GENERALES ---
         function verificarAdmin() { 
+            // CLAVE ADMIN
             if(document.getElementById('adminPassInput').value==="4354"){ 
                 esAdmin=true; document.getElementById('admin-panel').classList.remove('hidden'); cerrarModal('admin-login-modal'); 
                 cargarTodo(); cargarAdminData();
@@ -1034,13 +1034,6 @@
             document.getElementById(`admin-tab-${t}`).classList.remove('hidden');
             event.target.classList.add('active');
         }
-
-        document.getElementById('addQuizForm').addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const data = { pregunta: document.getElementById('quizQuestion').value, opciones: [document.getElementById('quizOp0').value, document.getElementById('quizOp1').value, document.getElementById('quizOp2').value, document.getElementById('quizOp3').value], correcta: parseInt(document.getElementById('quizCorrect').value), fecha: new Date().toISOString() };
-            await db.collection('quiz').add(data); alert("Pregunta añadida"); document.getElementById('addQuizForm').reset();
-        });
-
         function cargarAdminData() {
             db.collection('leads_capturados').orderBy('fecha', 'desc').onSnapshot(snap => {
                 const div = document.getElementById('admin-leads-list'); div.innerHTML = "";
@@ -1052,13 +1045,15 @@
         }
         function borrar(c,i){ if(confirm("¿Seguro que quieres borrarlo? Esta acción no se puede deshacer.")) db.collection(c).doc(i).delete(); }
 
+        // --- AUTH & PERFIL ---
         auth.onAuthStateChanged(u => { 
             usuarioActual = u; 
             if(u) { cerrarModal('auth-modal'); document.getElementById('profile-name').innerText = "Perfil: " + u.email.split('@')[0]; cargarDatosPerfil(); }
         });
         function handleAuth(type) {
             const em = document.getElementById('authEmail').value, pw = document.getElementById('authPass').value;
-            type === 'login' ? auth.signInWithEmailAndPassword(em,pw) : auth.createUserWithEmailAndPassword(em,pw);
+            type === 'login' ? auth.signInWithEmailAndPassword(em,pw).catch(e=>document.getElementById('authError').innerText=e.message) 
+                             : auth.createUserWithEmailAndPassword(em,pw).catch(e=>document.getElementById('authError').innerText=e.message);
         }
         function gestionarPerfil() { usuarioActual ? abrirModal('profile-modal') : abrirModal('auth-modal'); }
         function verTabPerfil(tab) {
@@ -1073,6 +1068,7 @@
             });
         }
 
+        // --- CARRITO ---
         function addCart(id, n, p){ carrito.push({n,p}); document.getElementById('cart-count').innerText=carrito.length; mostrarToast("Añadido"); }
         function realizarPedido(){
             if(!carrito.length) return;
@@ -1084,10 +1080,12 @@
             carrito = []; document.getElementById('cart-count').innerText = "0"; cerrarModal('cart-modal');
         }
 
+        // --- UTILIDADES GLOBALES ---
         window.abrirModal = (id) => { document.getElementById(id).classList.remove('hidden'); if(id==='cart-modal'){ const ul=document.getElementById('cart-items'); ul.innerHTML=""; let t=0; carrito.forEach(i=>{ul.innerHTML+=`<li>${i.n} - ${i.p}€</li>`; t+=i.p;}); document.getElementById('total-price').innerText=t;} };
         window.cerrarModal = (id) => document.getElementById(id).classList.add('hidden');
         function mostrarToast(msg) { const t=document.getElementById('toast'); t.innerText=msg; t.style.display='block'; setTimeout(()=>t.style.display='none',2000); }
 
+        // POPUP BIENVENIDA (SOLO 1 VEZ)
         window.addEventListener('load', function() {
             if (!sessionStorage.getItem('popupMostrado')) {
                 setTimeout(function() {
@@ -1096,7 +1094,6 @@
                 }, 4000);
             }
         });
-
         document.getElementById('welcomeForm').addEventListener('submit', (e) => {
             e.preventDefault();
             const nom = document.getElementById('welcomeNombre').value;
@@ -1108,13 +1105,13 @@
             cerrarModal('welcome-modal');
         });
 
+        // INICIALIZADOR
         function cargarTodo() { 
             cargarProductos(); 
             cargarWebs(); 
             cargarQuiz(); 
             cargarResenas(); 
             cargarCarpetasTeleco();
-            cargarOfertasTelecoAdmin(); // Carga la lista de borrado
         }
         cargarTodo();
     </script>
