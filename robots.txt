@@ -1,0 +1,5 @@
+User-agent: *
+Allow: /
+
+# Mapa del sitio
+Sitemap: https://movinetconde.es/sitemap.xml
