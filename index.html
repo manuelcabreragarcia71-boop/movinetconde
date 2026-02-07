@@ -1,17 +1,18 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
     <title>MOVINETCONDE | Tecnología & Servicios</title>
     
     <link rel="canonical" href="https://movinetconde.es/" />
 
-    <link rel="icon" href="favicon.ico" sizes="any">
-    <link rel="icon" href="icon.png" type="image/png">
-    <link rel="apple-touch-icon" href="icon.png">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;800&family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="icon" href="favicon.ico" sizes="any" />
+    <link rel="icon" href="icon.png" type="image/png" />
+    <link rel="apple-touch-icon" href="icon.png" />
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;800&family=Orbitron:wght@400;700&display=swap" rel="stylesheet" />
 
     <style>
         :root {
@@ -754,23 +755,132 @@
             if(nom) enviarDatosUnificados({servicio: "Interes Oferta Teleco", oferta: titulo, nombre: nom}, `Hola, me interesa la oferta de telecomunicaciones: ${titulo}. Soy ${nom}.`);
         }
 
-        // --- SISTEMA DE COMPRESIÓN DE IMÁGENES ---
+        // --- FUNCIONES DE COMPRESIÓN DE IMAGEN ---
+        function comprimirImagen(file) {
+            return new Promise((resolve, reject) => {
+                const reader = new FileReader();
+                reader.readAsDataURL(file);
+                reader.onload = function(event) {
+                    const img = new Image();
+                    img.src = event.target.result;
+                    img.onload = function() {
+                        const canvas = document.createElement('canvas');
+                        const ctx = canvas.getContext('2d');
+                        
+                        // Redimensionar si es muy grande
+                        const maxWidth = 800; 
+                        let width = img.width;
+                        let height = img.height;
+                        
+                        if (width > maxWidth) {
+                            height *= maxWidth / width;
+                            width = maxWidth;
+                        }
+                        
+                        canvas.width = width;
+                        canvas.height = height;
+                        ctx.drawImage(img, 0, 0, width, height);
+                        
+                        // Comprimir a JPEG con calidad 0.7
+                        resolve(canvas.toDataURL('image/jpeg', 0.7));
+                    };
+                    img.onerror = error => reject(error);
+                };
+                reader.onerror = error => reject(error);
+            });
+        }
+
+        // --- SISTEMA DE GUARDADO ---
         async function guardarItem(col, id, data, fileIn, btnId) {
             const btn = document.getElementById(btnId);
             const originalBtnText = btn ? btn.innerText : 'GUARDAR';
             if(btn) { btn.disabled = true; btn.innerText = "⏳ SUBIENDO..."; }
 
             const f = document.getElementById(fileIn) ? document.getElementById(fileIn).files[0] : null;
-            if(f) { 
-                try {
+            
+            try {
+                if(f) { 
                     const imagenComprimida = await comprimirImagen(f);
                     if (imagenComprimida.length > 950000) {
-                        alert("⚠️ La imagen es demasiado pesada. Usa una captura de pantalla.");
+                        alert("⚠️ La imagen es demasiado pesada incluso comprimida. Intenta con otra.");
                         if(btn) { btn.disabled = false; btn.innerText = originalBtnText; }
                         return;
                     }
                     data.img = imagenComprimida;
-                } catch (error) {
-                    console.error("Error img", error);
-                    alert("Error con la imagen.");
-                    if(
+                }
+                
+                // Guardar en Firebase
+                await db.collection(col).add({ ...data, fecha: new Date().toISOString() });
+                
+                alert("✅ Guardado correctamente");
+                document.getElementById(id).reset();
+                if(btn) { btn.disabled = false; btn.innerText = originalBtnText; }
+
+            } catch (error) {
+                console.error("Error al guardar:", error);
+                alert("Error al guardar: " + error.message);
+                if(btn) { btn.disabled = false; btn.innerText = originalBtnText; }
+            }
+        }
+
+        // Resto de la lógica básica de navegación
+        function verSeccion(id) {
+            document.querySelectorAll('.container').forEach(c => c.classList.add('hidden'));
+            const sec = document.getElementById('sec-' + id);
+            if(sec) sec.classList.remove('hidden');
+            
+            document.querySelectorAll('.menu-btn').forEach(b => b.classList.remove('active'));
+            const btn = document.getElementById('btn-' + id);
+            if(btn) btn.classList.add('active');
+
+            // Cargas específicas
+            if(id === 'catalogo') cargarProductos();
+            if(id === 'teleco') cargarCarpetasTeleco();
+            if(id === 'webs') cargarWebs();
+            if(id === 'quiz') startQuiz();
+            if(id === 'resenas') cargarResenas();
+        }
+
+        function abrirModal(id) { document.getElementById(id).classList.remove('hidden'); }
+        function cerrarModal(id) { document.getElementById(id).classList.add('hidden'); }
+
+        // Inicializar
+        window.onload = function() {
+            setTimeout(() => {
+               const welcomeScreen = document.getElementById('welcome-screen');
+               if(welcomeScreen) welcomeScreen.style.display = 'none';
+               // Mostrar modal bienvenida unos segundos después
+               setTimeout(() => {
+                   if(!sessionStorage.getItem('welcomeShown')) {
+                       abrirModal('welcome-modal');
+                       sessionStorage.setItem('welcomeShown', 'true');
+                   }
+               }, 3000);
+            }, 3500);
+
+            // Listeners Formularios Admin
+            document.getElementById('addFolderForm')?.addEventListener('submit', (e) => {
+                e.preventDefault();
+                guardarItem('telecom_carpetas', 'addFolderForm', { nombre: document.getElementById('folderName').value }, 'folderImg', 'btn-save-folder');
+            });
+
+            document.getElementById('addOfferForm')?.addEventListener('submit', (e) => {
+                e.preventDefault();
+                guardarItem('telecom_ofertas', 'addOfferForm', { 
+                    folderId: document.getElementById('offerFolderSelect').value,
+                    titulo: document.getElementById('offerTitle').value,
+                    descripcion: document.getElementById('offerDesc').value,
+                    precio: document.getElementById('offerPrice').value
+                }, 'offerImg', 'btn-save-offer');
+            });
+        };
+
+        // Función borrar genérica
+        function borrar(col, id) {
+            if(confirm("¿Seguro que quieres borrar esto?")) {
+                db.collection(col).doc(id).delete();
+            }
+        }
+    </script>
+</body>
+</html>
