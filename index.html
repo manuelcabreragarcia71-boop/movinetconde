@@ -22,34 +22,35 @@
             --error: #e74c3c;
         }
 
-        /* --- CORRECCIÓN RESPONSIVE PARA ANDROID --- */
+        /* --- CONFIGURACIÓN BASE --- */
         * {
-            box-sizing: border-box; /* Fundamental para que padding no rompa el ancho */
+            box-sizing: border-box; /* Fundamental */
         }
 
-        html, body {
+        html {
             width: 100%;
-            overflow-x: hidden; /* Evita desplazamiento horizontal */
-            margin: 0;
-            padding: 0;
-            position: relative;
+            overflow-x: hidden; /* Corta el scroll horizontal en la raíz */
         }
 
         body { 
+            margin: 0; 
+            padding: 0;
+            width: 100%;
+            overflow-x: hidden; /* Doble seguridad */
             font-family: 'Montserrat', sans-serif; 
             color: var(--text); 
             background-color: #000; 
-            /* Fondo fijo */
             background-image: url('fondo.JPG');
             background-repeat: no-repeat; 
             background-position: center center; 
             background-attachment: fixed; 
             background-size: cover;       
             touch-action: manipulation;
-            padding-bottom: 80px; /* Espacio para el footer */
+            padding-bottom: 80px; 
+            -webkit-text-size-adjust: 100%; /* Evita zoom de texto automático en iOS */
         }
 
-        /* --- INTRO BIENVENIDA (SPLASH SCREEN) --- */
+        /* --- INTRO BIENVENIDA --- */
         #welcome-screen {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: #000; z-index: 9999;
@@ -85,9 +86,9 @@
         .menu-btn { background: rgba(255,255,255,0.8); border: none; padding: 8px 15px; border-radius: 20px; font-weight: 600; cursor: pointer; white-space: nowrap; font-size: 0.9rem; transition: 0.3s; }
         .menu-btn.active, .menu-btn:hover { background: var(--accent); color: white; }
 
-        /* --- CONTENEDORES GENERALES --- */
+        /* --- CONTENEDORES --- */
         .container { 
-            width: 95%; /* Ajuste % para evitar desbordes */
+            width: 95%; 
             max-width: 1200px; 
             margin: 20px auto; 
             padding: 20px; 
@@ -101,14 +102,24 @@
         .section-title { text-align: center; color: var(--primary); text-transform: uppercase; margin-bottom: 20px; border-bottom: 2px solid var(--accent); display: inline-block; padding-bottom: 5px; font-weight: 800; max-width: 100%; word-wrap: break-word; }
         .center-wrapper { text-align: center; }
 
-        /* --- MENÚ HOME (GRID) --- */
-        .home-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; }
+        /* --- MENÚ HOME (SOLUCIÓN GRID) --- */
+        .home-grid { 
+            display: grid; 
+            /* minmax(0, 1fr) ES LA CLAVE: permite que la columna se encoja aunque el texto sea largo */
+            grid-template-columns: repeat(2, minmax(0, 1fr)); 
+            gap: 15px; 
+        }
         @media (min-width: 768px) { .home-grid { grid-template-columns: repeat(4, 1fr); } }
         
         .home-card {
-            background: rgba(255,255,255,0.9); padding: 25px 15px; border-radius: 15px;
-            text-align: center; border: 2px solid rgba(0,0,0,0.05); cursor: pointer;
+            background: rgba(255,255,255,0.9); 
+            padding: 20px 5px; /* Reducido padding lateral */
+            border-radius: 15px;
+            text-align: center; 
+            border: 2px solid rgba(0,0,0,0.05); cursor: pointer;
             transition: all 0.3s ease; display: flex; flex-direction: column; align-items: center; justify-content: center;
+            width: 100%; /* Asegura que no crezca más que la celda */
+            overflow: hidden; /* Esconde lo que sobre */
         }
         .home-card:hover {
             transform: translateY(-5px) scale(1.02);
@@ -116,31 +127,56 @@
             box-shadow: 0 10px 20px rgba(255,140,0,0.2);
         }
         .home-icon { font-size: 2.5rem; color: var(--accent); margin-bottom: 10px; }
-        .home-title { font-weight: 800; text-transform: uppercase; font-size: 0.9rem; color: var(--primary); }
+        
+        .home-title { 
+            font-weight: 800; 
+            text-transform: uppercase; 
+            font-size: 0.8rem; /* Texto un poco más pequeño para caber mejor */
+            color: var(--primary);
+            width: 100%;
+            overflow-wrap: break-word; /* Obliga a partir palabras largas */
+            word-wrap: break-word;
+            hyphens: auto; /* Pone guiones si es necesario */
+        }
+
+        /* --- FIX MÓVIL CRÍTICO --- */
+        /* Ajustes específicos para pantallas pequeñas como la tuya */
+        @media (max-width: 480px) {
+            .container {
+                width: 96% !important; /* Aprovecha más ancho */
+                padding: 15px 10px !important; /* Menos relleno interno */
+                margin: 15px auto !important;
+            }
+            .home-grid {
+                gap: 10px !important; /* Menos espacio entre botones */
+            }
+            .home-icon {
+                font-size: 2rem !important; /* Iconos un pelín más pequeños */
+            }
+            .home-card {
+                padding: 15px 2px !important; /* Muy poco padding lateral para dejar espacio al texto */
+            }
+        }
 
         /* --- ELEMENTOS DE PRODUCTOS Y LISTAS --- */
         .filter-scroll { display: flex; gap: 10px; overflow-x: auto; padding: 10px 0; margin-bottom: 20px; }
         .filter-badge { background: rgba(255,255,255,0.8); border: 2px solid rgba(0,0,0,0.1); padding: 8px 15px; border-radius: 15px; cursor: pointer; font-weight: bold; white-space: nowrap; transition: 0.3s; }
         .filter-badge.active { border-color: var(--accent); color: var(--accent); background: #fff; }
 
-        /* Grid ajustado para móviles pequeños */
         .grid-container { 
             display: grid; 
-            grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); /* Reducido para mejor ajuste móvil */
+            grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); /* Grid flexible para móviles */
             gap: 15px; 
-        }
-        @media (min-width: 600px) {
-            .grid-container { grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 20px; }
         }
         
         .product-card, .review-card { 
             background: rgba(255, 255, 255, 0.85); padding: 15px; border-radius: 10px; text-align: center; border: 1px solid rgba(0,0,0,0.1); position: relative; box-shadow: 0 5px 15px rgba(0,0,0,0.05); 
-            display: flex; flex-direction: column; justify-content: space-between; /* Alineación vertical */
+            display: flex; flex-direction: column; justify-content: space-between;
         }
         .product-photo { width: 100%; height: 180px; object-fit: contain; border-radius: 5px; background: white; margin-bottom: 10px;}
         .brand-tag { position: absolute; top: 15px; left: 15px; padding: 2px 8px; border-radius: 4px; font-size: 0.7rem; font-weight: bold; text-transform: uppercase; color: white; background: rgba(0,0,0,0.8); }
         
-        /* --- ESTILOS TELECO (CARPETAS) --- */
+        /* --- ESTILOS TELECO --- */
         .folder-card {
             background: white; border-radius: 15px; padding: 20px; text-align: center;
             border: 2px solid #eee; transition: 0.3s; cursor: pointer; position: relative; overflow: hidden;
@@ -151,10 +187,9 @@
 
         /* --- ZONA PC --- */
         .pc-option-card {
-            background: white; padding: 30px; border-radius: 15px; text-align: center; 
+            background: white; padding: 20px; border-radius: 15px; text-align: center; 
             border: 2px solid #eee; transition: 0.3s; cursor: pointer;
         }
-        .pc-option-card:hover { border-color: var(--accent); transform: translateY(-5px); box-shadow: 0 10px 20px rgba(0,0,0,0.1); }
         .pc-icon { font-size: 3rem; color: var(--accent); margin-bottom: 15px; }
 
         /* --- BOTONES Y PRECIOS --- */
@@ -168,16 +203,15 @@
         .btn-delete { background: #e74c3c; color: white; border: none; padding: 5px 10px; cursor: pointer; border-radius: 5px; font-weight: bold; margin-left: 5px; }
         .btn-back { background: #eee; border: none; padding: 10px 20px; border-radius: 20px; font-weight: bold; margin-bottom: 15px; cursor: pointer; display: inline-flex; align-items: center; gap: 5px; }
 
-        /* --- PANEL ADMIN --- */
+        /* --- MODALES Y FORMULARIOS --- */
         .admin-panel { background: rgba(255, 248, 225, 0.98); border: 2px dashed var(--accent); margin-bottom: 20px; padding: 15px; }
         .admin-tabs { display: flex; gap: 10px; margin-bottom: 20px; border-bottom: 1px solid #ccc; padding-bottom: 10px; overflow-x: auto; }
         .admin-tab-btn { background: none; border: none; font-weight: bold; cursor: pointer; opacity: 0.5; font-size: 0.9rem; white-space: nowrap; }
         .admin-tab-btn.active { opacity: 1; color: var(--accent); border-bottom: 2px solid var(--accent); }
         .admin-actions { display: flex; gap: 5px; margin-top: 10px; padding-top: 10px; border-top: 1px solid rgba(0,0,0,0.1); justify-content: center;}
 
-        /* --- MODALES Y FORMULARIOS --- */
         .form-box { max-width: 100%; margin: 0 auto; background: rgba(255,255,255,0.95); padding: 20px; border-radius: 10px; }
-        input, textarea, select { width: 100%; padding: 12px; margin-bottom: 15px; border: 1px solid #ccc; border-radius: 5px; box-sizing: border-box; background: rgba(255,255,255,0.9); font-size: 16px; /* Evita zoom en iPhone al hacer click */ }
+        input, textarea, select { width: 100%; padding: 12px; margin-bottom: 15px; border: 1px solid #ccc; border-radius: 5px; box-sizing: border-box; background: rgba(255,255,255,0.9); font-size: 16px; }
         
         .modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); z-index: 2000; display: flex; justify-content: center; align-items: center; }
         .modal-content { background: rgba(255,255,255,0.98); padding: 25px; width: 90%; max-width: 500px; border-radius: 10px; position: relative; max-height: 90vh; overflow-y: auto; }
