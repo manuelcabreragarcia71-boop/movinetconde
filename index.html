@@ -6,14 +6,13 @@
     <title>MOVINETCONDE | Tecnología & Servicios</title>
     
     <link rel="canonical" href="https://www.tudominio.com/" />
-
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;800&family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
 
     <style>
         :root {
             --primary: #000000;
-            --accent: #ff8c00; /* Naranja corporativo */
+            --accent: #ff8c00;
             --white: #ffffff;
             --text: #333333;
             --bg-glass: rgba(255, 255, 255, 0.92); 
@@ -227,25 +226,44 @@
         </div>
 
         <div id="admin-tab-productos" class="hidden">
-            <h3>Nuevo Móvil</h3>
-            <form id="addProductForm">
-                <input type="file" id="newImg" accept="image/*">
+            <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap:20px;">
                 
-                <input type="text" id="newBrand" placeholder="Marca (Ej: Samsung)" list="marcas-list" required>
-                <datalist id="marcas-list">
-                    <option value="Apple"><option value="Samsung"><option value="Xiaomi"><option value="Oppo"><option value="Realme">
-                </datalist>
-
-                <input type="text" id="newName" placeholder="Modelo (Ej: Galaxy S22)" required>
-                
-                <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px;">
-                    <input type="number" id="newGB" placeholder="Almacenamiento (GB)">
-                    <input type="number" id="newRAM" placeholder="Memoria RAM">
+                <div style="background:white; padding:15px; border-radius:10px; border: 1px solid #ccc;">
+                    <h4 style="color:var(--accent); margin-top:0;">1. Crear Carpeta/Marca</h4>
+                    <form id="addMovilBrandForm" style="margin-bottom:15px;">
+                        <input type="file" id="brandImg" accept="image/*" required>
+                        <input type="text" id="brandName" placeholder="Nombre Marca (Ej: Samsung)" required>
+                        <button type="submit" class="btn-secondary" id="btn-save-brand">CREAR MARCA</button>
+                    </form>
+                    
+                    <div style="border-top: 2px dashed #eee; padding-top: 10px;">
+                        <h5 style="margin:0 0 10px 0;">🗑️ Borrar Marcas:</h5>
+                        <div id="admin-brands-list" style="max-height: 200px; overflow-y: auto;">Cargando...</div>
+                    </div>
                 </div>
 
-                <input type="number" id="newPrice" placeholder="Precio (€)" required>
-                <button type="submit" class="btn-primary" id="btn-save-product">GUARDAR MÓVIL</button>
-            </form>
+                <div style="background:white; padding:15px; border-radius:10px; border: 1px solid #ccc;">
+                    <h4 style="color:var(--accent); margin-top:0;">2. Subir Móvil</h4>
+                    <form id="addProductForm">
+                        <label style="font-size:0.8rem; font-weight:bold;">¿En qué carpeta va?</label>
+                        <select id="newBrandSelect" required>
+                            <option value="">Cargando marcas...</option>
+                        </select>
+                        
+                        <input type="file" id="newImg" accept="image/*">
+                        <input type="text" id="newName" placeholder="Modelo (Ej: Galaxy S22)" required>
+                        
+                        <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px;">
+                            <input type="number" id="newGB" placeholder="GB Almac.">
+                            <input type="number" id="newRAM" placeholder="GB RAM">
+                        </div>
+
+                        <input type="number" id="newPrice" placeholder="Precio (€)" required>
+                        <button type="submit" class="btn-primary" id="btn-save-product">GUARDAR MÓVIL</button>
+                    </form>
+                </div>
+
+            </div>
         </div>
 
         <div id="admin-tab-teleco" class="hidden">
@@ -354,7 +372,7 @@
         <div class="center-wrapper"><h2 class="section-title">Móviles</h2></div>
         
         <div id="catalogo-folders-view">
-            <p style="text-align:center; margin-bottom:15px;">Selecciona una marca para ver modelos:</p>
+            <p style="text-align:center; margin-bottom:15px;">Selecciona una marca:</p>
             <div id="brands-container" class="grid-container" style="grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));">
                 Cargando marcas...
             </div>
@@ -575,6 +593,7 @@
         let allProducts = []; 
         let allQuestions = []; 
         let telecomFolders = [];
+        let mobileBrands = []; // Nueva lista para marcas de móviles
         const MI_TELEFONO = "34613509309"; 
         const FORMSPREE_URL = "https://formspree.io/f/xwvqgdob";
         const EMAIL_SECUNDARIO = "movinetconde@gmail.com";
@@ -594,43 +613,85 @@
             mostrarToast("Solicitud enviada");
         }
 
-        // --- LÓGICA MÓVILES (NUEVA: CARPETAS) ---
+        // --- LÓGICA MÓVILES NUEVA (CARPETAS REALES) ---
+        
+        // 1. Cargar las Carpetas (Marcas) disponibles
+        function cargarMarcasMoviles() {
+            db.collection("moviles_marcas").orderBy("nombre").onSnapshot(snap => {
+                mobileBrands = [];
+                const container = document.getElementById('brands-container'); // Vista Cliente
+                const selectAdmin = document.getElementById('newBrandSelect'); // Select Admin (Upload)
+                const listAdmin = document.getElementById('admin-brands-list'); // Lista Admin (Borrar)
+                
+                if(container) container.innerHTML = "";
+                if(selectAdmin) selectAdmin.innerHTML = '<option value="">Selecciona Carpeta...</option>';
+                if(listAdmin) listAdmin.innerHTML = "";
+
+                if(snap.empty) {
+                     if(container) container.innerHTML = "<p>No hay marcas disponibles.</p>";
+                     return;
+                }
+
+                snap.forEach(doc => {
+                    const b = doc.data(); 
+                    const id = doc.id;
+                    mobileBrands.push({...b, id});
+
+                    // Vista Cliente (Grid de carpetas)
+                    if(container) {
+                        container.innerHTML += `
+                            <div class="folder-card" onclick="verMovilesDeMarca('${b.nombre}')">
+                                <img src="${b.img}" class="folder-icon" style="background:white; padding:5px;">
+                                <div class="folder-title">${b.nombre}</div>
+                            </div>`;
+                    }
+                    
+                    // Select Admin (Para subir móvil)
+                    if(selectAdmin) {
+                        selectAdmin.innerHTML += `<option value="${b.nombre}">${b.nombre}</option>`;
+                    }
+
+                    // Lista Admin (Para borrar)
+                    if(listAdmin) {
+                        listAdmin.innerHTML += `
+                            <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:8px; background:#f9f9f9; padding:5px; border-radius:5px;">
+                                <div style="display:flex; align-items:center; gap:10px;">
+                                    <img src="${b.img}" style="width:30px; height:30px; border-radius:50%; object-fit:cover;">
+                                    <span style="font-weight:bold; font-size:0.9rem;">${b.nombre}</span>
+                                </div>
+                                <button class="btn-delete" onclick="borrar('moviles_marcas','${id}')"><i class="fas fa-trash"></i></button>
+                            </div>`;
+                    }
+                });
+            });
+        }
+
+        // 2. Cargar los Productos (Móviles)
         function cargarProductos() {
             db.collection("productos").orderBy("fecha", "desc").onSnapshot(snap => {
                 allProducts = []; 
                 snap.forEach(doc => allProducts.push({...doc.data(), id: doc.id}));
-                renderizarCarpetasMoviles(); 
+                // Ya no necesitamos renderizar carpetas automáticas aquí, eso lo hace cargarMarcasMoviles
             });
         }
 
-        function renderizarCarpetasMoviles() {
-            const marcasUnicas = [...new Set(allProducts.map(p => p.marca ? p.marca.trim() : 'Otras'))].sort();
-            const container = document.getElementById('brands-container');
-            if(!container) return;
-            container.innerHTML = "";
-            if(marcasUnicas.length === 0) { container.innerHTML = "<p>No hay móviles disponibles.</p>"; return; }
-
-            marcasUnicas.forEach(marca => {
-                const ejemplo = allProducts.find(p => (p.marca || 'Otras') == marca);
-                const imgMarca = ejemplo ? ejemplo.img : ''; 
-                container.innerHTML += `
-                    <div class="folder-card" onclick="verMovilesDeMarca('${marca}')">
-                        <img src="${imgMarca}" class="folder-icon" style="background:white; padding:5px;">
-                        <div class="folder-title">${marca}</div>
-                        <small style="color:#777;">Ver disponibles</small>
-                    </div>`;
-            });
-        }
-
-        function verMovilesDeMarca(marca) {
+        // 3. Ver Móviles dentro de la carpeta seleccionada
+        function verMovilesDeMarca(marcaNombre) {
             document.getElementById('catalogo-folders-view').classList.add('hidden');
             document.getElementById('catalogo-list-view').classList.remove('hidden');
-            document.getElementById('current-brand-title').innerText = marca;
+            document.getElementById('current-brand-title').innerText = marcaNombre;
             
             const container = document.getElementById('productos-container');
-            container.innerHTML = "";
+            container.innerHTML = "Cargando...";
             
-            const filtrados = allProducts.filter(p => (p.marca || 'Otras') === marca);
+            // Filtramos por el nombre de la marca guardado en el producto
+            const filtrados = allProducts.filter(p => p.marca === marcaNombre);
+            container.innerHTML = "";
+
+            if(filtrados.length === 0) {
+                container.innerHTML = "<p>Aún no hay móviles en esta carpeta.</p>";
+                return;
+            }
 
             filtrados.forEach(p => {
                 let adminBtns = esAdmin ? `<div class="admin-actions"><button class="btn-delete" onclick="borrar('productos','${p.id}')">🗑️</button></div>` : '';
@@ -655,10 +716,12 @@
                     </div>`;
             });
         }
+
         function volverAMarcas() {
             document.getElementById('catalogo-list-view').classList.add('hidden');
             document.getElementById('catalogo-folders-view').classList.remove('hidden');
         }
+
 
         // --- LÓGICA TELECO ---
         function cargarCarpetasTeleco() {
@@ -754,18 +817,28 @@
             });
         }
 
-        // --- HANDLERS ADMIN ---
-        if(document.getElementById('addFolderForm')) { document.getElementById('addFolderForm').addEventListener('submit', e => { e.preventDefault(); guardarItem('telecom_carpetas', null, { nombre: document.getElementById('folderName').value }, 'folderImg', 'btn-save-folder').then(() => document.getElementById('addFolderForm').reset()); }); }
+        // --- HANDLERS ADMIN (EVENT LISTENERS) ---
         
-        if(document.getElementById('addOfferForm')) { document.getElementById('addOfferForm').addEventListener('submit', e => { e.preventDefault(); const data = { folderId: document.getElementById('offerFolderSelect').value, titulo: document.getElementById('offerTitle').value, descripcion: document.getElementById('offerDesc').value, precio: document.getElementById('offerPrice').value }; guardarItem('telecom_ofertas', null, data, 'offerImg', 'btn-save-offer').then(() => document.getElementById('addOfferForm').reset()); }); }
-        
-        // --- GUARDAR MÓVIL ACTUALIZADO (GB/RAM) ---
+        // 1. Crear Carpeta de Móvil
+        if(document.getElementById('addMovilBrandForm')) {
+            document.getElementById('addMovilBrandForm').addEventListener('submit', e => {
+                e.preventDefault();
+                const data = { nombre: document.getElementById('brandName').value };
+                guardarItem('moviles_marcas', null, data, 'brandImg', 'btn-save-brand')
+                .then(() => document.getElementById('addMovilBrandForm').reset());
+            });
+        }
+
+        // 2. Subir Móvil (Ahora usa Select)
         if(document.getElementById('addProductForm')) {
             document.getElementById('addProductForm').addEventListener('submit', e=>{ 
                 e.preventDefault(); 
+                const selectedBrand = document.getElementById('newBrandSelect').value;
+                if(!selectedBrand) return alert("¡Debes seleccionar una carpeta!");
+
                 const data = {
                     nombre: document.getElementById('newName').value, 
-                    marca: document.getElementById('newBrand').value.trim(), 
+                    marca: selectedBrand, 
                     gb: document.getElementById('newGB').value,
                     ram: document.getElementById('newRAM').value,
                     precio: Number(document.getElementById('newPrice').value)
@@ -774,7 +847,10 @@
                 .then(()=>{ document.getElementById('addProductForm').reset(); }); 
             });
         }
-        
+
+        // Otros handlers
+        if(document.getElementById('addFolderForm')) { document.getElementById('addFolderForm').addEventListener('submit', e => { e.preventDefault(); guardarItem('telecom_carpetas', null, { nombre: document.getElementById('folderName').value }, 'folderImg', 'btn-save-folder').then(() => document.getElementById('addFolderForm').reset()); }); }
+        if(document.getElementById('addOfferForm')) { document.getElementById('addOfferForm').addEventListener('submit', e => { e.preventDefault(); const data = { folderId: document.getElementById('offerFolderSelect').value, titulo: document.getElementById('offerTitle').value, descripcion: document.getElementById('offerDesc').value, precio: document.getElementById('offerPrice').value }; guardarItem('telecom_ofertas', null, data, 'offerImg', 'btn-save-offer').then(() => document.getElementById('addOfferForm').reset()); }); }
         if(document.getElementById('addWebForm')) { document.getElementById('addWebForm').addEventListener('submit', e=>{ e.preventDefault(); guardarItem('webs', null, { titulo: document.getElementById('webTitle').value }, 'webImg', 'btn-save-web').then(()=>{document.getElementById('addWebForm').reset()}); }); }
 
         // --- FORMULARIOS USUARIO ---
@@ -823,7 +899,7 @@
         function cerrarSesionAdmin(){ esAdmin=false; document.getElementById('admin-panel').classList.add('hidden'); cargarTodo(); }
         function verAdminTab(t) { document.querySelectorAll('[id^="admin-tab-"]').forEach(x => x.classList.add('hidden')); document.querySelectorAll('.admin-tab-btn').forEach(b => b.classList.remove('active')); document.getElementById(`admin-tab-${t}`).classList.remove('hidden'); event.target.classList.add('active'); }
         function cargarAdminData() { db.collection('leads_capturados').orderBy('fecha', 'desc').onSnapshot(snap => { const div = document.getElementById('admin-leads-list'); div.innerHTML = ""; snap.forEach(doc => { const d = doc.data(); div.innerHTML += `<div class="review-card" style="text-align:left; border-left:4px solid orange;"><b>${d.servicio}</b><br>👤 ${d.nombre} - ${d.telefono}</div>`; }); }); }
-        function borrar(c,i){ if(confirm("¿Borrar?")) db.collection(c).doc(i).delete(); }
+        function borrar(c,i){ if(confirm("¿Seguro que quieres borrarlo?")) db.collection(c).doc(i).delete(); }
 
         auth.onAuthStateChanged(u => { usuarioActual = u; if(u) { cerrarModal('auth-modal'); document.getElementById('profile-name').innerText = "Perfil: " + u.email.split('@')[0]; cargarDatosPerfil(); } });
         function handleAuth(type) { const em = document.getElementById('authEmail').value, pw = document.getElementById('authPass').value; type === 'login' ? auth.signInWithEmailAndPassword(em,pw).catch(e=>document.getElementById('authError').innerText=e.message) : auth.createUserWithEmailAndPassword(em,pw).catch(e=>document.getElementById('authError').innerText=e.message); }
@@ -841,7 +917,14 @@
         window.addEventListener('load', function() { if (!sessionStorage.getItem('popupMostrado')) { setTimeout(function() { abrirModal('welcome-modal'); sessionStorage.setItem('popupMostrado', 'true'); }, 4000); } });
         document.getElementById('welcomeForm').addEventListener('submit', (e) => { e.preventDefault(); enviarDatosUnificados({ servicio: "Lead Bienvenida", nombre: document.getElementById('welcomeNombre').value, telefono: document.getElementById('welcomeTel').value }, `Hola, acabo de entrar en la web.`); cerrarModal('welcome-modal'); });
 
-        function cargarTodo() { cargarProductos(); cargarWebs(); cargarQuiz(); cargarResenas(); cargarCarpetasTeleco(); }
+        function cargarTodo() { 
+            cargarProductos(); 
+            cargarMarcasMoviles(); // Cargamos las carpetas de móviles explícitas
+            cargarWebs(); 
+            cargarQuiz(); 
+            cargarResenas(); 
+            cargarCarpetasTeleco(); 
+        }
         cargarTodo();
     </script>
 </body>
