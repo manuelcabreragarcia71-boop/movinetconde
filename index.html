@@ -111,7 +111,7 @@
             background: rgba(255, 255, 255, 0.85); padding: 15px; border-radius: 10px; text-align: center; border: 1px solid rgba(0,0,0,0.1); position: relative; box-shadow: 0 5px 15px rgba(0,0,0,0.05); 
             display: flex; flex-direction: column; justify-content: space-between;
         }
-        .product-photo { width: 100%; height: 180px; object-fit: contain; border-radius: 5px; background: white; margin-bottom: 10px;}
+        .product-photo { width: 100%; height: 180px; object-fit: contain; border-radius: 5px; background: white; margin-bottom: 10px; cursor: zoom-in; }
         .brand-tag { position: absolute; top: 15px; left: 15px; padding: 2px 8px; border-radius: 4px; font-size: 0.7rem; font-weight: bold; text-transform: uppercase; color: white; background: rgba(0,0,0,0.8); }
         
         .specs-badge {
@@ -177,6 +177,10 @@
         .address-box.visible { display: block; }
         .store-info { text-align: center; background: #e8f5e9; padding: 10px; border-radius: 5px; color: #2e7d32; font-size: 0.9rem; margin-bottom: 15px; display: none; }
         .store-info.visible { display: block; }
+
+        /* --- ESTILOS VISOR FOTO GRANDE --- */
+        #img-modal { background: rgba(0,0,0,0.95); display: flex; justify-content: center; align-items: center; z-index: 5000; }
+        #img-modal img { max-width: 95%; max-height: 90%; border-radius: 5px; box-shadow: 0 0 20px rgba(255,140,0,0.5); object-fit: contain; }
 
     </style>
 </head>
@@ -604,6 +608,11 @@
         </div>
     </div>
     
+    <div id="img-modal" class="modal hidden" onclick="cerrarModal('img-modal')">
+        <span class="close" style="color:white; position:fixed; top:20px; right:20px; font-size:3rem; z-index:5001;">&times;</span>
+        <img id="img-grande-src" src="" onclick="event.stopPropagation()">
+    </div>
+    
     <div id="toast" class="toast">Guardado</div>
 
     <footer>
@@ -651,6 +660,12 @@
                 window.location.href = url;
             }
             mostrarToast("Solicitud enviada");
+        }
+        
+        // --- FUNCIÓN PARA VER FOTO GRANDE ---
+        function verFotoGrande(src) {
+            document.getElementById('img-grande-src').src = src;
+            abrirModal('img-modal');
         }
 
         // --- LÓGICA MÓVILES NUEVA ---
@@ -758,7 +773,7 @@
                 container.innerHTML += `
                     <div class="product-card">
                         <span class="brand-tag">${p.marca}</span>
-                        <img src="${p.img}" class="product-photo">
+                        <img src="${p.img}" class="product-photo" onclick="verFotoGrande('${p.img}')">
                         <h3 style="margin-bottom:5px;">${p.nombre}</h3>
                         ${infoExtra}
                         <p class="price">${p.precio}€</p>
@@ -820,7 +835,15 @@
                 if(snap.empty) { container.innerHTML = "<p>No hay ofertas.</p>"; return; }
                 snap.forEach(doc => {
                     const o = doc.data();
-                    container.innerHTML += `<div class="product-card"><img src="${o.img}" class="product-photo"><h3>${o.titulo}</h3><p>${o.descripcion}</p>${o.precio ? `<p class="price">${o.precio}€</p>` : ''}<button class="btn-primary" onclick="pedirInfoOferta('${o.titulo}')">ME INTERESA</button></div>`;
+                    // AÑADIDO: onclick="verFotoGrande" en la imagen
+                    container.innerHTML += `
+                        <div class="product-card">
+                            <img src="${o.img}" class="product-photo" onclick="verFotoGrande('${o.img}')">
+                            <h3>${o.titulo}</h3>
+                            <p>${o.descripcion}</p>
+                            ${o.precio ? `<p class="price">${o.precio}€</p>` : ''}
+                            <button class="btn-primary" onclick="pedirInfoOferta('${o.titulo}')">ME INTERESA</button>
+                        </div>`;
                 });
             });
         }
