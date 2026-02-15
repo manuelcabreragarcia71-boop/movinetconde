@@ -167,6 +167,22 @@
         .quiz-btn.correct { background: var(--success); color: white; border-color: var(--success); }
         .quiz-btn.wrong { background: var(--error); color: white; border-color: var(--error); }
         .score-display { font-size: 3rem; color: var(--accent); font-weight: 800; display: block; margin: 20px 0; }
+        
+        /* ESTILOS CARRITO */
+        .opcion-entrega {
+            background: #f1f1f1;
+            padding: 10px;
+            margin: 5px 0;
+            border-radius: 5px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            border: 1px solid #ccc;
+        }
+        .opcion-entrega:hover {
+            background: #e9e9e9;
+        }
     </style>
 </head>
 <body>
@@ -229,7 +245,6 @@
 
         <div id="admin-tab-productos" class="hidden">
             <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap:20px;">
-                
                 <div style="background:white; padding:15px; border-radius:10px; border: 1px solid #ccc;">
                     <h4 style="color:var(--accent); margin-top:0;">1. Crear Carpeta/Marca</h4>
                     <form id="addMovilBrandForm" style="margin-bottom:15px;">
@@ -237,34 +252,26 @@
                         <input type="text" id="brandName" placeholder="Nombre Marca (Ej: Samsung)" required>
                         <button type="submit" class="btn-secondary" id="btn-save-brand">CREAR MARCA</button>
                     </form>
-                    
                     <div style="border-top: 2px dashed #eee; padding-top: 10px;">
                         <h5 style="margin:0 0 10px 0;">🗑️ Borrar Marcas:</h5>
                         <div id="admin-brands-list" style="max-height: 200px; overflow-y: auto;">Cargando...</div>
                     </div>
                 </div>
-
                 <div style="background:white; padding:15px; border-radius:10px; border: 1px solid #ccc;">
                     <h4 style="color:var(--accent); margin-top:0;">2. Subir Móvil</h4>
                     <form id="addProductForm">
                         <label style="font-size:0.8rem; font-weight:bold;">¿En qué carpeta va?</label>
-                        <select id="newBrandSelect" required>
-                            <option value="">Cargando marcas...</option>
-                        </select>
-                        
+                        <select id="newBrandSelect" required><option value="">Cargando marcas...</option></select>
                         <input type="file" id="newImg" accept="image/*">
                         <input type="text" id="newName" placeholder="Modelo (Ej: Galaxy S22)" required>
-                        
                         <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px;">
                             <input type="number" id="newGB" placeholder="GB Almac.">
                             <input type="number" id="newRAM" placeholder="GB RAM">
                         </div>
-
                         <input type="number" id="newPrice" placeholder="Precio (€)" required>
                         <button type="submit" class="btn-primary" id="btn-save-product">GUARDAR MÓVIL</button>
                     </form>
                 </div>
-
             </div>
         </div>
 
@@ -279,7 +286,6 @@
                     </form>
                     <div id="admin-folders-list"></div>
                 </div>
-
                 <div style="background:white; padding:15px; border-radius:10px; border: 1px solid #ccc;">
                     <h4 style="color:var(--accent);">2. Ofertas</h4>
                     <form id="addOfferForm" style="margin-bottom:15px;">
@@ -330,7 +336,6 @@
              <h4>Gestionar Opiniones</h4>
              <div id="admin-reviews-list" class="grid-container" style="grid-template-columns: 1fr;"></div>
         </div>
-
         <button onclick="cerrarSesionAdmin()" style="margin-top:20px; background:#333; color:white; border:none; padding:10px; width:100%;">Cerrar Sesión Admin</button>
     </div>
 
@@ -372,14 +377,10 @@
 
     <div id="sec-catalogo" class="container hidden">
         <div class="center-wrapper"><h2 class="section-title">Móviles</h2></div>
-        
         <div id="catalogo-folders-view">
             <p style="text-align:center; margin-bottom:15px;">Selecciona una marca:</p>
-            <div id="brands-container" class="grid-container" style="grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));">
-                Cargando marcas...
-            </div>
+            <div id="brands-container" class="grid-container" style="grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));">Cargando marcas...</div>
         </div>
-
         <div id="catalogo-list-view" class="hidden">
             <button class="btn-back" onclick="volverAMarcas()"><i class="fas fa-arrow-left"></i> Volver a Marcas</button>
             <h3 id="current-brand-title" style="margin-left:10px; display:inline-block; text-transform: uppercase;"></h3>
@@ -495,11 +496,24 @@
     <div id="cart-modal" class="modal hidden">
         <div class="modal-content">
             <span class="close" onclick="cerrarModal('cart-modal')">&times;</span>
-            <h2>Carrito</h2>
+            <h2>Tu Carrito</h2>
             <ul id="cart-items" style="list-style:none; padding:0; margin:20px 0;"></ul>
+            
+            <div style="background: #f9f9f9; padding: 15px; border-radius: 8px; margin-bottom: 15px; text-align: left;">
+                <p style="font-weight:bold; margin-top:0;">¿Cómo lo quieres?</p>
+                <label class="opcion-entrega">
+                    <input type="radio" name="entrega" value="envio" checked>
+                    <span>🚚 Envío a Domicilio</span>
+                </label>
+                <label class="opcion-entrega">
+                    <input type="radio" name="entrega" value="tienda">
+                    <span>🏪 Recoger en Tienda (Gratis)</span>
+                </label>
+            </div>
+
             <h3>Total: <span id="total-price">0</span>€</h3>
             <button onclick="realizarPedido()" class="btn-primary" style="background-color: #5469d4;">
-                <i class="fas fa-credit-card"></i> PAGAR CON TARJETA
+                <i class="fas fa-credit-card"></i> PAGAR AHORA
             </button>
         </div>
     </div>
@@ -602,8 +616,8 @@
         const FORMSPREE_URL = "https://formspree.io/f/xwvqgdob";
         const EMAIL_SECUNDARIO = "movinetconde@gmail.com";
 
-        // 🟢 INICIALIZAR STRIPE (PON TU CLAVE PUBLICA AQUI)
-        const stripe = Stripe('pk_test_TU_CLAVE_PUBLICA_AQUI');
+        // 🟢 TU CLAVE PÚBLICA INTEGRADA
+        const stripe = Stripe('pk_test_51T139I01BQr9moLGh9EnVFNIkp2nGivbMYWJQ7jSgubqg0BnRfhV7pqQSo2KiSNclEsbwuKBtymbOcbXFTEqskhB00T80qXeCQ');
 
         function enviarDatosUnificados(datos, mensajeWhatsapp) {
             datos["_cc"] = EMAIL_SECUNDARIO; 
@@ -620,117 +634,50 @@
             mostrarToast("Solicitud enviada");
         }
 
-        // --- LÓGICA MÓVILES NUEVA (CARPETAS REALES) ---
+        // --- LÓGICA MÓVILES ---
         function cargarMarcasMoviles() {
             db.collection("moviles_marcas").orderBy("nombre").onSnapshot(snap => {
                 mobileBrands = [];
                 const container = document.getElementById('brands-container'); 
                 const selectAdmin = document.getElementById('newBrandSelect'); 
                 const listAdmin = document.getElementById('admin-brands-list'); 
-                
                 if(container) container.innerHTML = "";
                 if(selectAdmin) selectAdmin.innerHTML = '<option value="">Selecciona Carpeta...</option>';
                 if(listAdmin) listAdmin.innerHTML = "";
-
-                if(snap.empty) {
-                     if(container) container.innerHTML = "<p>No hay marcas disponibles.</p>";
-                     return;
-                }
-
+                if(snap.empty && container) { container.innerHTML = "<p>No hay marcas disponibles.</p>"; return; }
                 snap.forEach(doc => {
-                    const b = doc.data(); 
-                    const id = doc.id;
-                    mobileBrands.push({...b, id});
-
-                    if(container) {
-                        container.innerHTML += `
-                            <div class="folder-card" onclick="verMovilesDeMarca('${b.nombre}')">
-                                <img src="${b.img}" class="folder-icon" style="background:white; padding:5px;">
-                                <div class="folder-title">${b.nombre}</div>
-                            </div>`;
-                    }
-                    if(selectAdmin) {
-                        selectAdmin.innerHTML += `<option value="${b.nombre}">${b.nombre}</option>`;
-                    }
-                    if(listAdmin) {
-                        listAdmin.innerHTML += `
-                            <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:8px; background:#f9f9f9; padding:5px; border-radius:5px;">
-                                <div style="display:flex; align-items:center; gap:10px;">
-                                    <img src="${b.img}" style="width:30px; height:30px; border-radius:50%; object-fit:cover;">
-                                    <span style="font-weight:bold; font-size:0.9rem;">${b.nombre}</span>
-                                </div>
-                                <button class="btn-delete" onclick="borrar('moviles_marcas','${id}')"><i class="fas fa-trash"></i></button>
-                            </div>`;
-                    }
+                    const b = doc.data(); const id = doc.id; mobileBrands.push({...b, id});
+                    if(container) container.innerHTML += `<div class="folder-card" onclick="verMovilesDeMarca('${b.nombre}')"><img src="${b.img}" class="folder-icon" style="background:white; padding:5px;"><div class="folder-title">${b.nombre}</div></div>`;
+                    if(selectAdmin) selectAdmin.innerHTML += `<option value="${b.nombre}">${b.nombre}</option>`;
+                    if(listAdmin) listAdmin.innerHTML += `<div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:8px; background:#f9f9f9; padding:5px; border-radius:5px;"><div style="display:flex; align-items:center; gap:10px;"><img src="${b.img}" style="width:30px; height:30px; border-radius:50%; object-fit:cover;"><span style="font-weight:bold; font-size:0.9rem;">${b.nombre}</span></div><button class="btn-delete" onclick="borrar('moviles_marcas','${id}')"><i class="fas fa-trash"></i></button></div>`;
                 });
             });
         }
-
-        function cargarProductos() {
-            db.collection("productos").orderBy("fecha", "desc").onSnapshot(snap => {
-                allProducts = []; 
-                snap.forEach(doc => allProducts.push({...doc.data(), id: doc.id}));
-            });
-        }
-
+        function cargarProductos() { db.collection("productos").orderBy("fecha", "desc").onSnapshot(snap => { allProducts = []; snap.forEach(doc => allProducts.push({...doc.data(), id: doc.id})); }); }
         function verMovilesDeMarca(marcaNombre) {
             document.getElementById('catalogo-folders-view').classList.add('hidden');
             document.getElementById('catalogo-list-view').classList.remove('hidden');
             document.getElementById('current-brand-title').innerText = marcaNombre;
-            
-            const container = document.getElementById('productos-container');
-            container.innerHTML = "Cargando...";
-            const filtrados = allProducts.filter(p => p.marca === marcaNombre);
-            container.innerHTML = "";
-
-            if(filtrados.length === 0) {
-                container.innerHTML = "<p>Aún no hay móviles en esta carpeta.</p>";
-                return;
-            }
-
+            const container = document.getElementById('productos-container'); container.innerHTML = "Cargando...";
+            const filtrados = allProducts.filter(p => p.marca === marcaNombre); container.innerHTML = "";
+            if(filtrados.length === 0) { container.innerHTML = "<p>Aún no hay móviles en esta carpeta.</p>"; return; }
             filtrados.forEach(p => {
                 let adminBtns = esAdmin ? `<div class="admin-actions"><button class="btn-delete" onclick="borrar('productos','${p.id}')">🗑️</button></div>` : '';
-                let infoExtra = "";
-                if(p.ram || p.gb) {
-                    infoExtra = `<div class="specs-badge">💾 ${p.ram || '?'}GB RAM | 💿 ${p.gb || '?'}GB</div>`;
-                }
-
-                container.innerHTML += `
-                    <div class="product-card">
-                        <span class="brand-tag">${p.marca}</span>
-                        <img src="${p.img}" class="product-photo">
-                        <h3 style="margin-bottom:5px;">${p.nombre}</h3>
-                        ${infoExtra}
-                        <p class="price">${p.precio}€</p>
-                        <button class="btn-primary" onclick="addCart('${p.id}','${p.nombre} (${p.gb}GB)',${p.precio})">AÑADIR</button>
-                        ${adminBtns}
-                    </div>`;
+                let infoExtra = (p.ram || p.gb) ? `<div class="specs-badge">💾 ${p.ram || '?'}GB RAM | 💿 ${p.gb || '?'}GB</div>` : '';
+                container.innerHTML += `<div class="product-card"><span class="brand-tag">${p.marca}</span><img src="${p.img}" class="product-photo"><h3 style="margin-bottom:5px;">${p.nombre}</h3>${infoExtra}<p class="price">${p.precio}€</p><button class="btn-primary" onclick="addCart('${p.id}','${p.nombre} (${p.gb}GB)',${p.precio})">AÑADIR</button>${adminBtns}</div>`;
             });
         }
-
-        function volverAMarcas() {
-            document.getElementById('catalogo-list-view').classList.add('hidden');
-            document.getElementById('catalogo-folders-view').classList.remove('hidden');
-        }
+        function volverAMarcas() { document.getElementById('catalogo-list-view').classList.add('hidden'); document.getElementById('catalogo-folders-view').classList.remove('hidden'); }
 
         // --- LÓGICA TELECO ---
         function cargarCarpetasTeleco() {
             db.collection("telecom_carpetas").orderBy("nombre").onSnapshot(snap => {
                 telecomFolders = [];
-                const container = document.getElementById('folders-container'); 
-                const selectAdmin = document.getElementById('offerFolderSelect'); 
-                const listAdmin = document.getElementById('admin-folders-list');
-                
-                if(container) container.innerHTML = "";
-                if(selectAdmin) selectAdmin.innerHTML = '<option value="">Selecciona Carpeta...</option>';
-                if(listAdmin) listAdmin.innerHTML = "";
-
+                const container = document.getElementById('folders-container'); const selectAdmin = document.getElementById('offerFolderSelect'); const listAdmin = document.getElementById('admin-folders-list');
+                if(container) container.innerHTML = ""; if(selectAdmin) selectAdmin.innerHTML = '<option value="">Selecciona Carpeta...</option>'; if(listAdmin) listAdmin.innerHTML = "";
                 snap.forEach(doc => {
-                    const f = doc.data(); const id = doc.id;
-                    telecomFolders.push({...f, id});
-                    if(container) {
-                        container.innerHTML += `<div class="folder-card" onclick="verOfertasDeCarpeta('${id}', '${f.nombre}')"><img src="${f.img}" class="folder-icon"><div class="folder-title">${f.nombre}</div></div>`;
-                    }
+                    const f = doc.data(); const id = doc.id; telecomFolders.push({...f, id});
+                    if(container) container.innerHTML += `<div class="folder-card" onclick="verOfertasDeCarpeta('${id}', '${f.nombre}')"><img src="${f.img}" class="folder-icon"><div class="folder-title">${f.nombre}</div></div>`;
                     if(selectAdmin) selectAdmin.innerHTML += `<option value="${id}">${f.nombre}</option>`;
                     if(listAdmin) listAdmin.innerHTML += `<div style="display:flex; justify-content:space-between; margin-bottom:5px;"><span>${f.nombre}</span><button class="btn-delete" onclick="borrar('telecom_carpetas','${id}')">🗑️</button></div>`;
                 });
@@ -739,55 +686,32 @@
         }
         function cargarOfertasTelecoAdmin() {
             db.collection("telecom_ofertas").orderBy("fecha", "desc").onSnapshot(snap => {
-                const listDiv = document.getElementById('admin-offers-admin-list');
-                if(!listDiv) return; listDiv.innerHTML = "";
-                snap.forEach(doc => {
-                    const o = doc.data();
-                    const carp = telecomFolders.find(f => f.id === o.folderId)?.nombre || '??';
-                    listDiv.innerHTML += `<div style="display:flex; justify-content:space-between; margin-bottom:5px; border-bottom:1px solid #eee;"><span>${o.titulo} (${carp})</span><button class="btn-delete" onclick="borrar('telecom_ofertas','${doc.id}')">🗑️</button></div>`;
-                });
+                const listDiv = document.getElementById('admin-offers-admin-list'); if(!listDiv) return; listDiv.innerHTML = "";
+                snap.forEach(doc => { const o = doc.data(); const carp = telecomFolders.find(f => f.id === o.folderId)?.nombre || '??'; listDiv.innerHTML += `<div style="display:flex; justify-content:space-between; margin-bottom:5px; border-bottom:1px solid #eee;"><span>${o.titulo} (${carp})</span><button class="btn-delete" onclick="borrar('telecom_ofertas','${doc.id}')">🗑️</button></div>`; });
             });
         }
         function verOfertasDeCarpeta(folderId, folderName) {
-            document.getElementById('teleco-folders-view').classList.add('hidden');
-            document.getElementById('teleco-offers-view').classList.remove('hidden');
-            document.getElementById('current-folder-title').innerText = folderName;
-            const container = document.getElementById('offers-container');
-            container.innerHTML = "Cargando...";
+            document.getElementById('teleco-folders-view').classList.add('hidden'); document.getElementById('teleco-offers-view').classList.remove('hidden'); document.getElementById('current-folder-title').innerText = folderName;
+            const container = document.getElementById('offers-container'); container.innerHTML = "Cargando...";
             db.collection("telecom_ofertas").where("folderId", "==", folderId).onSnapshot(snap => {
-                container.innerHTML = "";
-                if(snap.empty) { container.innerHTML = "<p>No hay ofertas.</p>"; return; }
-                snap.forEach(doc => {
-                    const o = doc.data();
-                    container.innerHTML += `<div class="product-card"><img src="${o.img}" class="product-photo"><h3>${o.titulo}</h3><p>${o.descripcion}</p>${o.precio ? `<p class="price">${o.precio}€</p>` : ''}<button class="btn-primary" onclick="pedirInfoOferta('${o.titulo}')">ME INTERESA</button></div>`;
-                });
+                container.innerHTML = ""; if(snap.empty) { container.innerHTML = "<p>No hay ofertas.</p>"; return; }
+                snap.forEach(doc => { const o = doc.data(); container.innerHTML += `<div class="product-card"><img src="${o.img}" class="product-photo"><h3>${o.titulo}</h3><p>${o.descripcion}</p>${o.precio ? `<p class="price">${o.precio}€</p>` : ''}<button class="btn-primary" onclick="pedirInfoOferta('${o.titulo}')">ME INTERESA</button></div>`; });
             });
         }
-        function volverACarpetas() {
-            document.getElementById('teleco-offers-view').classList.add('hidden');
-            document.getElementById('teleco-folders-view').classList.remove('hidden');
-        }
-        function pedirInfoOferta(titulo) {
-            const nom = prompt("Tu nombre:");
-            if(nom) enviarDatosUnificados({servicio: "Interes Oferta Teleco", oferta: titulo, nombre: nom}, `Hola, me interesa: ${titulo}. Soy ${nom}.`);
-        }
+        function volverACarpetas() { document.getElementById('teleco-offers-view').classList.add('hidden'); document.getElementById('teleco-folders-view').classList.remove('hidden'); }
+        function pedirInfoOferta(titulo) { const nom = prompt("Tu nombre:"); if(nom) enviarDatosUnificados({servicio: "Interes Oferta Teleco", oferta: titulo, nombre: nom}, `Hola, me interesa: ${titulo}. Soy ${nom}.`); }
 
         // --- COMPRESIÓN IMÁGENES ---
         async function guardarItem(col, id, data, fileIn, btnId) {
-            const btn = document.getElementById(btnId);
-            const originalBtnText = btn ? btn.innerText : 'GUARDAR';
+            const btn = document.getElementById(btnId); const originalBtnText = btn ? btn.innerText : 'GUARDAR';
             if(btn) { btn.disabled = true; btn.innerText = "⏳ SUBIENDO..."; }
             const f = document.getElementById(fileIn) ? document.getElementById(fileIn).files[0] : null;
             if(f) { 
-                try {
-                    const imagenComprimida = await comprimirImagen(f);
-                    if (imagenComprimida.length > 950000) { alert("Imagen muy pesada. Usa captura."); if(btn){btn.disabled=false; btn.innerText=originalBtnText;} return; }
-                    data.img = imagenComprimida;
-                } catch (error) { console.error(error); if(btn){btn.disabled=false; btn.innerText=originalBtnText;} return; }
+                try { const imagenComprimida = await comprimirImagen(f); if (imagenComprimida.length > 950000) { alert("Imagen muy pesada. Usa captura."); if(btn){btn.disabled=false; btn.innerText=originalBtnText;} return; } data.img = imagenComprimida; } 
+                catch (error) { console.error(error); if(btn){btn.disabled=false; btn.innerText=originalBtnText;} return; }
             }
             try { await db.collection(col).add({...data, fecha: new Date().toISOString()}); mostrarToast("Guardado"); } 
-            catch (error) { alert("Error: " + error.message); } 
-            finally { if(btn) { btn.disabled = false; btn.innerText = originalBtnText; } }
+            catch (error) { alert("Error: " + error.message); } finally { if(btn) { btn.disabled = false; btn.innerText = originalBtnText; } }
         }
         function comprimirImagen(file) {
             return new Promise((resolve, reject) => {
@@ -796,11 +720,8 @@
                     const img = new Image(); img.src = event.target.result;
                     img.onload = () => {
                         const canvas = document.createElement('canvas'); const ctx = canvas.getContext('2d');
-                        const maxWidth = 500; const scaleSize = maxWidth / img.width;
-                        const newWidth = (img.width > maxWidth) ? maxWidth : img.width;
-                        const newHeight = (img.width > maxWidth) ? (img.height * scaleSize) : img.height;
-                        canvas.width = newWidth; canvas.height = newHeight;
-                        ctx.fillStyle = "#FFFFFF"; ctx.fillRect(0, 0, newWidth, newHeight); ctx.drawImage(img, 0, 0, newWidth, newHeight);
+                        const maxWidth = 500; const scaleSize = maxWidth / img.width; const newWidth = (img.width > maxWidth) ? maxWidth : img.width; const newHeight = (img.width > maxWidth) ? (img.height * scaleSize) : img.height;
+                        canvas.width = newWidth; canvas.height = newHeight; ctx.fillStyle = "#FFFFFF"; ctx.fillRect(0, 0, newWidth, newHeight); ctx.drawImage(img, 0, 0, newWidth, newHeight);
                         resolve(canvas.toDataURL('image/jpeg', 0.6)); 
                     }; img.onerror = reject;
                 }; reader.onerror = reject;
@@ -808,32 +729,8 @@
         }
 
         // --- HANDLERS ADMIN ---
-        if(document.getElementById('addMovilBrandForm')) {
-            document.getElementById('addMovilBrandForm').addEventListener('submit', e => {
-                e.preventDefault();
-                const data = { nombre: document.getElementById('brandName').value };
-                guardarItem('moviles_marcas', null, data, 'brandImg', 'btn-save-brand')
-                .then(() => document.getElementById('addMovilBrandForm').reset());
-            });
-        }
-        if(document.getElementById('addProductForm')) {
-            document.getElementById('addProductForm').addEventListener('submit', e=>{ 
-                e.preventDefault(); 
-                const selectedBrand = document.getElementById('newBrandSelect').value;
-                if(!selectedBrand) return alert("¡Debes seleccionar una carpeta!");
-
-                const data = {
-                    nombre: document.getElementById('newName').value, 
-                    marca: selectedBrand, 
-                    gb: document.getElementById('newGB').value,
-                    ram: document.getElementById('newRAM').value,
-                    precio: Number(document.getElementById('newPrice').value)
-                };
-                guardarItem('productos', null, data, 'newImg', 'btn-save-product')
-                .then(()=>{ document.getElementById('addProductForm').reset(); }); 
-            });
-        }
-
+        if(document.getElementById('addMovilBrandForm')) { document.getElementById('addMovilBrandForm').addEventListener('submit', e => { e.preventDefault(); guardarItem('moviles_marcas', null, { nombre: document.getElementById('brandName').value }, 'brandImg', 'btn-save-brand').then(() => document.getElementById('addMovilBrandForm').reset()); }); }
+        if(document.getElementById('addProductForm')) { document.getElementById('addProductForm').addEventListener('submit', e=>{ e.preventDefault(); const selectedBrand = document.getElementById('newBrandSelect').value; if(!selectedBrand) return alert("¡Debes seleccionar una carpeta!"); const data = { nombre: document.getElementById('newName').value, marca: selectedBrand, gb: document.getElementById('newGB').value, ram: document.getElementById('newRAM').value, precio: Number(document.getElementById('newPrice').value) }; guardarItem('productos', null, data, 'newImg', 'btn-save-product').then(()=>{ document.getElementById('addProductForm').reset(); }); }); }
         if(document.getElementById('addFolderForm')) { document.getElementById('addFolderForm').addEventListener('submit', e => { e.preventDefault(); guardarItem('telecom_carpetas', null, { nombre: document.getElementById('folderName').value }, 'folderImg', 'btn-save-folder').then(() => document.getElementById('addFolderForm').reset()); }); }
         if(document.getElementById('addOfferForm')) { document.getElementById('addOfferForm').addEventListener('submit', e => { e.preventDefault(); const data = { folderId: document.getElementById('offerFolderSelect').value, titulo: document.getElementById('offerTitle').value, descripcion: document.getElementById('offerDesc').value, precio: document.getElementById('offerPrice').value }; guardarItem('telecom_ofertas', null, data, 'offerImg', 'btn-save-offer').then(() => document.getElementById('addOfferForm').reset()); }); }
         if(document.getElementById('addWebForm')) { document.getElementById('addWebForm').addEventListener('submit', e=>{ e.preventDefault(); guardarItem('webs', null, { titulo: document.getElementById('webTitle').value }, 'webImg', 'btn-save-web').then(()=>{document.getElementById('addWebForm').reset()}); }); }
@@ -849,21 +746,9 @@
         inputTelLead.addEventListener('input', function() { if(inputTelLead.value.length < 9) leadYaEnviado = false; clearTimeout(temporizadorLead); temporizadorLead = setTimeout(() => { if (inputTelLead.value.length >= 9 && !leadYaEnviado) { enviarDatosUnificados({origen: "Captura Web", nombre: document.getElementById('leadNombre').value, telefono: inputTelLead.value}, `Hola, estaba viendo vuestra web.`); leadYaEnviado = true; } }, 2000); });
         document.getElementById('silentLeadForm').addEventListener('submit', (e) => { e.preventDefault(); enviarDatosUnificados({servicio: "Contacto General", nombre: document.getElementById('leadNombre').value, telefono: document.getElementById('leadTelefono').value, interes: document.getElementById('leadInteres').value}, `Hola, me interesa: ${document.getElementById('leadInteres').value}.`); });
 
-        function verSeccion(id) {
-            document.querySelectorAll('[id^="sec-"]').forEach(s => s.classList.add('hidden'));
-            document.querySelectorAll('.menu-btn').forEach(b => b.classList.remove('active'));
-            document.getElementById(`sec-${id}`).classList.remove('hidden');
-            document.getElementById(`btn-${id}`).classList.add('active');
-        }
-
-        function cargarWebs() {
-            db.collection("webs").onSnapshot(snap => {
-                const c = document.getElementById('webs-container'); c.innerHTML="";
-                snap.forEach(doc => { const w = doc.data(); let adminBtns = esAdmin ? `<div class="admin-actions"><button class="btn-delete" onclick="borrar('webs','${doc.id}')">🗑️</button></div>` : ''; c.innerHTML += `<div class="product-card"><img src="${w.img}" class="product-photo" style="object-fit:contain; height:180px;"><h3>${w.titulo}</h3><button class="btn-primary" onclick="abrirModalWebPersonalizada('${w.titulo}')">ELEGIR</button>${adminBtns}</div>`; });
-            });
-        }
+        function verSeccion(id) { document.querySelectorAll('[id^="sec-"]').forEach(s => s.classList.add('hidden')); document.querySelectorAll('.menu-btn').forEach(b => b.classList.remove('active')); document.getElementById(`sec-${id}`).classList.remove('hidden'); document.getElementById(`btn-${id}`).classList.add('active'); }
+        function cargarWebs() { db.collection("webs").onSnapshot(snap => { const c = document.getElementById('webs-container'); c.innerHTML=""; snap.forEach(doc => { const w = doc.data(); let adminBtns = esAdmin ? `<div class="admin-actions"><button class="btn-delete" onclick="borrar('webs','${doc.id}')">🗑️</button></div>` : ''; c.innerHTML += `<div class="product-card"><img src="${w.img}" class="product-photo" style="object-fit:contain; height:180px;"><h3>${w.titulo}</h3><button class="btn-primary" onclick="abrirModalWebPersonalizada('${w.titulo}')">ELEGIR</button>${adminBtns}</div>`; }); }); }
         function abrirModalWebPersonalizada(diseno="General") { const nom = prompt("Dinos tu nombre:"); if(nom) enviarDatosUnificados({servicio: "Interes Web", diseño: diseno, nombre: nom}, `Hola, me interesa web: ${diseno}.`); }
-
         document.getElementById('addReviewForm').addEventListener('submit', async (e) => { e.preventDefault(); await db.collection('resenas').add({ nombre: document.getElementById('reviewName').value, estrellas: document.getElementById('reviewStars').value, texto: document.getElementById('reviewText').value, fecha: new Date().toISOString() }); alert("Enviada"); cerrarModal('review-modal'); });
         function cargarResenas() { db.collection('resenas').orderBy('fecha', 'desc').onSnapshot(snap => { const d = document.getElementById('reviews-container'); d.innerHTML=""; const adminList = document.getElementById('admin-reviews-list'); if(esAdmin && adminList) adminList.innerHTML = ""; snap.forEach(doc => { const r = doc.data(); d.innerHTML += `<div class="review-card"><div style="color:gold;">${"⭐".repeat(r.estrellas)}</div><b>${r.nombre}</b><p>${r.texto}</p></div>`; if(esAdmin && adminList) adminList.innerHTML += `<div class="review-card" style="text-align:left;"><b>${r.nombre}</b><button class="btn-delete" onclick="borrar('resenas','${doc.id}')">X</button></div>`; }); }); }
 
@@ -887,43 +772,46 @@
         function gestionarPerfil() { usuarioActual ? abrirModal('profile-modal') : abrirModal('auth-modal'); }
         function verTabPerfil(tab) { document.querySelectorAll('[id^="tab-"]').forEach(t => t.classList.add('hidden')); document.getElementById(`tab-${tab}`).classList.remove('hidden'); }
         function cargarDatosPerfil() { if(!usuarioActual) return; db.collection('pedidos').where('uid', '==', usuarioActual.uid).orderBy('fecha', 'desc').onSnapshot(snap => { const div = document.getElementById('user-orders-list'); div.innerHTML = ""; snap.forEach(doc => { div.innerHTML += `<div class="order-card confirmado"><p>Total: ${doc.data().total}€</p></div>`; }); }); }
-
         function addCart(id, n, p){ carrito.push({n,p}); document.getElementById('cart-count').innerText=carrito.length; mostrarToast("Añadido"); }
-        
-        // 🟢 NUEVA FUNCIÓN: CONECTAR CON STRIPE (BACKEND)
+
+        // 🟢 NUEVA FUNCIÓN DE PAGO INTELIGENTE
         function realizarPedido() {
             if (carrito.length === 0) return alert("El carrito está vacío");
 
-            // Botón de carga
+            // 1. Detectamos opción (Envío o Tienda)
+            const opciones = document.getElementsByName('entrega');
+            let modoSeleccionado = 'envio';
+            for(let op of opciones) {
+                if(op.checked) modoSeleccionado = op.value;
+            }
+
             const btn = document.querySelector('#cart-modal .btn-primary');
             const textoOriginal = btn.innerHTML;
-            btn.innerHTML = "PROCESANDO...";
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> PROCESANDO...';
             btn.disabled = true;
 
-            // Llamamos al servidor que creamos en el paso 1
-            // Nota: Si subes esto a internet, cambia localhost por tu dominio real
+            // 2. Llamamos al servidor
             fetch('http://localhost:4242/crear-sesion-pago', {
                 method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ carrito: carrito }),
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ 
+                    carrito: carrito,
+                    modoEntrega: modoSeleccionado 
+                }),
             })
-            .then(function(response) {
-                return response.json();
-            })
-            .then(function(session) {
+            .then(response => response.json())
+            .then(session => {
                 if(session.error) {
-                    alert(session.error);
+                    alert("Error: " + session.error);
                     btn.innerHTML = textoOriginal;
                     btn.disabled = false;
                 } else {
                     return stripe.redirectToCheckout({ sessionId: session.id });
                 }
             })
-            .catch(function(error) {
+            .catch(error => {
                 console.error('Error:', error);
-                alert("Error conectando con el servidor de pagos. Asegúrate de iniciar 'node server.js'");
+                alert("Error: Asegúrate de encender el servidor con 'node server.js'");
                 btn.innerHTML = textoOriginal;
                 btn.disabled = false;
             });
@@ -936,14 +824,7 @@
         window.addEventListener('load', function() { if (!sessionStorage.getItem('popupMostrado')) { setTimeout(function() { abrirModal('welcome-modal'); sessionStorage.setItem('popupMostrado', 'true'); }, 4000); } });
         document.getElementById('welcomeForm').addEventListener('submit', (e) => { e.preventDefault(); enviarDatosUnificados({ servicio: "Lead Bienvenida", nombre: document.getElementById('welcomeNombre').value, telefono: document.getElementById('welcomeTel').value }, `Hola, acabo de entrar en la web.`); cerrarModal('welcome-modal'); });
 
-        function cargarTodo() { 
-            cargarProductos(); 
-            cargarMarcasMoviles(); 
-            cargarWebs(); 
-            cargarQuiz(); 
-            cargarResenas(); 
-            cargarCarpetasTeleco(); 
-        }
+        function cargarTodo() { cargarProductos(); cargarMarcasMoviles(); cargarWebs(); cargarQuiz(); cargarResenas(); cargarCarpetasTeleco(); }
         cargarTodo();
     </script>
 </body>
