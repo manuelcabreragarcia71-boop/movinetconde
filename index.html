@@ -19,7 +19,6 @@
             --success: #2ecc71;
             --pending: #f39c12;
             --error: #e74c3c;
-            --stripe: #635bff;
         }
 
         /* --- CONFIGURACIÓN BASE --- */
@@ -151,8 +150,6 @@
         .form-box { max-width: 100%; margin: 0 auto; background: rgba(255,255,255,0.95); padding: 20px; border-radius: 10px; }
         input, textarea, select { width: 100%; padding: 12px; margin-bottom: 15px; border: 1px solid #ccc; border-radius: 5px; box-sizing: border-box; background: rgba(255,255,255,0.9); font-size: 16px; }
         
-        .input-stripe { border: 2px solid var(--stripe); background-color: #f0f0ff; }
-
         .modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); z-index: 2000; display: flex; justify-content: center; align-items: center; }
         .modal-content { background: rgba(255,255,255,0.98); padding: 25px; width: 90%; max-width: 500px; border-radius: 10px; position: relative; max-height: 90vh; overflow-y: auto; }
         .close { position: absolute; top: 10px; right: 20px; font-size: 1.8rem; cursor: pointer; color: #333; }
@@ -260,7 +257,7 @@
                 <div style="background:white; padding:15px; border-radius:10px; border: 1px solid #ccc;">
                     <h4 style="color:var(--accent); margin-top:0;">2. Subir Móvil</h4>
                     <p style="font-size:0.8rem; color:#666; margin-bottom:10px;">
-                        Para pagos con tarjeta: Crea el producto en Stripe, copia el "Enlace de Pago" y pégalo abajo.
+                       Los pedidos llegan al WhatsApp.
                     </p>
                     <form id="addProductForm">
                         <label style="font-size:0.8rem; font-weight:bold;">¿En qué carpeta va?</label>
@@ -270,8 +267,6 @@
                         
                         <input type="file" id="newImg" accept="image/*">
                         <input type="text" id="newName" placeholder="Modelo (Ej: Galaxy S22)" required>
-                        
-                        <input type="url" id="newStripeLink" class="input-stripe" placeholder="Enlace Stripe (https://buy.stripe.com/...)">
 
                         <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px;">
                             <input type="number" id="newGB" placeholder="GB Almac.">
@@ -599,9 +594,9 @@
                 </div>
 
                 <div id="box-tienda" class="store-info">
-                    📍 <strong>Recogida en tienda:</strong><br>
-                    Ven a nuestra tienda en Sanlúcar de Barrameda.<br>
-                    ¡Te avisaremos cuando esté listo!
+                    📍 <strong>Recogida en CHIPIONA:</strong><br>
+                    Pásate por nuestra tienda en Chipiona.<br>
+                    ¡Te avisaremos al WhatsApp!
                 </div>
 
                 <button type="submit" class="btn-primary" id="btn-finalizar">CONFIRMAR PEDIDO</button>
@@ -748,12 +743,12 @@
                                  </div>`;
                 }
 
-                // 🟢 LÓGICA DE BOTÓN INTELIGENTE (AHORA ABRE EL MODAL)
+                // BOTON ABRE EL MODAL DE WHATSAPP
                 let botonCompraHTML = `
                     <button class="btn-primary" onclick="iniciarProcesoCompra('${p.id}')" style="background:var(--accent); margin-top:10px;">
                         COMPRAR AHORA
                     </button>
-                    <p style="font-size:0.7rem; color:#666; margin-top:5px;">${p.stripeLink ? '💳 Tarjeta o Efectivo' : '💬 Pedir por WhatsApp'}</p>
+                    <p style="font-size:0.7rem; color:#666; margin-top:5px;">💬 Pedir por WhatsApp / Efectivo</p>
                 `;
 
                 container.innerHTML += `
@@ -881,7 +876,7 @@
             });
         }
 
-        // 2. Subir Móvil (AHORA CON LINK DE STRIPE)
+        // 2. Subir Móvil (SIN STRIPE, TODO WHATSAPP)
         if(document.getElementById('addProductForm')) {
             document.getElementById('addProductForm').addEventListener('submit', e=>{ 
                 e.preventDefault(); 
@@ -893,9 +888,8 @@
                     marca: selectedBrand, 
                     gb: document.getElementById('newGB').value,
                     ram: document.getElementById('newRAM').value,
-                    precio: Number(document.getElementById('newPrice').value),
-                    // 🟢 GUARDAMOS EL ENLACE DE STRIPE
-                    stripeLink: document.getElementById('newStripeLink').value 
+                    precio: Number(document.getElementById('newPrice').value)
+                    // Eliminado stripeLink
                 };
                 guardarItem('productos', null, data, 'newImg', 'btn-save-product')
                 .then(()=>{ document.getElementById('addProductForm').reset(); }); 
@@ -1011,9 +1005,9 @@
 
             const nombre = document.getElementById('compra-nombre').value;
             const tel = document.getElementById('compra-tel').value;
-            const direccion = metodoActual === 'envio' ? document.getElementById('compra-direccion').value : "RECOGIDA EN TIENDA";
+            const direccion = metodoActual === 'envio' ? document.getElementById('compra-direccion').value : "RECOGIDA EN CHIPIONA";
             
-            // 1. Guardar el pedido en Firebase
+            // 1. Guardar el pedido en Firebase (opcional, pero recomendado)
             const nuevoPedido = {
                 producto: productoEnCurso.nombre,
                 precio: productoEnCurso.precio,
@@ -1027,25 +1021,18 @@
             
             try {
                 await db.collection('pedidos_web').add(nuevoPedido);
-                enviarDatosUnificados(nuevoPedido, ""); // Enviar al email (Formspree) sin abrir whatsapp aún
+                enviarDatosUnificados(nuevoPedido, ""); // Guardar en email
             } catch(err) { console.error("Error guardando pedido", err); }
 
-            // 2. Redirigir según el método de pago del producto
-            if (productoEnCurso.stripeLink && productoEnCurso.stripeLink.includes('http')) {
-                // Si es pago con tarjeta, abrimos Stripe
-                alert("Pedido registrado. Te redirigimos al pago seguro.");
-                window.open(productoEnCurso.stripeLink, '_blank');
+            // 2. ABRIR WHATSAPP DIRECTAMENTE
+            let msg = `Hola, soy ${nombre}. Quiero comprar el *${productoEnCurso.nombre}* (${productoEnCurso.precio}€).`;
+            if(metodoActual === 'envio') {
+                msg += ` 🚚 *ENVÍO A:* ${direccion}`;
             } else {
-                // Si es por WhatsApp, abrimos WhatsApp con el mensaje formateado
-                let msg = `Hola, soy ${nombre}. Quiero comprar el *${productoEnCurso.nombre}* (${productoEnCurso.precio}€).`;
-                if(metodoActual === 'envio') {
-                    msg += ` 🚚 *ENVÍO A:* ${direccion}`;
-                } else {
-                    msg += ` 🏪 *PASARÉ A RECOGERLO*.`;
-                }
-                const url = `https://wa.me/${MI_TELEFONO}?text=${encodeURIComponent(msg)}`;
-                window.open(url, '_blank');
+                msg += ` 🏪 *PASARÉ A RECOGERLO EN CHIPIONA*.`;
             }
+            const url = `https://wa.me/${MI_TELEFONO}?text=${encodeURIComponent(msg)}`;
+            window.open(url, '_blank');
             
             cerrarModal('modal-compra');
         });
