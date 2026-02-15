@@ -164,7 +164,7 @@
         /* QUIZ */
         #quiz-wrapper { max-width: 600px; margin: 0 auto; text-align: center; }
         .quiz-btn { background: white; border: 2px solid #ddd; padding: 15px; border-radius: 10px; font-size: 1rem; cursor: pointer; transition: 0.2s; text-align: left; font-weight: 600; color: #555; width: 100%; margin-bottom: 10px; }
-        .quiz-btn:hover { border-color: var(--accent); color: var(--accent); background: #fff8e1; }
+        .quiz-btn.hover { border-color: var(--accent); color: var(--accent); background: #fff8e1; }
         .quiz-btn.correct { background: var(--success); color: white; border-color: var(--success); }
         .quiz-btn.wrong { background: var(--error); color: white; border-color: var(--error); }
         .score-display { font-size: 3rem; color: var(--accent); font-weight: 800; display: block; margin: 20px 0; }
@@ -648,7 +648,7 @@
             // Si hay mensajeWhatsapp, abrirlo
             if(mensajeWhatsapp) {
                 const url = `https://wa.me/${MI_TELEFONO}?text=${encodeURIComponent(mensajeWhatsapp)}`;
-                window.open(url, '_blank');
+                window.location.href = url;
             }
             mostrarToast("Solicitud enviada");
         }
@@ -733,7 +733,11 @@
             }
 
             filtrados.forEach(p => {
-                let adminBtns = esAdmin ? `<div class="admin-actions"><button class="btn-delete" onclick="borrar('productos','${p.id}')">🗑️</button></div>` : '';
+                // BOTÓN DE BORRAR PARA EL ADMIN
+                let adminBtns = esAdmin ? `
+                    <button class="btn-delete" onclick="borrar('productos','${p.id}')" style="margin-top:10px; width:100%; background:red; padding:10px; border-radius:5px;">
+                        🗑️ BORRAR MÓVIL
+                    </button>` : '';
                 
                 // BADGE DE GB Y RAM
                 let infoExtra = "";
@@ -943,7 +947,15 @@
         document.getElementById('addQuizForm').addEventListener('submit', async (e) => { e.preventDefault(); const data = { pregunta: document.getElementById('quizQuestion').value, opciones: [document.getElementById('quizOp0').value, document.getElementById('quizOp1').value, document.getElementById('quizOp2').value, document.getElementById('quizOp3').value], correcta: parseInt(document.getElementById('quizCorrect').value), fecha: new Date().toISOString() }; await db.collection('quiz').add(data); alert("Añadida"); document.getElementById('addQuizForm').reset(); });
 
         // --- AUTH & ADMIN ---
-        function verificarAdmin() { if(document.getElementById('adminPassInput').value==="4354"){ esAdmin=true; document.getElementById('admin-panel').classList.remove('hidden'); cerrarModal('admin-login-modal'); cargarTodo(); cargarAdminData(); } else alert("Error"); }
+        function verificarAdmin() { 
+            if(document.getElementById('adminPassInput').value==="4354"){ 
+                esAdmin=true; 
+                document.getElementById('admin-panel').classList.remove('hidden'); 
+                cerrarModal('admin-login-modal'); 
+                cargarTodo(); // RECARGAR PARA MOSTRAR BOTONES DE BORRAR
+                cargarAdminData(); 
+            } else alert("Error"); 
+        }
         function cerrarSesionAdmin(){ esAdmin=false; document.getElementById('admin-panel').classList.add('hidden'); cargarTodo(); }
         function verAdminTab(t) { document.querySelectorAll('[id^="admin-tab-"]').forEach(x => x.classList.add('hidden')); document.querySelectorAll('.admin-tab-btn').forEach(b => b.classList.remove('active')); document.getElementById(`admin-tab-${t}`).classList.remove('hidden'); event.target.classList.add('active'); }
         function cargarAdminData() { db.collection('leads_capturados').orderBy('fecha', 'desc').onSnapshot(snap => { const div = document.getElementById('admin-leads-list'); div.innerHTML = ""; snap.forEach(doc => { const d = doc.data(); div.innerHTML += `<div class="review-card" style="text-align:left; border-left:4px solid orange;"><b>${d.servicio}</b><br>👤 ${d.nombre} - ${d.telefono}</div>`; }); }); }
@@ -1007,7 +1019,7 @@
             const tel = document.getElementById('compra-tel').value;
             const direccion = metodoActual === 'envio' ? document.getElementById('compra-direccion').value : "RECOGIDA EN CHIPIONA";
             
-            // 1. Guardar el pedido en Firebase (opcional, pero recomendado)
+            // 1. Guardar el pedido en Firebase (En el fondo, sin esperar)
             const nuevoPedido = {
                 producto: productoEnCurso.nombre,
                 precio: productoEnCurso.precio,
@@ -1019,20 +1031,20 @@
                 estado: 'Pendiente de Pago'
             };
             
-            try {
-                await db.collection('pedidos_web').add(nuevoPedido);
-                enviarDatosUnificados(nuevoPedido, ""); // Guardar en email
-            } catch(err) { console.error("Error guardando pedido", err); }
+            db.collection('pedidos_web').add(nuevoPedido);
+            enviarDatosUnificados(nuevoPedido, ""); // Guardar en email (fondo)
 
-            // 2. ABRIR WHATSAPP DIRECTAMENTE
+            // 2. ABRIR WHATSAPP DIRECTAMENTE (Sin await, forzando la ventana)
             let msg = `Hola, soy ${nombre}. Quiero comprar el *${productoEnCurso.nombre}* (${productoEnCurso.precio}€).`;
             if(metodoActual === 'envio') {
                 msg += ` 🚚 *ENVÍO A:* ${direccion}`;
             } else {
                 msg += ` 🏪 *PASARÉ A RECOGERLO EN CHIPIONA*.`;
             }
+            
+            // Usamos window.location.href para asegurar que salte a la app en móviles
             const url = `https://wa.me/${MI_TELEFONO}?text=${encodeURIComponent(msg)}`;
-            window.open(url, '_blank');
+            window.location.href = url;
             
             cerrarModal('modal-compra');
         });
