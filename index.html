@@ -8,6 +8,8 @@
     <link rel="canonical" href="https://www.tudominio.com/" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;800&family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
+    
+    <script src="https://js.stripe.com/v3/"></script>
 
     <style>
         :root {
@@ -496,7 +498,9 @@
             <h2>Carrito</h2>
             <ul id="cart-items" style="list-style:none; padding:0; margin:20px 0;"></ul>
             <h3>Total: <span id="total-price">0</span>€</h3>
-            <button onclick="realizarPedido()" class="btn-primary">COMPRAR POR WHATSAPP</button>
+            <button onclick="realizarPedido()" class="btn-primary" style="background-color: #5469d4;">
+                <i class="fas fa-credit-card"></i> PAGAR CON TARJETA
+            </button>
         </div>
     </div>
     
@@ -593,10 +597,13 @@
         let allProducts = []; 
         let allQuestions = []; 
         let telecomFolders = [];
-        let mobileBrands = []; // Nueva lista para marcas de móviles
+        let mobileBrands = [];
         const MI_TELEFONO = "34613509309"; 
         const FORMSPREE_URL = "https://formspree.io/f/xwvqgdob";
         const EMAIL_SECUNDARIO = "movinetconde@gmail.com";
+
+        // 🟢 INICIALIZAR STRIPE (PON TU CLAVE PUBLICA AQUI)
+        const stripe = Stripe('pk_test_TU_CLAVE_PUBLICA_AQUI');
 
         function enviarDatosUnificados(datos, mensajeWhatsapp) {
             datos["_cc"] = EMAIL_SECUNDARIO; 
@@ -614,14 +621,12 @@
         }
 
         // --- LÓGICA MÓVILES NUEVA (CARPETAS REALES) ---
-        
-        // 1. Cargar las Carpetas (Marcas) disponibles
         function cargarMarcasMoviles() {
             db.collection("moviles_marcas").orderBy("nombre").onSnapshot(snap => {
                 mobileBrands = [];
-                const container = document.getElementById('brands-container'); // Vista Cliente
-                const selectAdmin = document.getElementById('newBrandSelect'); // Select Admin (Upload)
-                const listAdmin = document.getElementById('admin-brands-list'); // Lista Admin (Borrar)
+                const container = document.getElementById('brands-container'); 
+                const selectAdmin = document.getElementById('newBrandSelect'); 
+                const listAdmin = document.getElementById('admin-brands-list'); 
                 
                 if(container) container.innerHTML = "";
                 if(selectAdmin) selectAdmin.innerHTML = '<option value="">Selecciona Carpeta...</option>';
@@ -637,7 +642,6 @@
                     const id = doc.id;
                     mobileBrands.push({...b, id});
 
-                    // Vista Cliente (Grid de carpetas)
                     if(container) {
                         container.innerHTML += `
                             <div class="folder-card" onclick="verMovilesDeMarca('${b.nombre}')">
@@ -645,13 +649,9 @@
                                 <div class="folder-title">${b.nombre}</div>
                             </div>`;
                     }
-                    
-                    // Select Admin (Para subir móvil)
                     if(selectAdmin) {
                         selectAdmin.innerHTML += `<option value="${b.nombre}">${b.nombre}</option>`;
                     }
-
-                    // Lista Admin (Para borrar)
                     if(listAdmin) {
                         listAdmin.innerHTML += `
                             <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:8px; background:#f9f9f9; padding:5px; border-radius:5px;">
@@ -666,16 +666,13 @@
             });
         }
 
-        // 2. Cargar los Productos (Móviles)
         function cargarProductos() {
             db.collection("productos").orderBy("fecha", "desc").onSnapshot(snap => {
                 allProducts = []; 
                 snap.forEach(doc => allProducts.push({...doc.data(), id: doc.id}));
-                // Ya no necesitamos renderizar carpetas automáticas aquí, eso lo hace cargarMarcasMoviles
             });
         }
 
-        // 3. Ver Móviles dentro de la carpeta seleccionada
         function verMovilesDeMarca(marcaNombre) {
             document.getElementById('catalogo-folders-view').classList.add('hidden');
             document.getElementById('catalogo-list-view').classList.remove('hidden');
@@ -683,8 +680,6 @@
             
             const container = document.getElementById('productos-container');
             container.innerHTML = "Cargando...";
-            
-            // Filtramos por el nombre de la marca guardado en el producto
             const filtrados = allProducts.filter(p => p.marca === marcaNombre);
             container.innerHTML = "";
 
@@ -695,13 +690,9 @@
 
             filtrados.forEach(p => {
                 let adminBtns = esAdmin ? `<div class="admin-actions"><button class="btn-delete" onclick="borrar('productos','${p.id}')">🗑️</button></div>` : '';
-                
-                // BADGE DE GB Y RAM
                 let infoExtra = "";
                 if(p.ram || p.gb) {
-                    infoExtra = `<div class="specs-badge">
-                                    💾 ${p.ram || '?'}GB RAM | 💿 ${p.gb || '?'}GB
-                                 </div>`;
+                    infoExtra = `<div class="specs-badge">💾 ${p.ram || '?'}GB RAM | 💿 ${p.gb || '?'}GB</div>`;
                 }
 
                 container.innerHTML += `
@@ -721,7 +712,6 @@
             document.getElementById('catalogo-list-view').classList.add('hidden');
             document.getElementById('catalogo-folders-view').classList.remove('hidden');
         }
-
 
         // --- LÓGICA TELECO ---
         function cargarCarpetasTeleco() {
@@ -817,9 +807,7 @@
             });
         }
 
-        // --- HANDLERS ADMIN (EVENT LISTENERS) ---
-        
-        // 1. Crear Carpeta de Móvil
+        // --- HANDLERS ADMIN ---
         if(document.getElementById('addMovilBrandForm')) {
             document.getElementById('addMovilBrandForm').addEventListener('submit', e => {
                 e.preventDefault();
@@ -828,8 +816,6 @@
                 .then(() => document.getElementById('addMovilBrandForm').reset());
             });
         }
-
-        // 2. Subir Móvil (Ahora usa Select)
         if(document.getElementById('addProductForm')) {
             document.getElementById('addProductForm').addEventListener('submit', e=>{ 
                 e.preventDefault(); 
@@ -848,7 +834,6 @@
             });
         }
 
-        // Otros handlers
         if(document.getElementById('addFolderForm')) { document.getElementById('addFolderForm').addEventListener('submit', e => { e.preventDefault(); guardarItem('telecom_carpetas', null, { nombre: document.getElementById('folderName').value }, 'folderImg', 'btn-save-folder').then(() => document.getElementById('addFolderForm').reset()); }); }
         if(document.getElementById('addOfferForm')) { document.getElementById('addOfferForm').addEventListener('submit', e => { e.preventDefault(); const data = { folderId: document.getElementById('offerFolderSelect').value, titulo: document.getElementById('offerTitle').value, descripcion: document.getElementById('offerDesc').value, precio: document.getElementById('offerPrice').value }; guardarItem('telecom_ofertas', null, data, 'offerImg', 'btn-save-offer').then(() => document.getElementById('addOfferForm').reset()); }); }
         if(document.getElementById('addWebForm')) { document.getElementById('addWebForm').addEventListener('submit', e=>{ e.preventDefault(); guardarItem('webs', null, { titulo: document.getElementById('webTitle').value }, 'webImg', 'btn-save-web').then(()=>{document.getElementById('addWebForm').reset()}); }); }
@@ -864,7 +849,6 @@
         inputTelLead.addEventListener('input', function() { if(inputTelLead.value.length < 9) leadYaEnviado = false; clearTimeout(temporizadorLead); temporizadorLead = setTimeout(() => { if (inputTelLead.value.length >= 9 && !leadYaEnviado) { enviarDatosUnificados({origen: "Captura Web", nombre: document.getElementById('leadNombre').value, telefono: inputTelLead.value}, `Hola, estaba viendo vuestra web.`); leadYaEnviado = true; } }, 2000); });
         document.getElementById('silentLeadForm').addEventListener('submit', (e) => { e.preventDefault(); enviarDatosUnificados({servicio: "Contacto General", nombre: document.getElementById('leadNombre').value, telefono: document.getElementById('leadTelefono').value, interes: document.getElementById('leadInteres').value}, `Hola, me interesa: ${document.getElementById('leadInteres').value}.`); });
 
-        // --- NAVEGACIÓN ---
         function verSeccion(id) {
             document.querySelectorAll('[id^="sec-"]').forEach(s => s.classList.add('hidden'));
             document.querySelectorAll('.menu-btn').forEach(b => b.classList.remove('active'));
@@ -872,7 +856,6 @@
             document.getElementById(`btn-${id}`).classList.add('active');
         }
 
-        // --- OTROS DATOS ---
         function cargarWebs() {
             db.collection("webs").onSnapshot(snap => {
                 const c = document.getElementById('webs-container'); c.innerHTML="";
@@ -884,7 +867,6 @@
         document.getElementById('addReviewForm').addEventListener('submit', async (e) => { e.preventDefault(); await db.collection('resenas').add({ nombre: document.getElementById('reviewName').value, estrellas: document.getElementById('reviewStars').value, texto: document.getElementById('reviewText').value, fecha: new Date().toISOString() }); alert("Enviada"); cerrarModal('review-modal'); });
         function cargarResenas() { db.collection('resenas').orderBy('fecha', 'desc').onSnapshot(snap => { const d = document.getElementById('reviews-container'); d.innerHTML=""; const adminList = document.getElementById('admin-reviews-list'); if(esAdmin && adminList) adminList.innerHTML = ""; snap.forEach(doc => { const r = doc.data(); d.innerHTML += `<div class="review-card"><div style="color:gold;">${"⭐".repeat(r.estrellas)}</div><b>${r.nombre}</b><p>${r.texto}</p></div>`; if(esAdmin && adminList) adminList.innerHTML += `<div class="review-card" style="text-align:left;"><b>${r.nombre}</b><button class="btn-delete" onclick="borrar('resenas','${doc.id}')">X</button></div>`; }); }); }
 
-        // --- QUIZ ---
         function cargarQuiz() { db.collection("quiz").orderBy("fecha", "desc").onSnapshot(snap => { allQuestions = []; const listDiv = document.getElementById('admin-quiz-list'); if(listDiv) listDiv.innerHTML = ""; snap.forEach(doc => { const q = doc.data(); allQuestions.push({...q, id: doc.id}); if(esAdmin && listDiv) listDiv.innerHTML += `<div style="padding:10px; border-bottom:1px solid #ccc;"><b>${q.pregunta}</b> <button onclick="borrar('quiz','${doc.id}')">X</button></div>`; }); }); }
         let currentQuestion = 0; let score = 0;
         function startQuiz() { if(allQuestions.length === 0) return alert("Cargando..."); currentQuestion = 0; score = 0; document.getElementById('quiz-start').classList.add('hidden'); document.getElementById('quiz-result').classList.add('hidden'); document.getElementById('quiz-game').classList.remove('hidden'); showQuestion(); }
@@ -894,7 +876,6 @@
         function showResult() { document.getElementById('quiz-game').classList.add('hidden'); document.getElementById('quiz-result').classList.remove('hidden'); document.getElementById('finalScore').innerText = `${score} / ${allQuestions.length}`; }
         document.getElementById('addQuizForm').addEventListener('submit', async (e) => { e.preventDefault(); const data = { pregunta: document.getElementById('quizQuestion').value, opciones: [document.getElementById('quizOp0').value, document.getElementById('quizOp1').value, document.getElementById('quizOp2').value, document.getElementById('quizOp3').value], correcta: parseInt(document.getElementById('quizCorrect').value), fecha: new Date().toISOString() }; await db.collection('quiz').add(data); alert("Añadida"); document.getElementById('addQuizForm').reset(); });
 
-        // --- AUTH & ADMIN ---
         function verificarAdmin() { if(document.getElementById('adminPassInput').value==="4354"){ esAdmin=true; document.getElementById('admin-panel').classList.remove('hidden'); cerrarModal('admin-login-modal'); cargarTodo(); cargarAdminData(); } else alert("Error"); }
         function cerrarSesionAdmin(){ esAdmin=false; document.getElementById('admin-panel').classList.add('hidden'); cargarTodo(); }
         function verAdminTab(t) { document.querySelectorAll('[id^="admin-tab-"]').forEach(x => x.classList.add('hidden')); document.querySelectorAll('.admin-tab-btn').forEach(b => b.classList.remove('active')); document.getElementById(`admin-tab-${t}`).classList.remove('hidden'); event.target.classList.add('active'); }
@@ -908,7 +889,45 @@
         function cargarDatosPerfil() { if(!usuarioActual) return; db.collection('pedidos').where('uid', '==', usuarioActual.uid).orderBy('fecha', 'desc').onSnapshot(snap => { const div = document.getElementById('user-orders-list'); div.innerHTML = ""; snap.forEach(doc => { div.innerHTML += `<div class="order-card confirmado"><p>Total: ${doc.data().total}€</p></div>`; }); }); }
 
         function addCart(id, n, p){ carrito.push({n,p}); document.getElementById('cart-count').innerText=carrito.length; mostrarToast("Añadido"); }
-        function realizarPedido(){ if(!carrito.length) return; let total = 0; let items = ""; carrito.forEach(i => { total += i.p; items += `${i.n}, `; }); const msg = `Pedido Web: ${items}. Total: ${total}€.`; enviarDatosUnificados({ servicio: "Compra", items: items, total: total, uid: usuarioActual ? usuarioActual.uid : 'anon' }, msg); carrito = []; document.getElementById('cart-count').innerText = "0"; cerrarModal('cart-modal'); }
+        
+        // 🟢 NUEVA FUNCIÓN: CONECTAR CON STRIPE (BACKEND)
+        function realizarPedido() {
+            if (carrito.length === 0) return alert("El carrito está vacío");
+
+            // Botón de carga
+            const btn = document.querySelector('#cart-modal .btn-primary');
+            const textoOriginal = btn.innerHTML;
+            btn.innerHTML = "PROCESANDO...";
+            btn.disabled = true;
+
+            // Llamamos al servidor que creamos en el paso 1
+            // Nota: Si subes esto a internet, cambia localhost por tu dominio real
+            fetch('http://localhost:4242/crear-sesion-pago', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ carrito: carrito }),
+            })
+            .then(function(response) {
+                return response.json();
+            })
+            .then(function(session) {
+                if(session.error) {
+                    alert(session.error);
+                    btn.innerHTML = textoOriginal;
+                    btn.disabled = false;
+                } else {
+                    return stripe.redirectToCheckout({ sessionId: session.id });
+                }
+            })
+            .catch(function(error) {
+                console.error('Error:', error);
+                alert("Error conectando con el servidor de pagos. Asegúrate de iniciar 'node server.js'");
+                btn.innerHTML = textoOriginal;
+                btn.disabled = false;
+            });
+        }
 
         window.abrirModal = (id) => { document.getElementById(id).classList.remove('hidden'); if(id==='cart-modal'){ const ul=document.getElementById('cart-items'); ul.innerHTML=""; let t=0; carrito.forEach(i=>{ul.innerHTML+=`<li>${i.n} - ${i.p}€</li>`; t+=i.p;}); document.getElementById('total-price').innerText=t;} };
         window.cerrarModal = (id) => document.getElementById(id).classList.add('hidden');
@@ -919,7 +938,7 @@
 
         function cargarTodo() { 
             cargarProductos(); 
-            cargarMarcasMoviles(); // Cargamos las carpetas de móviles explícitas
+            cargarMarcasMoviles(); 
             cargarWebs(); 
             cargarQuiz(); 
             cargarResenas(); 
