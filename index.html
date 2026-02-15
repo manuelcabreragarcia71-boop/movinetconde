@@ -137,10 +137,6 @@
         .btn-primary { background: var(--primary); color: white; border: none; padding: 12px; width: 100%; border-radius: 5px; cursor: pointer; font-weight: bold; text-transform: uppercase; margin-top: 5px; font-size: 0.9rem; transition: 0.3s; }
         .btn-primary:hover { background: var(--accent); }
         
-        /* Botón Específico para Stripe */
-        .btn-stripe { background: var(--stripe); color: white; border: none; padding: 12px; width: 100%; border-radius: 5px; cursor: pointer; font-weight: bold; text-transform: uppercase; margin-top: 5px; font-size: 0.9rem; transition: 0.3s; display: flex; align-items: center; justify-content: center; gap: 8px; text-decoration: none;}
-        .btn-stripe:hover { background: #4b44d4; box-shadow: 0 4px 12px rgba(99, 91, 255, 0.4); }
-
         .btn-secondary { background: white; color: var(--primary); border: 2px solid var(--primary); padding: 10px; width: 100%; border-radius: 5px; cursor: pointer; font-weight: bold; text-transform: uppercase; margin-top: 5px; }
         .btn-delete { background: #e74c3c; color: white; border: none; padding: 5px 10px; cursor: pointer; border-radius: 5px; font-weight: bold; margin-left: 5px; }
         .btn-back { background: #eee; border: none; padding: 10px 20px; border-radius: 20px; font-weight: bold; margin-bottom: 15px; cursor: pointer; display: inline-flex; align-items: center; gap: 5px; }
@@ -155,7 +151,6 @@
         .form-box { max-width: 100%; margin: 0 auto; background: rgba(255,255,255,0.95); padding: 20px; border-radius: 10px; }
         input, textarea, select { width: 100%; padding: 12px; margin-bottom: 15px; border: 1px solid #ccc; border-radius: 5px; box-sizing: border-box; background: rgba(255,255,255,0.9); font-size: 16px; }
         
-        /* Campo especial para el link de Stripe en admin */
         .input-stripe { border: 2px solid var(--stripe); background-color: #f0f0ff; }
 
         .modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); z-index: 2000; display: flex; justify-content: center; align-items: center; }
@@ -176,6 +171,16 @@
         .quiz-btn.correct { background: var(--success); color: white; border-color: var(--success); }
         .quiz-btn.wrong { background: var(--error); color: white; border-color: var(--error); }
         .score-display { font-size: 3rem; color: var(--accent); font-weight: 800; display: block; margin: 20px 0; }
+
+        /* --- ESTILOS MODAL COMPRA --- */
+        .purchase-tabs { display: flex; width: 100%; margin-bottom: 15px; border-bottom: 1px solid #ddd; }
+        .p-tab { flex: 1; padding: 12px; border: none; background: #f9f9f9; cursor: pointer; font-weight: bold; color: #777; transition: 0.3s; }
+        .p-tab.active { background: white; color: var(--accent); border-bottom: 3px solid var(--accent); }
+        .address-box { background: #fff8e1; padding: 10px; border-radius: 5px; border: 1px solid #ffe0b2; margin-bottom: 10px; display: none; }
+        .address-box.visible { display: block; }
+        .store-info { text-align: center; background: #e8f5e9; padding: 10px; border-radius: 5px; color: #2e7d32; font-size: 0.9rem; margin-bottom: 15px; display: none; }
+        .store-info.visible { display: block; }
+
     </style>
 </head>
 <body>
@@ -572,6 +577,38 @@
         </div>
     </div>
     
+    <div id="modal-compra" class="modal hidden">
+        <div class="modal-content">
+            <span class="close" onclick="cerrarModal('modal-compra')">&times;</span>
+            <h3 style="color:var(--primary); margin-top:0;">Finalizar Pedido</h3>
+            <h4 id="compra-prod-nombre" style="color:var(--accent);">Producto</h4>
+            
+            <div class="purchase-tabs">
+                <button type="button" class="p-tab active" id="tab-envio" onclick="cambiarMetodo('envio')">🚚 Envío</button>
+                <button type="button" class="p-tab" id="tab-tienda" onclick="cambiarMetodo('tienda')">🏪 Recogida</button>
+            </div>
+
+            <form id="form-confirmar-compra">
+                <input type="hidden" id="compra-prod-id">
+                <input type="text" id="compra-nombre" placeholder="Tu Nombre Completo" required>
+                <input type="tel" id="compra-tel" placeholder="Tu Teléfono" required>
+                
+                <div id="box-direccion" class="address-box visible">
+                    <label style="font-size:0.8rem; font-weight:bold;">Dirección de Envío:</label>
+                    <textarea id="compra-direccion" rows="2" placeholder="Calle, Número, Piso, Ciudad y CP"></textarea>
+                </div>
+
+                <div id="box-tienda" class="store-info">
+                    📍 <strong>Recogida en tienda:</strong><br>
+                    Ven a nuestra tienda en Sanlúcar de Barrameda.<br>
+                    ¡Te avisaremos cuando esté listo!
+                </div>
+
+                <button type="submit" class="btn-primary" id="btn-finalizar">CONFIRMAR PEDIDO</button>
+            </form>
+        </div>
+    </div>
+    
     <div id="toast" class="toast">Guardado</div>
 
     <footer>
@@ -613,8 +650,11 @@
             
             db.collection('leads_capturados').add({ ...datos, fecha: new Date().toISOString(), leido: false });
             
-            const url = `https://wa.me/${MI_TELEFONO}?text=${encodeURIComponent(mensajeWhatsapp)}`;
-            window.open(url, '_blank');
+            // Si hay mensajeWhatsapp, abrirlo
+            if(mensajeWhatsapp) {
+                const url = `https://wa.me/${MI_TELEFONO}?text=${encodeURIComponent(mensajeWhatsapp)}`;
+                window.open(url, '_blank');
+            }
             mostrarToast("Solicitud enviada");
         }
 
@@ -679,7 +719,7 @@
             });
         }
 
-        // 3. Ver Móviles dentro de la carpeta seleccionada (CON BOTONES INTELIGENTES)
+        // 3. Ver Móviles dentro de la carpeta seleccionada (CON LOGICA DE COMPRA NUEVA)
         function verMovilesDeMarca(marcaNombre) {
             document.getElementById('catalogo-folders-view').classList.add('hidden');
             document.getElementById('catalogo-list-view').classList.remove('hidden');
@@ -708,26 +748,13 @@
                                  </div>`;
                 }
 
-                // 🟢 LÓGICA DE BOTÓN INTELIGENTE (STRIPE vs WHATSAPP)
-                let botonCompraHTML = "";
-                if (p.stripeLink && p.stripeLink.includes('http')) {
-                    // Si hay enlace de Stripe, mostramos botón de Tarjeta
-                    botonCompraHTML = `
-                        <a href="${p.stripeLink}" target="_blank" class="btn-stripe">
-                            <i class="fab fa-stripe-s"></i> PAGAR CON TARJETA
-                        </a>
-                        <p style="font-size:0.7rem; color:var(--text); opacity:0.8; margin-top:5px;">Envío 🚚 a Domicilio incluido</p>
-                    `;
-                } else {
-                    // Si NO hay enlace, mostramos botón de WhatsApp
-                    const msg = `Hola, me interesa el ${p.nombre} (${p.gb}GB) por ${p.precio}€.`;
-                    botonCompraHTML = `
-                        <a href="https://wa.me/${MI_TELEFONO}?text=${encodeURIComponent(msg)}" target="_blank" style="text-decoration:none;">
-                            <button class="btn-primary" style="background:#25D366; display:flex; align-items:center; justify-content:center; gap:8px;">
-                                <i class="fab fa-whatsapp"></i> PEDIR POR WHATSAPP
-                            </button>
-                        </a>`;
-                }
+                // 🟢 LÓGICA DE BOTÓN INTELIGENTE (AHORA ABRE EL MODAL)
+                let botonCompraHTML = `
+                    <button class="btn-primary" onclick="iniciarProcesoCompra('${p.id}')" style="background:var(--accent); margin-top:10px;">
+                        COMPRAR AHORA
+                    </button>
+                    <p style="font-size:0.7rem; color:#666; margin-top:5px;">${p.stripeLink ? '💳 Tarjeta o Efectivo' : '💬 Pedir por WhatsApp'}</p>
+                `;
 
                 container.innerHTML += `
                     <div class="product-card">
@@ -940,6 +967,88 @@
 
         window.addEventListener('load', function() { if (!sessionStorage.getItem('popupMostrado')) { setTimeout(function() { abrirModal('welcome-modal'); sessionStorage.setItem('popupMostrado', 'true'); }, 4000); } });
         document.getElementById('welcomeForm').addEventListener('submit', (e) => { e.preventDefault(); enviarDatosUnificados({ servicio: "Lead Bienvenida", nombre: document.getElementById('welcomeNombre').value, telefono: document.getElementById('welcomeTel').value }, `Hola, acabo de entrar en la web.`); cerrarModal('welcome-modal'); });
+
+        // --- NUEVA LÓGICA DE COMPRA ---
+        let metodoActual = 'envio';
+        let productoEnCurso = null;
+
+        function iniciarProcesoCompra(idProducto) {
+            productoEnCurso = allProducts.find(p => p.id === idProducto);
+            if(!productoEnCurso) return;
+
+            document.getElementById('compra-prod-id').value = idProducto;
+            document.getElementById('compra-prod-nombre').innerText = productoEnCurso.nombre + " - " + productoEnCurso.precio + "€";
+            
+            // Resetear formulario
+            cambiarMetodo('envio'); 
+            document.getElementById('compra-nombre').value = "";
+            document.getElementById('compra-tel').value = "";
+            document.getElementById('compra-direccion').value = "";
+            
+            abrirModal('modal-compra');
+        }
+
+        function cambiarMetodo(metodo) {
+            metodoActual = metodo;
+            if(metodo === 'envio') {
+                document.getElementById('tab-envio').classList.add('active');
+                document.getElementById('tab-tienda').classList.remove('active');
+                document.getElementById('box-direccion').classList.add('visible');
+                document.getElementById('box-tienda').classList.remove('visible');
+                document.getElementById('compra-direccion').required = true;
+            } else {
+                document.getElementById('tab-envio').classList.remove('active');
+                document.getElementById('tab-tienda').classList.add('active');
+                document.getElementById('box-direccion').classList.remove('visible');
+                document.getElementById('box-tienda').classList.add('visible');
+                document.getElementById('compra-direccion').required = false;
+            }
+        }
+
+        document.getElementById('form-confirmar-compra').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            if(!productoEnCurso) return;
+
+            const nombre = document.getElementById('compra-nombre').value;
+            const tel = document.getElementById('compra-tel').value;
+            const direccion = metodoActual === 'envio' ? document.getElementById('compra-direccion').value : "RECOGIDA EN TIENDA";
+            
+            // 1. Guardar el pedido en Firebase
+            const nuevoPedido = {
+                producto: productoEnCurso.nombre,
+                precio: productoEnCurso.precio,
+                cliente: nombre,
+                telefono: tel,
+                metodo: metodoActual, // 'envio' o 'tienda'
+                direccion: direccion,
+                fecha: new Date().toISOString(),
+                estado: 'Pendiente de Pago'
+            };
+            
+            try {
+                await db.collection('pedidos_web').add(nuevoPedido);
+                enviarDatosUnificados(nuevoPedido, ""); // Enviar al email (Formspree) sin abrir whatsapp aún
+            } catch(err) { console.error("Error guardando pedido", err); }
+
+            // 2. Redirigir según el método de pago del producto
+            if (productoEnCurso.stripeLink && productoEnCurso.stripeLink.includes('http')) {
+                // Si es pago con tarjeta, abrimos Stripe
+                alert("Pedido registrado. Te redirigimos al pago seguro.");
+                window.open(productoEnCurso.stripeLink, '_blank');
+            } else {
+                // Si es por WhatsApp, abrimos WhatsApp con el mensaje formateado
+                let msg = `Hola, soy ${nombre}. Quiero comprar el *${productoEnCurso.nombre}* (${productoEnCurso.precio}€).`;
+                if(metodoActual === 'envio') {
+                    msg += ` 🚚 *ENVÍO A:* ${direccion}`;
+                } else {
+                    msg += ` 🏪 *PASARÉ A RECOGERLO*.`;
+                }
+                const url = `https://wa.me/${MI_TELEFONO}?text=${encodeURIComponent(msg)}`;
+                window.open(url, '_blank');
+            }
+            
+            cerrarModal('modal-compra');
+        });
 
         function cargarTodo() { 
             cargarProductos(); 
